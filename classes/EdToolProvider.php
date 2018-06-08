@@ -9,7 +9,7 @@ class EdToolProvider extends ToolProvider\ToolProvider {
 
 
     function onError() {
-        die( $this->reason );
+        wp_die( $this->reason );
         // TODO handle this exception
         $msg = $this->message;
 
