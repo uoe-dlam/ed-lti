@@ -33,6 +33,25 @@ abstract class Blog_Handler {
             return $this->get_blog_id();
         }
 
+        return $this->create_blog();
+
+    }
+
+    protected function blog_exists() {
+        global $wpdb;
+        $blogs = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}blogs_meta INNER JOIN {$wpdb->prefix}blogs ON {$wpdb->prefix}blogs.blog_id = {$wpdb->prefix}blogs_meta.blog_id WHERE course_id = %s AND resource_link_id = %s AND blog_type = %s",
+                $this->data['course_id'],
+                $this->data['resource_link_id'],
+                $this->get_blog_type()
+            )
+        );
+
+        return ( ! empty( $blogs ) );
+    }
+
+    protected function create_blog() {
         $path = $this->get_path();
         $title = $this->get_title();
 
@@ -51,23 +70,10 @@ abstract class Blog_Handler {
             'domain' => $this->data['domain'],
         );
 
-        $blog_id = $this->create_blog( $blog_data, $version );
+        $blog_id = $this->do_ns_cloner_create( $blog_data );
+        $this->add_blog_meta( $blog_id, $version );
 
         return $blog_id;
-    }
-
-    protected function blog_exists() {
-        global $wpdb;
-        $blogs = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}blogs_meta INNER JOIN {$wpdb->prefix}blogs ON {$wpdb->prefix}blogs.blog_id = {$wpdb->prefix}blogs_meta.blog_id WHERE course_id = %s AND resource_link_id = %s AND blog_type = %s",
-                $this->data['course_id'],
-                $this->data['resource_link_id'],
-                $this->get_blog_type()
-            )
-        );
-
-        return ( ! empty( $blogs ) );
     }
 
     public function get_blog_max_version() {
@@ -83,12 +89,6 @@ abstract class Blog_Handler {
         );
 
         return (int) $blog_max_version[0]->max_version;
-    }
-
-    protected function create_blog( $blog_data, $version = 1 ) {
-        $blog_id = $this->do_ns_cloner_create( $blog_data );
-        $this->add_blog_meta( $blog_id, $version );
-        return $blog_id;
     }
 
     protected function do_ns_cloner_create( array $data ) {
