@@ -29,15 +29,6 @@ function lti_get_db_connector() {
     return DataConnector\DataConnector::getDataConnector( $wpdb->base_prefix, $db );
 }
 
-function lti_add_consumer() {
-    $key = 'rlawson3';
-    $consumer = new ToolProvider\ToolConsumer( $key, lti_get_db_connector() );
-    $consumer->name = 'Richard Moodle Site';
-    $consumer->secret = 'aberdeen31';
-    $consumer->enabled = TRUE;
-    $consumer->save();
-}
-
 add_action( 'parse_request', 'lti_do_launch' );
 
 function lti_do_launch() {
@@ -57,7 +48,7 @@ function lti_do_launch() {
 
         if( is_student_blog_and_non_student( $blog_type, $tool ) ) {
             $course_id = $_REQUEST['lis_course_section_sourcedid'];
-            $resource_link_id = $_REQUEST['resource_link_id'];
+            $resource_link_id = $tool->resourceLink->getId();
             lti_show_staff_student_blogs_for_course( $course_id, $resource_link_id, $tool );
             return;
         }
