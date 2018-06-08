@@ -198,7 +198,7 @@ function lti_maybe_create_site_blogs_meta_table () {
 
             $wpdb->query( "CREATE TABLE IF NOT EXISTS `{$wpdb->blogsmetatable}` (
                   id int(11) NOT NULL AUTO_INCREMENT,
-                  blog_id  int(11) NOT NULL,
+                  blog_id  bigint(20) NOT NULL,
                   version int(11) NOT NULL,
                   course_id varchar(256) NOT NULL,
                   resource_link_id varchar(256) NOT NULL,
@@ -210,7 +210,7 @@ function lti_maybe_create_site_blogs_meta_table () {
             );
 
             $wpdb->query( "ALTER TABLE `{$wpdb->blogsmetatable}`
-                ADD CONSTRAINT `{$wpdb->blogsmetatable}`_site_FK1 FOREIGN KEY (blog_id)
+                ADD CONSTRAINT `{$wpdb->blogsmetatable}_site_FK1` FOREIGN KEY (blog_id)
                 REFERENCES {$wpdb->prefix}blogs (blog_id)
                 ON DELETE CASCADE 
                 ON UPDATE CASCADE;"
