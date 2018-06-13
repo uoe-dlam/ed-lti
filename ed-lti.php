@@ -6,7 +6,6 @@ Author: Richard Lawson (richard.lawson@ed.ac.uk)
 Version: 1.0
 */
 
-require_once ABSPATH . "wp-includes/pluggable.php";
 require_once "vendor/autoload.php";
 require_once "classes/EdToolProvider.php";
 require_once "classes/user_lti_roles.php";
@@ -22,6 +21,8 @@ use IMSGlobal\LTI\ToolProvider;
 
 //TODO remove set timezone on production
 date_default_timezone_set('Europe/London');
+
+//TODO Look at handling blog category.
 
 function lti_get_db_connector() {
     global $wpdb;
@@ -179,7 +180,7 @@ function lti_render_student_blogs_list_view( $course_id, $resource_link_id ) {
 
     $blogs = $wpdb->get_results(
         $wpdb->prepare(
-            "SELECT * FROM {$wpdb->prefix}blogs_meta INNER JOIN {$wpdb->prefix}blogs ON {$wpdb->prefix}blogs.blog_id = {$wpdb->prefix}blogs_meta.blog_id WHERE course_id = %s AND resource_link_id = %s AND blog_type = %s",
+            "SELECT * FROM {$wpdb->base_prefix}blogs_meta INNER JOIN {$wpdb->base_prefix}blogs ON {$wpdb->base_prefix}blogs.blog_id = {$wpdb->base_prefix}blogs_meta.blog_id WHERE course_id = %s AND resource_link_id = %s AND blog_type = %s",
             $course_id,
             $resource_link_id,
             $blog_type
@@ -267,7 +268,7 @@ function lti_do_setup() {
 }
 
 // do plugin setup
-lti_do_setup();
+register_activation_hook( __FILE__, 'lti_do_setup' );
 
 
 

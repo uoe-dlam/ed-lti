@@ -24,7 +24,7 @@ function lti_consumer_keys_admin() {
 
         switch( $_POST[ 'action' ] ) {
             case "edit":
-                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}lti2_consumer WHERE consumer_key256 = %s", $consumer_key ) );
+                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->base_prefix}lti2_consumer WHERE consumer_key256 = %s", $consumer_key ) );
                 if ( $row ) {
                     lti_edit( $row );
                     $is_editing = true;
@@ -33,17 +33,17 @@ function lti_consumer_keys_admin() {
                 }
                 break;
             case "save":
-                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}lti2_consumer WHERE consumer_key256 = %s", $consumer_key ) );
+                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->base_prefix}lti2_consumer WHERE consumer_key256 = %s", $consumer_key ) );
                 if ( $row ) {
-                    $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}lti2_consumer SET  name = %s, secret = %s, enabled = %d, lti_version = %s  WHERE consumer_key256 = %s", $_POST[ 'name' ], $_POST[ 'secret' ], $_POST[ 'enabled' ], $_POST[ 'lti_version' ], $consumer_key ) );
+                    $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->base_prefix}lti2_consumer SET  name = %s, secret = %s, enabled = %d, lti_version = %s  WHERE consumer_key256 = %s", $_POST[ 'name' ], $_POST[ 'secret' ], $_POST[ 'enabled' ], $_POST[ 'lti_version' ], $consumer_key ) );
                     echo "<p><strong>" . __( 'Provider Updated', 'wordpress-mu-lti' ) . "</strong></p>";
                 } else {
-                    $wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->prefix}lti2_consumer ( `name`, `consumer_key256`, `secret`, `enabled`, `lti_version`) VALUES ( %s, %s, %s, %d, %s)", $_POST[ 'name' ], $_POST[ 'consumer_key' ], $_POST[ 'secret' ], $_POST[ 'enabled' ], $_POST[ 'lti_version' ]) );
+                    $wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->base_prefix}lti2_consumer ( `name`, `consumer_key256`, `secret`, `enabled`, `lti_version`) VALUES ( %s, %s, %s, %d, %s)", $_POST[ 'name' ], $_POST[ 'consumer_key' ], $_POST[ 'secret' ], $_POST[ 'enabled' ], $_POST[ 'lti_version' ]) );
                     echo "<p><strong>" . __( 'Provider Added', 'wordpress-mu-lti' ) . "</strong></p>";
                 }
                 break;
             case "del":
-                $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}lti2_consumer WHERE consumer_key256 = %s", $consumer_key ) );
+                $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->base_prefix}lti2_consumer WHERE consumer_key256 = %s", $consumer_key ) );
                 echo "<p><strong>" . __( 'Provider Deleted', 'wordpress-mu-lti' ) . "</strong></p>";
                 break;
         }
@@ -55,7 +55,7 @@ function lti_consumer_keys_admin() {
         if( isset( $_POST['search_txt'] ) ) {
             $escaped_search = addslashes($_POST['search_txt']);
 
-            $rows = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}lti2_consumer WHERE consumer_key256 LIKE '%{$escaped_search}%' OR name LIKE '%{$escaped_search}%'");
+            $rows = $wpdb->get_results("SELECT * FROM {$wpdb->base_prefix}lti2_consumer WHERE consumer_key256 LIKE '%{$escaped_search}%' OR name LIKE '%{$escaped_search}%'");
             lti_listing($rows, sprintf(__("Searching for %s", 'wordpress-mu-lti'), esc_html($_POST['search_txt'])));
         }
         echo '<form method="POST">';
@@ -68,7 +68,7 @@ function lti_consumer_keys_admin() {
         echo "<p><input type='submit' class='button-secondary' value='" . __( 'Search', 'wordpress-mu-lti' ) . "' /></p>";
         echo "</form><br />";
         lti_edit();
-        $rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}lti2_consumer LIMIT 0,20" );
+        $rows = $wpdb->get_results( "SELECT * FROM {$wpdb->base_prefix}lti2_consumer LIMIT 0,20" );
         lti_listing( $rows );
     }
 }

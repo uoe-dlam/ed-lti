@@ -41,7 +41,7 @@ abstract class Blog_Handler {
         global $wpdb;
         $blogs = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}blogs_meta INNER JOIN {$wpdb->prefix}blogs ON {$wpdb->prefix}blogs.blog_id = {$wpdb->prefix}blogs_meta.blog_id WHERE course_id = %s AND resource_link_id = %s AND blog_type = %s",
+                "SELECT * FROM {$wpdb->base_prefix}blogs_meta INNER JOIN {$wpdb->base_prefix}blogs ON {$wpdb->base_prefix}blogs.blog_id = {$wpdb->base_prefix}blogs_meta.blog_id WHERE course_id = %s AND resource_link_id = %s AND blog_type = %s",
                 $this->data['course_id'],
                 $this->data['resource_link_id'],
                 $this->get_blog_type()
@@ -81,7 +81,7 @@ abstract class Blog_Handler {
 
         $blog_max_version = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT IFNULL(MAX(version), 0) AS max_version FROM {$wpdb->prefix}blogs_meta WHERE course_id = %s AND blog_type = %s",
+                "SELECT IFNULL(MAX(version), 0) AS max_version FROM {$wpdb->base_prefix}blogs_meta WHERE course_id = %s AND blog_type = %s",
                 $this->data['course_id'],
                 $this->get_blog_type()
 
@@ -141,7 +141,7 @@ abstract class Blog_Handler {
             $lastname = $this->user->last_name;
         }
 
-        $wpdb->insert($wpdb->prefix . 'blogs_meta', array(
+        $wpdb->insert($wpdb->base_prefix . 'blogs_meta', array(
             'blog_id' => $blog_id,
             'version' => $version,
             'course_id' => $this->data['course_id'],
@@ -156,7 +156,7 @@ abstract class Blog_Handler {
         global $wpdb;
         $blogs = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT {$wpdb->prefix}blogs_meta.blog_id AS blog_id FROM {$wpdb->prefix}blogs_meta INNER JOIN {$wpdb->prefix}blogs ON {$wpdb->prefix}blogs.blog_id = {$wpdb->prefix}blogs_meta.blog_id WHERE course_id = %s AND resource_link_id = %s AND blog_type = %s",
+                "SELECT {$wpdb->base_prefix}blogs_meta.blog_id AS blog_id FROM {$wpdb->base_prefix}blogs_meta INNER JOIN {$wpdb->base_prefix}blogs ON {$wpdb->base_prefix}blogs.blog_id = {$wpdb->base_prefix}blogs_meta.blog_id WHERE course_id = %s AND resource_link_id = %s AND blog_type = %s",
                 $this->data['course_id'],
                 $this->data['resource_link_id'],
                 $this->get_blog_type()
@@ -175,7 +175,7 @@ abstract class Blog_Handler {
 
         $blog_count = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT COUNT(id) AS blog_count FROM {$wpdb->prefix}blogs_meta WHERE course_id = %s AND blog_type = %s",
+                "SELECT COUNT(id) AS blog_count FROM {$wpdb->base_prefix}blogs_meta WHERE course_id = %s AND blog_type = %s",
                 $this->data['course_id'],
                 $this->get_blog_type()
             )
@@ -189,7 +189,7 @@ abstract class Blog_Handler {
 
         $blog_count = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT COUNT(id) AS blog_count FROM {$wpdb->prefix}blogs_meta WHERE course_id = %s AND blog_id = %s",
+                "SELECT COUNT(id) AS blog_count FROM {$wpdb->base_prefix}blogs_meta WHERE course_id = %s AND blog_id = %d",
                 $course_id,
                 $blog_id
             )

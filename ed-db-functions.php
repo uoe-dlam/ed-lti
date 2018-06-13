@@ -187,7 +187,6 @@ function lti_maybe_create_db() {
 
 }
 
-// TODO when blog is deleted blog meta is not getting deleted - foreign key seems to fail
 function lti_maybe_create_site_blogs_meta_table () {
     global $wpdb;
 
@@ -211,7 +210,7 @@ function lti_maybe_create_site_blogs_meta_table () {
 
             $wpdb->query( "ALTER TABLE `{$wpdb->blogsmetatable}`
                 ADD CONSTRAINT `{$wpdb->blogsmetatable}_site_FK1` FOREIGN KEY (blog_id)
-                REFERENCES {$wpdb->prefix}blogs (blog_id)
+                REFERENCES {$wpdb->base_prefix}blogs (blog_id)
                 ON DELETE CASCADE 
                 ON UPDATE CASCADE;"
             );
