@@ -13,7 +13,7 @@ class Course_Blog_Handler extends Blog_Handler {
     }
 
     protected function get_path() {
-        return $this->get_friendly_path( $this->data['course_id'] );
+        return $this->get_friendly_path( $this->course_id );
     }
 
     public function get_wordpress_role( User_LTI_Roles $user_roles ) {

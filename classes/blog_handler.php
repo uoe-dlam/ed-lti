@@ -8,8 +8,11 @@
 
 abstract class Blog_Handler {
 
-    protected $data = array();
-
+    protected $course_id;
+    protected $course_title;
+    protected $domain;
+    protected $resource_link_id;
+    protected $username;
     protected $user = null;
 
     abstract protected function get_path();
@@ -19,14 +22,18 @@ abstract class Blog_Handler {
     abstract public function get_wordpress_role( User_LTI_Roles $roles );
 
     public function init( array $data, $user = null ) {
-        $this->data = $data;
+
+        foreach( $data as $key => $value ) {
+            $this->{$key} = $value;
+        }
+
         $this->user = $user;
     }
 
     public function first_or_create_blog() {
 
-        if( empty( $this->data ) ) {
-            wp_die( 'Blog_Handler: You must set data before calling first_or_create_blog' );
+        if( is_null( $this->course_id ) ||  is_null( $this->course_title ) ||  is_null( $this->domain ) || is_null( $this->resource_link_id ) || is_null( $this->username ) ) {
+            wp_die( 'Blog_Handler: You must set all data before calling first_or_create_blog' );
         }
 
         if( $this->blog_exists() ) {
@@ -42,8 +49,8 @@ abstract class Blog_Handler {
         $blogs = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT * FROM {$wpdb->base_prefix}blogs_meta INNER JOIN {$wpdb->base_prefix}blogs ON {$wpdb->base_prefix}blogs.blog_id = {$wpdb->base_prefix}blogs_meta.blog_id WHERE course_id = %s AND resource_link_id = %s AND blog_type = %s",
-                $this->data['course_id'],
-                $this->data['resource_link_id'],
+                $this->course_id,
+                $this->resource_link_id,
                 $this->get_blog_type()
             )
         );
@@ -67,7 +74,7 @@ abstract class Blog_Handler {
         $blog_data = array(
             'path' => $path,
             'title' => $title,
-            'domain' => $this->data['domain'],
+            'domain' => $this->domain,
         );
 
         $blog_id = $this->do_ns_cloner_create( $blog_data );
@@ -82,7 +89,7 @@ abstract class Blog_Handler {
         $blog_max_version = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT IFNULL(MAX(version), 0) AS max_version FROM {$wpdb->base_prefix}blogs_meta WHERE course_id = %s AND blog_type = %s",
-                $this->data['course_id'],
+                $this->course_id,
                 $this->get_blog_type()
 
             )
@@ -144,8 +151,8 @@ abstract class Blog_Handler {
         $wpdb->insert($wpdb->base_prefix . 'blogs_meta', array(
             'blog_id' => $blog_id,
             'version' => $version,
-            'course_id' => $this->data['course_id'],
-            'resource_link_id' => $this->data['resource_link_id'],
+            'course_id' => $this->course_id,
+            'resource_link_id' => $this->resource_link_id,
             'blog_type' => $this->get_blog_type(),
             'student_firstname' => $firstname,
             'student_lastname' => $lastname,
@@ -157,8 +164,8 @@ abstract class Blog_Handler {
         $blogs = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT {$wpdb->base_prefix}blogs_meta.blog_id AS blog_id FROM {$wpdb->base_prefix}blogs_meta INNER JOIN {$wpdb->base_prefix}blogs ON {$wpdb->base_prefix}blogs.blog_id = {$wpdb->base_prefix}blogs_meta.blog_id WHERE course_id = %s AND resource_link_id = %s AND blog_type = %s",
-                $this->data['course_id'],
-                $this->data['resource_link_id'],
+                $this->course_id,
+                $this->resource_link_id,
                 $this->get_blog_type()
             )
         );
@@ -176,7 +183,7 @@ abstract class Blog_Handler {
         $blog_count = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT COUNT(id) AS blog_count FROM {$wpdb->base_prefix}blogs_meta WHERE course_id = %s AND blog_type = %s",
-                $this->data['course_id'],
+                $this->course_id,
                 $this->get_blog_type()
             )
         );
@@ -208,7 +215,7 @@ abstract class Blog_Handler {
     }
 
     protected function get_title() {
-        return $this->data['course_title'];
+        return $this->course_title;
     }
 
     public function add_user_to_blog( $user, $blog_id, User_LTI_Roles $user_roles ) {

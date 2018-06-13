@@ -13,11 +13,11 @@ class Student_Blog_Handler extends Blog_Handler {
     }
 
     protected function get_path() {
-        return $this->get_friendly_path( $this->data['username'] . '_' . $this->data['course_title'] );
+        return $this->get_friendly_path( $this->username . '_' . $this->course_title );
     }
 
     protected function get_title() {
-        return $this->user->first_name . ' ' . $this->user->last_name . ' / ' . $this->data['course_title'];
+        return $this->user->first_name . ' ' . $this->user->last_name . ' / ' . $this->course_title;
     }
 
     public function get_wordpress_role( User_LTI_Roles $user_roles ) {
