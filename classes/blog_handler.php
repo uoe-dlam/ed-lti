@@ -14,6 +14,7 @@ abstract class Blog_Handler {
     protected $resource_link_id;
     protected $username;
     protected $user = null;
+    protected $source_id;
 
     abstract protected function get_path();
 
@@ -32,7 +33,7 @@ abstract class Blog_Handler {
 
     public function first_or_create_blog() {
 
-        if( is_null( $this->course_id ) ||  is_null( $this->course_title ) ||  is_null( $this->domain ) || is_null( $this->resource_link_id ) || is_null( $this->username ) ) {
+        if( is_null( $this->course_id ) ||  is_null( $this->course_title ) ||  is_null( $this->domain ) || is_null( $this->resource_link_id ) || is_null( $this->username ) || is_null( $this->source_id ) ) {
             wp_die( 'Blog_Handler: You must set all data before calling first_or_create_blog' );
         }
 
@@ -75,6 +76,7 @@ abstract class Blog_Handler {
             'path' => $path,
             'title' => $title,
             'domain' => $this->domain,
+            'source_id' => $this->source_id
         );
 
         $blog_id = $this->do_ns_cloner_create( $blog_data );
@@ -115,8 +117,7 @@ abstract class Blog_Handler {
 
         $_POST['action'] = 'process';
         $_POST['clone_mode'] = 'core';
-        // TODO Set this to template site id
-        $_POST['source_id'] = 5;
+        $_POST['source_id'] = $data['source_id'];
         $_POST['target_name'] = $data['path'];
         $_POST['target_title'] = $data['title'];
         $_POST['disable_addons'] = true;

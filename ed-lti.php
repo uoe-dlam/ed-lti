@@ -85,7 +85,9 @@ function lti_is_basic_lti_request() {
 function lti_destroy_session() {
     wp_logout();
     wp_set_current_user(0);
-    session_start();
+    if ( session_status() == PHP_SESSION_NONE ) {
+        session_start();
+    }
     $_SESSION = array();
     session_destroy();
     session_start();
@@ -110,13 +112,14 @@ function lti_get_user_data( EdToolProvider $tool ) {
 }
 
 function lti_get_site_data() {
-
+    // TODO source_id is hard coded at the moment. this is the original blog to clone.
     $site_data = array(
         'course_id' => $_REQUEST['lis_course_section_sourcedid'],
         'course_title' => $_REQUEST['context_title'],
         'domain' => get_current_site()->domain,
         'resource_link_id' => $_REQUEST["resource_link_id"],
-        'username' => $_REQUEST['ext_user_username']
+        'username' => $_REQUEST['ext_user_username'],
+        'source_id' => 1
     );
 
     return $site_data;
@@ -206,8 +209,9 @@ function lti_render_student_blogs_list_view( $course_id, $resource_link_id ) {
         <h2>Student Blogs For Course</h2>
         <ul>
         <?php foreach ( $blogs as $blog ): ?>
+            <?php $blog_details = get_blog_details( $blog->blog_id ); ?>
             <li>
-                <a href="index.php?lti_staff_view_blog=true&blog_id=<?php echo $blog->blog_id ?>"><?php echo $blog->student_firstname ?> <?php echo $blog->student_lastname ?> Blog</a>
+                <a href="index.php?lti_staff_view_blog=true&blog_id=<?php echo $blog->blog_id ?>"><?php echo $blog_details->blogname; ?></a>
             </li>
         <?php endforeach ?>
 
@@ -231,7 +235,9 @@ add_action( 'parse_request', 'lti_add_staff_to_student_blog' );
 function lti_add_staff_to_student_blog() {
     if( isset( $_REQUEST['lti_staff_view_blog'] ) && $_REQUEST['lti_staff_view_blog'] == 'true' ) {
 
-        session_start();
+        if ( session_status() == PHP_SESSION_NONE ) {
+            session_start();
+        }
 
         if( ! isset( $_SESSION['lti_staff'] ) ) {
             wp_die( 'You do not have permssion to view this page' );
