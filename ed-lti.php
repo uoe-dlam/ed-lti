@@ -112,6 +112,14 @@ function lti_get_user_data( EdToolProvider $tool ) {
 }
 
 function lti_get_site_data() {
+
+    //TODO - check that wording for error message is correct.
+    if( ! isset( $_REQUEST['lis_course_section_sourcedid'] ) ) {
+        wp_die( 'This course does not have a course ID number. Please ask your course organiser to set one for you in the VLE.');
+    }
+
+    $site_category = isset( $_REQUEST['custom_site_category'] ) ? $_REQUEST['custom_site_category'] : 1;
+
     // TODO source_id is hard coded at the moment. this is the original blog to clone.
     $site_data = array(
         'course_id' => $_REQUEST['lis_course_section_sourcedid'],
@@ -119,6 +127,7 @@ function lti_get_site_data() {
         'domain' => get_current_site()->domain,
         'resource_link_id' => $_REQUEST["resource_link_id"],
         'username' => $_REQUEST['ext_user_username'],
+        'site_category' => $site_category,
         'source_id' => 1
     );
 
@@ -130,9 +139,9 @@ function first_or_create_user( array $data ) {
 
     if ( ! $user ) {
         $user_id = wpmu_create_user( $data['username'], $data['password'], $data['email'] );
-        //TODO handle error - if user has same email as existing user, wpmu_create_user will fail silently. Need proper handling
+        //TODO - look at making email/link configurable
         if ( ! $user_id ) {
-            wp_die('Email is already being used by another user');
+            wp_die( 'This Email address is already being used by another user. Please contact <a href="https://www.ed.ac.uk/information-services/help-consultancy/contact-helpline">IS Helpline</a> for assistance.' );
         }
 
         $user = get_userdata( $user_id );

@@ -28,6 +28,18 @@ class User_LTI_Roles {
         return $this->hasRole('Learner');
     }
 
+    public function isInstructor() {
+        return $this->hasRole('Instructor');
+    }
+
+    public function isTeachingAssistant() {
+        return $this->hasRole('TeachingAssistant');
+    }
+
+    public function isContentDeveloper() {
+        return $this->hasRole('ContentDeveloper');
+    }
+
     private function hasRole($role) {
 
         if ( substr( $role, 0, 4 ) !== 'urn:' ) {
