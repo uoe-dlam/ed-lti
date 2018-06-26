@@ -17,12 +17,12 @@ class Course_Blog_Handler extends Blog_Handler {
     }
 
     public function get_wordpress_role( User_LTI_Roles $user_roles ) {
-        if( $user_roles->isLearner() ) {
-            return 'author';
+        if( $user_roles->isInstructor() || $user_roles->isContentDeveloper() || $user_roles->isAdmin() ) {
+            return 'administrator';
         }
 
-        // else must be admin or staff
-        return 'administrator';
+        // else must be student or teaching assistant
+        return 'author';
     }
 
 }

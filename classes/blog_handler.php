@@ -14,6 +14,7 @@ abstract class Blog_Handler {
     protected $resource_link_id;
     protected $username;
     protected $user = null;
+    protected $site_category;
     protected $source_id;
 
     abstract protected function get_path();
@@ -33,7 +34,7 @@ abstract class Blog_Handler {
 
     public function first_or_create_blog() {
 
-        if( is_null( $this->course_id ) ||  is_null( $this->course_title ) ||  is_null( $this->domain ) || is_null( $this->resource_link_id ) || is_null( $this->username ) || is_null( $this->source_id ) ) {
+        if( is_null( $this->course_id ) ||  is_null( $this->course_title ) ||  is_null( $this->domain ) || is_null( $this->resource_link_id ) || is_null( $this->username ) || is_null( $this->source_id ) || is_null( $this->site_category ) ) {
             wp_die( 'Blog_Handler: You must set all data before calling first_or_create_blog' );
         }
 
@@ -81,6 +82,7 @@ abstract class Blog_Handler {
 
         $blog_id = $this->do_ns_cloner_create( $blog_data );
         $this->add_blog_meta( $blog_id, $version );
+        $this->add_site_category( $blog_id );
 
         return $blog_id;
     }
@@ -158,6 +160,12 @@ abstract class Blog_Handler {
             'student_firstname' => $firstname,
             'student_lastname' => $lastname,
         ));
+    }
+
+    protected function add_site_category( $blog_id ) {
+        switch_to_blog( $blog_id );
+        update_option( 'site_category' , $this->site_category );
+        restore_current_blog();
     }
 
     protected function get_blog_id() {
