@@ -48,7 +48,8 @@ function lti_do_launch() {
         $blog_type = isset( $_REQUEST['custom_blog_type'] ) ? $_REQUEST['custom_blog_type'] : '';
 
         if( is_student_blog_and_non_student( $blog_type, $tool ) ) {
-            $course_id = $_REQUEST['lis_course_section_sourcedid'];
+            //$course_id = $_REQUEST['lis_course_section_sourcedid'];
+            $course_id = $_REQUEST['context_label'];
             $resource_link_id = $tool->resourceLink->getId();
             lti_show_staff_student_blogs_for_course( $course_id, $resource_link_id, $tool );
             return;
@@ -98,10 +99,11 @@ function is_student_blog_and_non_student( $type, EdToolProvider $tool ) {
 }
 
 function lti_get_user_data( EdToolProvider $tool ) {
-
+    // The LTI specs tell us that username should be set in the 'lis_person_sourcedid' param, but moodle doesn't do this. Moodle seems to use 'ext_user_username' instead
+    $username = $_REQUEST['lis_person_sourcedid'] != '' ? $_REQUEST['lis_person_sourcedid'] : $_REQUEST['ext_user_username'];
     //TODO Look at giving user random password.
     $user_data = array (
-        'username' => $_REQUEST['ext_user_username'],
+        'username' => $username,
         'email' => $tool->user->email,
         'firstname' => $tool->user->firstname,
         'lastname' => $tool->user->lastname,
@@ -114,19 +116,24 @@ function lti_get_user_data( EdToolProvider $tool ) {
 function lti_get_site_data() {
 
     //TODO - check that wording for error message is correct.
+    /*
     if( ! isset( $_REQUEST['lis_course_section_sourcedid'] ) ) {
         wp_die( 'This course does not have a course ID number. Please ask your course organiser to set one for you in the VLE.');
     }
+    */
 
     $site_category = isset( $_REQUEST['custom_site_category'] ) ? $_REQUEST['custom_site_category'] : 1;
 
+    $username = $_REQUEST['lis_person_sourcedid'] != '' ? $_REQUEST['lis_person_sourcedid'] : $_REQUEST['ext_user_username'];
+
     // TODO source_id is hard coded at the moment. this is the original blog to clone.
     $site_data = array(
-        'course_id' => $_REQUEST['lis_course_section_sourcedid'],
+        // $_REQUEST['lis_course_section_sourcedid']
+        'course_id' => $_REQUEST['context_label'],
         'course_title' => $_REQUEST['context_title'],
         'domain' => get_current_site()->domain,
         'resource_link_id' => $_REQUEST["resource_link_id"],
-        'username' => $_REQUEST['ext_user_username'],
+        'username' => $username,
         'site_category' => $site_category,
         'source_id' => 1
     );
@@ -139,9 +146,10 @@ function first_or_create_user( array $data ) {
 
     if ( ! $user ) {
         $user_id = wpmu_create_user( $data['username'], $data['password'], $data['email'] );
+
         //TODO - look at making email/link configurable
         if ( ! $user_id ) {
-            wp_die( 'This Email address is already being used by another user. Please contact <a href="https://www.ed.ac.uk/information-services/help-consultancy/contact-helpline">IS Helpline</a> for assistance.' );
+            wp_die( 'This Email address is already being used by another user. Please contact <a href="https://www.ed.ac.uk/information-services/help-consultancy/contact-helpline">IS Helpline</a> for assistance.', 200 );
         }
 
         $user = get_userdata( $user_id );
@@ -163,12 +171,13 @@ function lti_signin_user( $user, $blog_id ) {
     clean_user_cache( $user->ID );
     wp_clear_auth_cookie();
     wp_set_current_user( $user->ID );
-    wp_set_auth_cookie( $user->ID, true, false );
+    wp_set_auth_cookie( $user->ID, true, true );
 
     update_user_caches( $user );
 
     if ( is_user_logged_in() ) {
         wp_safe_redirect( home_url() );
+        exit;
     }
 }
 
@@ -275,6 +284,7 @@ function lti_add_staff_to_student_blog() {
 function lti_redirect_user_to_blog_without_login( $blog_id ) {
     switch_to_blog( $blog_id );
     wp_safe_redirect( home_url() );
+    exit;
 }
 
 function lti_do_setup() {

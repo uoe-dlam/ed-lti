@@ -23,6 +23,14 @@ abstract class Blog_Handler {
 
     abstract public function get_wordpress_role( User_LTI_Roles $roles );
 
+    abstract protected function blog_exists();
+
+    abstract public function get_blog_max_version();
+
+    abstract protected function get_blog_count();
+
+    abstract protected function get_blog_id();
+
     public function init( array $data, $user = null ) {
 
         foreach( $data as $key => $value ) {
@@ -44,20 +52,6 @@ abstract class Blog_Handler {
 
         return $this->create_blog();
 
-    }
-
-    protected function blog_exists() {
-        global $wpdb;
-        $blogs = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT * FROM {$wpdb->base_prefix}blogs_meta INNER JOIN {$wpdb->base_prefix}blogs ON {$wpdb->base_prefix}blogs.blog_id = {$wpdb->base_prefix}blogs_meta.blog_id WHERE course_id = %s AND resource_link_id = %s AND blog_type = %s",
-                $this->course_id,
-                $this->resource_link_id,
-                $this->get_blog_type()
-            )
-        );
-
-        return ( ! empty( $blogs ) );
     }
 
     protected function create_blog() {
@@ -85,21 +79,6 @@ abstract class Blog_Handler {
         $this->add_site_category( $blog_id );
 
         return $blog_id;
-    }
-
-    public function get_blog_max_version() {
-        global $wpdb;
-
-        $blog_max_version = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT IFNULL(MAX(version), 0) AS max_version FROM {$wpdb->base_prefix}blogs_meta WHERE course_id = %s AND blog_type = %s",
-                $this->course_id,
-                $this->get_blog_type()
-
-            )
-        );
-
-        return (int) $blog_max_version[0]->max_version;
     }
 
     protected function do_ns_cloner_create( array $data ) {
@@ -143,22 +122,15 @@ abstract class Blog_Handler {
     protected function add_blog_meta( $blog_id, $version = 1 ) {
         global $wpdb;
 
-        $firstname = '';
-        $lastname = '';
-
-        if( $this->user ) {
-            $firstname = $this->user->first_name;
-            $lastname = $this->user->last_name;
-        }
-
         $wpdb->insert($wpdb->base_prefix . 'blogs_meta', array(
             'blog_id' => $blog_id,
             'version' => $version,
             'course_id' => $this->course_id,
             'resource_link_id' => $this->resource_link_id,
             'blog_type' => $this->get_blog_type(),
-            'student_firstname' => $firstname,
-            'student_lastname' => $lastname,
+            'creator_firstname' => $this->user->first_name,
+            'creator_lastname' => $this->user->last_name,
+            'creator_id' => $this->user->ID
         ));
     }
 
@@ -166,38 +138,6 @@ abstract class Blog_Handler {
         switch_to_blog( $blog_id );
         update_option( 'site_category' , $this->site_category );
         restore_current_blog();
-    }
-
-    protected function get_blog_id() {
-        global $wpdb;
-        $blogs = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT {$wpdb->base_prefix}blogs_meta.blog_id AS blog_id FROM {$wpdb->base_prefix}blogs_meta INNER JOIN {$wpdb->base_prefix}blogs ON {$wpdb->base_prefix}blogs.blog_id = {$wpdb->base_prefix}blogs_meta.blog_id WHERE course_id = %s AND resource_link_id = %s AND blog_type = %s",
-                $this->course_id,
-                $this->resource_link_id,
-                $this->get_blog_type()
-            )
-        );
-
-        if ( ! $blogs ) {
-            return null;
-        }
-
-        return $blogs[0]->blog_id;
-    }
-
-    protected function get_blog_count() {
-        global $wpdb;
-
-        $blog_count = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT COUNT(id) AS blog_count FROM {$wpdb->base_prefix}blogs_meta WHERE course_id = %s AND blog_type = %s",
-                $this->course_id,
-                $this->get_blog_type()
-            )
-        );
-
-        return (int) $blog_count[0]->blog_count;
     }
 
     public static function is_course_blog( $course_id, $blog_id ) {

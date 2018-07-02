@@ -202,8 +202,9 @@ function lti_maybe_create_site_blogs_meta_table () {
                   course_id varchar(256) NOT NULL,
                   resource_link_id varchar(256) NOT NULL,
                   blog_type varchar(256) NOT NULL,
-                  student_firstname varchar(256),
-                  student_lastname varchar(256),
+                  creator_id bigint(20) NOT NULL,
+                  creator_firstname varchar(256),
+                  creator_lastname varchar(256),
                   PRIMARY KEY (id)
                 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;"
             );
