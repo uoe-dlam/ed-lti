@@ -30,6 +30,8 @@ function lti_get_db_connector() {
     return DataConnector\DataConnector::getDataConnector( $wpdb->base_prefix, $db );
 }
 
+/* -------------------- HANDLE LTI LAUNCH -------------------- */
+
 add_action( 'parse_request', 'lti_do_launch' );
 
 function lti_do_launch() {
@@ -42,13 +44,12 @@ function lti_do_launch() {
         $tool->handleRequest();
 
         if( ! isset( $_SESSION['lti_okay'] ) ) {
-            wp_die( 'There is a problem with your lti connection.' );
+            wp_die( 'There is a problem with your lti connection.', 200 );
         }
 
         $blog_type = isset( $_REQUEST['custom_blog_type'] ) ? $_REQUEST['custom_blog_type'] : '';
 
         if( is_student_blog_and_non_student( $blog_type, $tool ) ) {
-            //$course_id = $_REQUEST['lis_course_section_sourcedid'];
             $course_id = $_REQUEST['context_label'];
             $resource_link_id = $tool->resourceLink->getId();
             lti_show_staff_student_blogs_for_course( $course_id, $resource_link_id, $tool );
@@ -115,27 +116,18 @@ function lti_get_user_data( EdToolProvider $tool ) {
 
 function lti_get_site_data() {
 
-    //TODO - check that wording for error message is correct.
-    /*
-    if( ! isset( $_REQUEST['lis_course_section_sourcedid'] ) ) {
-        wp_die( 'This course does not have a course ID number. Please ask your course organiser to set one for you in the VLE.');
-    }
-    */
-
     $site_category = isset( $_REQUEST['custom_site_category'] ) ? $_REQUEST['custom_site_category'] : 1;
 
     $username = $_REQUEST['lis_person_sourcedid'] != '' ? $_REQUEST['lis_person_sourcedid'] : $_REQUEST['ext_user_username'];
 
-    // TODO source_id is hard coded at the moment. this is the original blog to clone.
     $site_data = array(
-        // $_REQUEST['lis_course_section_sourcedid']
         'course_id' => $_REQUEST['context_label'],
         'course_title' => $_REQUEST['context_title'],
         'domain' => get_current_site()->domain,
         'resource_link_id' => $_REQUEST["resource_link_id"],
         'username' => $username,
         'site_category' => $site_category,
-        'source_id' => 1
+        'source_id' => get_site_option( 'default_site_template_id' )
     );
 
     return $site_data;
@@ -147,9 +139,8 @@ function first_or_create_user( array $data ) {
     if ( ! $user ) {
         $user_id = wpmu_create_user( $data['username'], $data['password'], $data['email'] );
 
-        //TODO - look at making email/link configurable
         if ( ! $user_id ) {
-            wp_die( 'This Email address is already being used by another user. Please contact <a href="https://www.ed.ac.uk/information-services/help-consultancy/contact-helpline">IS Helpline</a> for assistance.', 200 );
+            wp_die( 'This Email address is already being used by another user. Please contact <a href="' . get_site_option( 'is_helpline_url' ) . '">IS Helpline</a> for assistance.', 200 );
         }
 
         $user = get_userdata( $user_id );
@@ -180,6 +171,8 @@ function lti_signin_user( $user, $blog_id ) {
         exit;
     }
 }
+
+/* -------------------- SHOW LIST OF STUDENT BLOGS TO STAFF -------------------- */
 
 function lti_show_staff_student_blogs_for_course( $course_id, $resource_link_id, EdToolProvider $tool ) {
     lti_add_staff_info_to_session( lti_get_user_data( $tool ), new User_LTI_Roles( $tool->user->roles ), $course_id, $resource_link_id );
@@ -286,6 +279,8 @@ function lti_redirect_user_to_blog_without_login( $blog_id ) {
     wp_safe_redirect( home_url() );
     exit;
 }
+
+/* -------------------- DO PLUGIN INSTALL STUFF BELOW -------------------- */
 
 function lti_do_setup() {
     lti_maybe_create_db();
