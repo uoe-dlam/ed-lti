@@ -33,12 +33,28 @@ function lti_consumer_keys_admin() {
                 }
                 break;
             case "save":
+                $errors = lti_do_validation();
+
+                if( ! empty( $errors ) ){
+
+                    echo '<ul style="color:red">';
+
+                    foreach( $errors as $error ) {
+                        echo '<li>' . $error . '</li>';
+                    }
+                    echo '</ul>';
+
+                    break;
+                }
+
+                $enabled = isset( $_POST[ 'enabled' ] ) ? 1 : 0;
+
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->base_prefix}lti2_consumer WHERE consumer_key256 = %s", $consumer_key ) );
                 if ( $row ) {
-                    $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->base_prefix}lti2_consumer SET  name = %s, secret = %s, enabled = %d, lti_version = %s  WHERE consumer_key256 = %s", $_POST[ 'name' ], $_POST[ 'secret' ], $_POST[ 'enabled' ], $_POST[ 'lti_version' ], $consumer_key ) );
+                    $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->base_prefix}lti2_consumer SET  name = %s, secret = %s, enabled = %d, lti_version = %s  WHERE consumer_key256 = %s", $_POST[ 'name' ], $_POST[ 'secret' ], $enabled, $_POST[ 'lti_version' ], $consumer_key ) );
                     echo "<p><strong>" . __( 'Provider Updated', 'wordpress-mu-lti' ) . "</strong></p>";
                 } else {
-                    $wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->base_prefix}lti2_consumer ( `name`, `consumer_key256`, `secret`, `enabled`, `lti_version`) VALUES ( %s, %s, %s, %d, %s)", $_POST[ 'name' ], $_POST[ 'consumer_key' ], $_POST[ 'secret' ], $_POST[ 'enabled' ], $_POST[ 'lti_version' ]) );
+                    $wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->base_prefix}lti2_consumer ( `name`, `consumer_key256`, `secret`, `enabled`, `lti_version`) VALUES ( %s, %s, %s, %d, %s)", $_POST[ 'name' ], $_POST[ 'consumer_key' ], $_POST[ 'secret' ], $enabled, $_POST[ 'lti_version' ]) );
                     echo "<p><strong>" . __( 'Provider Added', 'wordpress-mu-lti' ) . "</strong></p>";
                 }
                 break;
@@ -73,6 +89,25 @@ function lti_consumer_keys_admin() {
     }
 }
 
+function lti_do_validation() {
+
+    $errors = array();
+
+    if( $_POST['name'] == '' ) {
+        $errors[] = 'Name is required';
+    }
+
+    if( $_POST[ 'consumer_key' ] == '' ) {
+        $errors[] = 'Consumer key is required';
+    }
+
+    if( $_POST['secret'] == '' ) {
+        $errors[] = 'Secret is required';
+    }
+
+    return $errors;
+}
+
 
 function lti_edit( $row = false ) {
     $is_new = false;
@@ -92,9 +127,9 @@ function lti_edit( $row = false ) {
     echo "<form method='POST'><input type='hidden' name='action' value='save' />";
     wp_nonce_field( 'lti' );
     echo "<table class='form-table'>\n";
-    echo "<tr><th>" . __( 'Name', 'wordpress-mu-lti' ) . "</th><td><input type='text' name='name' value='{$row->name}' /></td></tr>\n";
-    echo "<tr><th>" . __( 'Consumer key', 'wordpress-mu-lti' ) . "</th><td><input type='text' name='consumer_key' value='{$row->consumer_key256}' ".(!$is_new?'readonly="readonly"':'')."/></td></tr>\n";
-    echo "<tr><th>" . __( 'Secret', 'wordpress-mu-lti' ) . "</th><td><input type='text' name='secret' value='{$row->secret}' /></td></tr>\n";
+    echo "<tr><th>" . __( 'Name', 'wordpress-mu-lti' ) . "</th><td><input type='text' name='name' value='{$row->name}' required/></td></tr>\n";
+    echo "<tr><th>" . __( 'Consumer key', 'wordpress-mu-lti' ) . "</th><td><input type='text' name='consumer_key' value='{$row->consumer_key256}' ".(!$is_new?'readonly="readonly"':'')." required/></td></tr>\n";
+    echo "<tr><th>" . __( 'Secret', 'wordpress-mu-lti' ) . "</th><td><input type='text' name='secret' value='{$row->secret}' required/></td></tr>\n";
     echo "<tr><th>" . __( 'LTI Version', 'wordpress-mu-lti' ) . "</th><td><select name='lti_version'><option value='LTI-1p0' ".($row->lti_version=='LTI-1p0'?'selected':'').">LTI-1p0</option><option value='LTI-2p0' ".($row->lti_version=='LTI-2p0'?'selected':'').">LTI-2p0</option></select></td></tr>\n";
     echo "<tr><th>" . __( 'Enabled', 'wordpress-mu-lti' ) . "</th><td><input type='checkbox' name='enabled' value='1' ";
     echo $row->enabled == 1 ? 'checked=1 ' : ' ';
