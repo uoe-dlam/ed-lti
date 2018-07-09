@@ -77,6 +77,7 @@ abstract class Blog_Handler {
         $blog_id = $this->do_ns_cloner_create( $blog_data );
         $this->add_blog_meta( $blog_id, $version );
         $this->add_site_category( $blog_id );
+        $this->make_blog_private( $blog_id );
 
         return $blog_id;
     }
@@ -138,6 +139,15 @@ abstract class Blog_Handler {
         switch_to_blog( $blog_id );
         update_option( 'site_category' , $this->site_category );
         restore_current_blog();
+    }
+
+    protected function make_blog_private( $blog_id ) {
+        switch_to_blog( $blog_id );
+        update_option( 'blog_public', '-2' );
+        restore_current_blog();
+        update_blog_details( $blog_id, array(
+            'public' => '-2'
+        ));
     }
 
     public static function is_course_blog( $course_id, $blog_id ) {
