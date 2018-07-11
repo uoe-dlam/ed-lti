@@ -40,7 +40,7 @@ function lti_do_launch() {
 
 		lti_destroy_session();
 
-		$tool = new EdToolProvider( lti_get_db_connector() );
+		$tool = new Ed_Tool_Provider( lti_get_db_connector() );
 		$tool->handleRequest();
 
 		if ( ! isset( $_SESSION['lti_okay'] ) ) {
@@ -95,11 +95,11 @@ function lti_destroy_session() {
 	session_start();
 }
 
-function is_student_blog_and_non_student( $type, EdToolProvider $tool ) {
+function is_student_blog_and_non_student( $type, Ed_Tool_Provider $tool ) {
 	return ( 'student' == $type && ! $tool->user->is_learner() );
 }
 
-function lti_get_user_data( EdToolProvider $tool ) {
+function lti_get_user_data( Ed_Tool_Provider $tool ) {
 	// The LTI specs tell us that username should be set in the 'lis_person_sourcedid' param, but moodle doesn't do this. Moodle seems to use 'ext_user_username' instead
 	$username = '' != $_REQUEST['lis_person_sourcedid'] ? $_REQUEST['lis_person_sourcedid'] : $_REQUEST['ext_user_username'];
 	//TODO Look at giving user random password.
@@ -174,7 +174,7 @@ function lti_signin_user( $user, $blog_id ) {
 
 /* -------------------- SHOW LIST OF STUDENT BLOGS TO STAFF -------------------- */
 
-function lti_show_staff_student_blogs_for_course( $course_id, $resource_link_id, EdToolProvider $tool ) {
+function lti_show_staff_student_blogs_for_course( $course_id, $resource_link_id, Ed_Tool_Provider $tool ) {
 	lti_add_staff_info_to_session( lti_get_user_data( $tool ), new User_LTI_Roles( $tool->user->roles ), $course_id, $resource_link_id );
 	lti_render_student_blogs_list_view( $course_id, $resource_link_id );
 }

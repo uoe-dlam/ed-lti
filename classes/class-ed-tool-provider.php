@@ -2,7 +2,7 @@
 
 use IMSGlobal\LTI\ToolProvider;
 
-class EdToolProvider extends ToolProvider\ToolProvider {
+class Ed_Tool_Provider extends ToolProvider\ToolProvider {
 
 	public function onLaunch() {
 		$_SESSION['lti_okay'] = true;
