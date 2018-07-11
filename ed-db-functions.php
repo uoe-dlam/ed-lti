@@ -198,7 +198,7 @@ function lti_maybe_create_db() {
 			$created = 1;
 		}
 		if ( $created ) {
-			?> <div id="message" class="updated fade"><p><strong><?php _e( 'LTI database tables created.', 'wordpress-mu-lti' ); ?></strong></p></div>
+			?> <div id="message" class="updated fade"><p><strong>LTI database tables created.</strong></p></div>
 			<?php
 		}
 	}
