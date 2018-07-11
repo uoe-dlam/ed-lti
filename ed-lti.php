@@ -26,7 +26,11 @@ date_default_timezone_set( 'Europe/London' );
 
 function lti_get_db_connector() {
 	global $wpdb;
+
+    // phpcs:disable
 	$db = new PDO( 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD );
+    // phpcs:enable
+
 	return DataConnector\DataConnector::getDataConnector( $wpdb->base_prefix, $db );
 }
 
@@ -50,8 +54,12 @@ function lti_do_launch() {
 		$blog_type = isset( $_REQUEST['custom_blog_type'] ) ? $_REQUEST['custom_blog_type'] : '';
 
 		if ( is_student_blog_and_non_student( $blog_type, $tool ) ) {
-			$course_id        = $_REQUEST['context_label'];
+			$course_id = $_REQUEST['context_label'];
+
+			// phpcs:disable
 			$resource_link_id = $tool->resourceLink->getId();
+            // phpcs:enable
+
 			lti_show_staff_student_blogs_for_course( $course_id, $resource_link_id, $tool );
 			return;
 		}
