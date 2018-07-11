@@ -69,7 +69,7 @@ class Course_Blog_Handler extends Blog_Handler {
 	}
 
 	public function get_wordpress_role( User_LTI_Roles $user_roles ) {
-		if ( $user_roles->isInstructor() || $user_roles->isContentDeveloper() || $user_roles->isAdmin() ) {
+		if ( $user_roles->is_instructor() || $user_roles->is_content_developer() || $user_roles->is_admin() ) {
 			return 'administrator';
 		}
 

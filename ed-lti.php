@@ -96,7 +96,7 @@ function lti_destroy_session() {
 }
 
 function is_student_blog_and_non_student( $type, EdToolProvider $tool ) {
-	return ( 'student' == $type && ! $tool->user->isLearner() );
+	return ( 'student' == $type && ! $tool->user->is_learner() );
 }
 
 function lti_get_user_data( EdToolProvider $tool ) {

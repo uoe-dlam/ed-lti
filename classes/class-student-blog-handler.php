@@ -85,7 +85,7 @@ class Student_Blog_Handler extends Blog_Handler {
 	}
 
 	public function get_wordpress_role( User_LTI_Roles $user_roles ) {
-		if ( $user_roles->isLearner() || $user_roles->isAdmin() ) {
+		if ( $user_roles->is_learner() || $user_roles->is_admin() ) {
 			return 'administrator';
 		}
 
