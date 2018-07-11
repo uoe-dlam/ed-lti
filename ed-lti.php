@@ -7,12 +7,12 @@ Version: 1.0
 */
 
 require_once 'vendor/autoload.php';
-require_once 'classes/EdToolProvider.php';
-require_once 'classes/user_lti_roles.php';
-require_once 'classes/blog_handler_factory.php';
-require_once 'classes/blog_handler.php';
-require_once 'classes/course_blog_handler.php';
-require_once 'classes/student_blog_handler.php';
+require_once 'classes/class-ed-tool-provider.php';
+require_once 'classes/class-user-lti-roles.php';
+require_once 'classes/class-blog-handler-factory.php';
+require_once 'classes/class-blog-handler.php';
+require_once 'classes/class-course-blog-handler.php';
+require_once 'classes/class-student-blog-handler.php';
 require_once 'ed-db-functions.php';
 require_once 'admin-pages.php';
 
