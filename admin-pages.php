@@ -67,11 +67,17 @@ function lti_consumer_keys_admin() {
 
 	if ( ! $is_editing ) {
 		echo '<h3>' . __( 'Search', 'wordpress-mu-lti' ) . '</h3>';
-		$escaped_search = '';
+		$search = '';
 		if ( isset( $_POST['search_txt'] ) ) {
-			$escaped_search = addslashes( $_POST['search_txt'] );
+			$search = '%' . $wpdb->esc_like( addslashes( $_POST['search_txt'] ) ) . '%';
 
-			$rows = $wpdb->get_results( "SELECT * FROM {$wpdb->base_prefix}lti2_consumer WHERE consumer_key256 LIKE '%{$escaped_search}%' OR name LIKE '%{$escaped_search}%'" );
+			$rows = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT * FROM {$wpdb->base_prefix}lti2_consumer WHERE consumer_key256 LIKE %s OR name LIKE %s",
+					[ $search, $search ]
+				)
+			);
+
 			lti_listing( $rows, sprintf( __( 'Searching for %s', 'wordpress-mu-lti' ), esc_html( $_POST['search_txt'] ) ) );
 		}
 		echo '<form method="POST">';
@@ -93,15 +99,15 @@ function lti_do_validation() {
 
 	$errors = array();
 
-	if ( $_POST['name'] == '' ) {
+	if ( '' == $_POST['name'] ) {
 		$errors[] = 'Name is required';
 	}
 
-	if ( $_POST['consumer_key'] == '' ) {
+	if ( '' == $_POST['consumer_key'] ) {
 		$errors[] = 'Consumer key is required';
 	}
 
-	if ( $_POST['secret'] == '' ) {
+	if ( '' == $_POST['secret'] ) {
 		$errors[] = 'Secret is required';
 	}
 
@@ -130,9 +136,9 @@ function lti_edit( $row = false ) {
 	echo '<tr><th>' . __( 'Name', 'wordpress-mu-lti' ) . "</th><td><input type='text' name='name' value='{$row->name}' required/></td></tr>\n";
 	echo '<tr><th>' . __( 'Consumer key', 'wordpress-mu-lti' ) . "</th><td><input type='text' name='consumer_key' value='{$row->consumer_key256}' " . ( ! $is_new ? 'readonly="readonly"' : '' ) . " required/></td></tr>\n";
 	echo '<tr><th>' . __( 'Secret', 'wordpress-mu-lti' ) . "</th><td><input type='text' name='secret' value='{$row->secret}' required/></td></tr>\n";
-	echo '<tr><th>' . __( 'LTI Version', 'wordpress-mu-lti' ) . "</th><td><select name='lti_version'><option value='LTI-1p0' " . ( $row->lti_version == 'LTI-1p0' ? 'selected' : '' ) . ">LTI-1p0</option><option value='LTI-2p0' " . ( $row->lti_version == 'LTI-2p0' ? 'selected' : '' ) . ">LTI-2p0</option></select></td></tr>\n";
+	echo '<tr><th>' . __( 'LTI Version', 'wordpress-mu-lti' ) . "</th><td><select name='lti_version'><option value='LTI-1p0' " . ( 'LTI-1p0' == $row->lti_version ? 'selected' : '' ) . ">LTI-1p0</option><option value='LTI-2p0' " . ( 'LTI-2p0' == $row->lti_version ? 'selected' : '' ) . ">LTI-2p0</option></select></td></tr>\n";
 	echo '<tr><th>' . __( 'Enabled', 'wordpress-mu-lti' ) . "</th><td><input type='checkbox' name='enabled' value='1' ";
-	echo $row->enabled == 1 ? 'checked=1 ' : ' ';
+	echo 1 == $row->enabled ? 'checked=1 ' : ' ';
 	echo "/></td></tr>\n";
 	echo '</table>';
 	echo "<p><input type='submit' class='button-primary' value='" . __( 'Save', 'wordpress-mu-lti' ) . "' /></p></form><br /><br />";
@@ -145,7 +151,7 @@ function lti_network_warning() {
 
 function lti_listing( $rows, $heading = '' ) {
 	if ( $rows ) {
-		if ( $heading != '' ) {
+		if ( '' != $heading ) {
 			echo "<h3>$heading</h3>";
 		}
 		echo '<table class="widefat" cellspacing="0"><thead><tr><th>' . __( 'Consumer name', 'wordpress-mu-lti' ) . '</th><th>' . __( 'Consumer key', 'wordpress-mu-lti' ) . '</th><th>' . __( 'LTI Version', 'wordpress-mu-lti' ) . '</th><th>' . __( 'Enabled', 'wordpress-mu-lti' ) . '</th><th>' . __( 'Edit', 'wordpress-mu-lti' ) . '</th><th>' . __( 'Delete', 'wordpress-mu-lti' ) . '</th></tr></thead><tbody>';
@@ -157,7 +163,7 @@ function lti_listing( $rows, $heading = '' ) {
 			//echo $row->custom_username_parameter;
 			echo $row->lti_version;
 			echo '</td><td>';
-			echo $row->enabled == 1 ? __( 'Yes', 'wordpress-mu-lti' ) : __( 'No', 'wordpress-mu-lti' );
+			echo 1 == $row->enabled ? __( 'Yes', 'wordpress-mu-lti' ) : __( 'No', 'wordpress-mu-lti' );
 			echo "</td><td><form method='POST'><input type='hidden' name='action' value='edit' /><input type='hidden' name='consumer_key' value='{$row->consumer_key256}' />";
 			wp_nonce_field( 'lti' );
 			echo "<input type='submit' class='button-secondary' value='" . __( 'Edit', 'wordpress-mu-lti' ) . "' /></form></td><td><form method='POST'><input type='hidden' name='action' value='del' /><input type='hidden' name='consumer_key' value='{$row->consumer_key256}' />";
