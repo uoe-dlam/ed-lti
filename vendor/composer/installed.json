@@ -1,0 +1,44 @@
+[
+    {
+        "name": "imsglobal/lti",
+        "version": "3.0.2",
+        "version_normalized": "3.0.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/IMSGlobal/LTI-Tool-Provider-Library-PHP.git",
+            "reference": "06b12f70c2803ee08da116bcda2951eefd411ac9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/IMSGlobal/LTI-Tool-Provider-Library-PHP/zipball/06b12f70c2803ee08da116bcda2951eefd411ac9",
+            "reference": "06b12f70c2803ee08da116bcda2951eefd411ac9",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.6.0"
+        },
+        "time": "2016-09-18T04:22:22+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "IMSGlobal\\LTI\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "authors": [
+            {
+                "name": "Stephen Vickers",
+                "email": "svickers@imsglobal.org"
+            }
+        ],
+        "description": "LTI Tool Provider Library",
+        "homepage": "https://www.imsglobal.org/lti",
+        "keywords": [
+            "LTI"
+        ]
+    }
+]
