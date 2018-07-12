@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: UOE LTI
+Plugin Name: Ed-LTI
 Description: Allows LMSs to connect to site and create blogs
 Author: Richard Lawson (richard.lawson@ed.ac.uk)
 Version: 1.0
@@ -13,7 +13,7 @@ require_once 'classes/class-blog-handler-factory.php';
 require_once 'classes/class-blog-handler.php';
 require_once 'classes/class-course-blog-handler.php';
 require_once 'classes/class-student-blog-handler.php';
-require_once 'ed-lti-data.php';
+require_once 'class-ed-lti-data.php';
 require_once 'class-ed-lti-settings.php';
 
 use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
@@ -24,7 +24,7 @@ use IMSGlobal\LTI\ToolProvider;
  *
  * @version 1.0.0
  */
-class Ed_Lti {
+class Ed_LTI {
 
 	private $wpdb;
 
@@ -313,4 +313,4 @@ class Ed_Lti {
 	}
 }
 
-register_activation_hook( __FILE__, [ 'EdLTI', 'activate' ] );
+register_activation_hook( __FILE__, [ 'Ed_LTI', 'activate' ] );
