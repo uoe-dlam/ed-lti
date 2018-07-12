@@ -83,12 +83,10 @@ function lti_consumer_keys_admin() {
 		echo '<form method="POST">';
 		wp_nonce_field( 'lti' );
 		echo '<input type="hidden" name="action" value="search" />';
-		echo '<p>';
-		echo 'Search:';
-		echo ' <input type="text" name="search_txt" value=""></p>';
-		echo ' <input type="hidden" name="consumer_key" value=""></p>';
+		echo '<p>Search: <input type="text" name="search_txt" value=""></p>';
+		echo '<input type="hidden" name="consumer_key" value="">';
 		echo '<p><input type="submit" class="button-secondary" value="Search"></p>';
-		echo '</form><br />';
+		echo '</form><br>';
 		lti_edit();
 		$rows = $wpdb->get_results( "SELECT * FROM {$wpdb->base_prefix}lti2_consumer LIMIT 0,20" );
 		lti_listing( $rows );
@@ -138,7 +136,7 @@ function lti_edit( $row = false ) {
 	echo '<tr><th>Consumer key</th><td><input type="text" name="consumer_key" value="' . $row->consumer_key256 . '"' . ( ! $is_new ? 'readonly="readonly"' : '' ) . 'required ></td></tr>';
 	echo '<tr><th>Secret</th><td><input type="text" name="secret" value="' . $row->secret . '" required ></td></tr>';
 	echo '<tr><th>LTI Version</th><td><select name="lti_version"><option value="LTI - 1p0"' . ( 'LTI - 1p0' == $row->lti_version ? 'selected' : '' ) . '>LTI-1p0</option><option value="LTI - 2p0" ' . ( 'LTI - 2p0' == $row->lti_version ? 'selected' : '' ) . '>LTI-2p0</option></select></td></tr>';
-	echo '<tr><th>Enabled</th><td><input type="checkbox" name="enabled" value="1"' . 1 == $row->enabled ? 'checked' : '' . '></td></tr>';
+	echo '<tr><th>Enabled</th><td><input type="checkbox" name="enabled" value="1" ' . ( 1 == $row->enabled ? 'checked' : '' ) . '></td></tr>';
 	echo '</table>';
 	echo '<p><input type="submit" class="button - primary" value="Save"></p></form><br><br>';
 }
@@ -168,7 +166,7 @@ function lti_listing( $rows, $heading = '' ) {
 			wp_nonce_field( 'lti' );
 			echo '<input type="submit" class="button-secondary" value="Del"></form>';
 			echo '</td></tr>';
-}
+		}
 
 		echo '</table>';
 	}
