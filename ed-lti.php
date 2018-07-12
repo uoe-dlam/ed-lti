@@ -14,7 +14,7 @@ require_once 'classes/class-blog-handler.php';
 require_once 'classes/class-course-blog-handler.php';
 require_once 'classes/class-student-blog-handler.php';
 require_once 'ed-db-functions.php';
-require_once 'admin-pages.php';
+require_once 'ed-admin-pages.php';
 
 use IMSGlobal\LTI\ToolProvider\DataConnector;
 use IMSGlobal\LTI\ToolProvider;
