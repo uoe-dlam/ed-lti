@@ -44,7 +44,7 @@ class Ed_LTI {
 	 * @return void
 	 */
 	public static function activate() {
-		$lti_data = new EdLtiData();
+		$lti_data = new Ed_LTI_Data();
 
 		$lti_data->lti_maybe_create_db();
 		$lti_data->lti_maybe_create_site_blogs_meta_table();

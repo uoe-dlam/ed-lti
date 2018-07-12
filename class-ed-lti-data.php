@@ -1,6 +1,6 @@
 <?php
 
-class Ed_Lti_Data {
+class Ed_LTI_Data {
 
     private $wpdb;
 
