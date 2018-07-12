@@ -135,7 +135,7 @@ function lti_edit( $row = false ) {
 	wp_nonce_field( 'lti' );
 	echo '<table class="form-table">';
 	echo '<tr><th>Name</th><td><input type="text" name="name" value="' . $row->name . '" required ></td></tr>';
-	echo '<tr><th>Consumer key</th><td><input type="text" name="consumer_key" value="' . $row->consumer_key256 '"' . ( ! $is_new ? 'readonly="readonly"' : '' ) . 'required ></td></tr>';
+	echo '<tr><th>Consumer key</th><td><input type="text" name="consumer_key" value="' . $row->consumer_key256 . '"' . ( ! $is_new ? 'readonly="readonly"' : '' ) . 'required ></td></tr>';
 	echo '<tr><th>Secret</th><td><input type="text" name="secret" value="' . $row->secret . '" required ></td></tr>';
 	echo '<tr><th>LTI Version</th><td><select name="lti_version"><option value="LTI - 1p0"' . ( 'LTI - 1p0' == $row->lti_version ? 'selected' : '' ) . '>LTI-1p0</option><option value="LTI - 2p0" ' . ( 'LTI - 2p0' == $row->lti_version ? 'selected' : '' ) . '>LTI-2p0</option></select></td></tr>';
 	echo '<tr><th>Enabled</th><td><input type="checkbox" name="enabled" value="1"' . 1 == $row->enabled ? 'checked' : '' . '></td></tr>';
@@ -162,9 +162,9 @@ function lti_listing( $rows, $heading = '' ) {
 			echo $row->lti_version;
 			echo '</td><td>';
 			echo 1 == $row->enabled ? 'Yes' : 'No';
-			echo '</td><td><form method="POST"><input type="hidden" name="action" value="edit"><input type="hidden" name="consumer_key" value="' . $row->consumer_key256} . '">';
+			echo '</td><td><form method="POST"><input type="hidden" name="action" value="edit"><input type="hidden" name="consumer_key" value="' . $row->consumer_key256 . '">';
 			wp_nonce_field( 'lti' );
-			echo '<input type="submit" class="button-secondary" value="Edit"></form></td><td><form method="POST"><input type="hidden" name="action" value="del"><input type="hidden" name="consumer_key" value="' . $row->consumer_key256} . '">';
+			echo '<input type="submit" class="button-secondary" value="Edit"></form></td><td><form method="POST"><input type="hidden" name="action" value="del"><input type="hidden" name="consumer_key" value="' . $row->consumer_key256 . '">';
 			wp_nonce_field( 'lti' );
 			echo '<input type="submit" class="button-secondary" value="Del"></form>';
 			echo '</td></tr>';
