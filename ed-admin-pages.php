@@ -78,7 +78,7 @@ function lti_consumer_keys_admin() {
 				)
 			);
 
-			lti_listing( $rows, 'Searching for ' . esc_html( $_POST['search_txt'] ) ) );
+			lti_listing( $rows, 'Searching for ' . esc_html( $_POST['search_txt'] ) );
 		}
 		echo '<form method="POST">';
 		wp_nonce_field( 'lti' );
@@ -131,18 +131,16 @@ function lti_edit( $row = false ) {
 		$is_new               = true;
 	}
 
-	echo "<form method='POST'><input type='hidden' name='action' value='save' />";
+	echo '<form method="POST"><input type="hidden" name="action" value="save">';
 	wp_nonce_field( 'lti' );
-	echo "<table class='form-table'>\n";
-	echo '<tr><th>Name</th><td><input type='text' name='name' value='{$row->name}' required/></td></tr>\n";
-	echo ' < tr > < th > Consumer key < / th > < td > < input type = 'text' name = 'consumer_key' value = '{$row->consumer_key256}' " . ( ! $is_new ? 'readonly="readonly"' : '' ) . " required / > < / td > < / tr > \n";
-	echo '<tr><th>Secret</th><td><input type='text' name='secret' value='{$row->secret}' required/></td></tr>\n";
-	echo '<tr><th>LTI Version</th><td><select name='lti_version'><option value='LTI - 1p0' " . ( 'LTI - 1p0' == $row->lti_version ? 'selected' : '' ) . ">LTI-1p0</option><option value='LTI - 2p0' " . ( 'LTI - 2p0' == $row->lti_version ? 'selected' : '' ) . ">LTI-2p0</option></select></td></tr>\n";
-	echo ' < tr > < th > Enabled < / th > < td > < input type      = 'checkbox' name = 'enabled' value = '1' ";
-	echo 1 == $row->enabled ? 'checked=1 ' : ' ';
-	echo " / > < / td > < / tr > \n";
+	echo '<table class="form-table">';
+	echo '<tr><th>Name</th><td><input type="text" name="name" value="' . $row->name . '" required ></td></tr>';
+	echo '<tr><th>Consumer key</th><td><input type="text" name="consumer_key" value="' . $row->consumer_key256 '"' . ( ! $is_new ? 'readonly="readonly"' : '' ) . 'required ></td></tr>';
+	echo '<tr><th>Secret</th><td><input type="text" name="secret" value="' . $row->secret . '" required ></td></tr>';
+	echo '<tr><th>LTI Version</th><td><select name="lti_version"><option value="LTI - 1p0"' . ( 'LTI - 1p0' == $row->lti_version ? 'selected' : '' ) . '>LTI-1p0</option><option value="LTI - 2p0" ' . ( 'LTI - 2p0' == $row->lti_version ? 'selected' : '' ) . '>LTI-2p0</option></select></td></tr>';
+	echo '<tr><th>Enabled</th><td><input type="checkbox" name="enabled" value="1"' . 1 == $row->enabled ? 'checked' : '' . '></td></tr>';
 	echo '</table>';
-	echo '<p><input type="submit' class='button - primary' value='Save' ></p></form><br /><br />';
+	echo '<p><input type="submit" class="button - primary" value="Save"></p></form><br><br>';
 }
 
 
