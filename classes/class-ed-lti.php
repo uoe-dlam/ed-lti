@@ -7,8 +7,8 @@ require_once 'classes/class-blog-handler-factory.php';
 require_once 'classes/class-blog-handler.php';
 require_once 'classes/class-course-blog-handler.php';
 require_once 'classes/class-student-blog-handler.php';
-require_once 'class-ed-lti-data.php';
-require_once 'class-ed-lti-settings.php';
+require_once 'classes/class-ed-lti-data.php';
+require_once 'classes/class-ed-lti-settings.php';
 
 use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 use IMSGlobal\LTI\ToolProvider;

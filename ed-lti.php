@@ -6,7 +6,7 @@ Author: Richard Lawson (richard.lawson@ed.ac.uk)
 Version: 1.0
 */
 
-require_once 'class-ed-lti.php';
+require_once 'classes/class-ed-lti.php';
 
 new Ed_LTI();
 

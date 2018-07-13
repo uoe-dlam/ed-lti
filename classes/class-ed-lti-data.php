@@ -11,16 +11,15 @@ class Ed_LTI_Data {
     }
 
     /**
-     *
      * Create table to store the consumers ands passwords if not exists
+     *
+     * @return void
      */
     public function lti_maybe_create_db() {
         $this->wpdb->ltitable = $this->wpdb->base_prefix . 'lti2_consumer';
 
         if ( is_user_logged_in() && is_super_admin() ) {
-            $created = 0;
             if ( $this->wpdb->get_var( "SHOW TABLES LIKE '{$this->wpdb->ltitable}'" ) != $this->wpdb->ltitable ) {
-
                 $this->wpdb->query(
                     "CREATE TABLE IF NOT EXISTS `{$this->wpdb->ltitable}` (
                       consumer_pk int(11) NOT NULL AUTO_INCREMENT,
@@ -197,24 +196,15 @@ class Ed_LTI_Data {
                     'ALTER TABLE `' . $this->wpdb->base_prefix . "lti2_share_key`
                     ADD INDEX {$this->wpdb->base_prefix}lti2_share_key_resource_link_pk_IDX (resource_link_pk ASC);"
                 );
-
-                $created = 1;
-            }
-            if ( $created ) {
-                ?> <div id="message" class="updated fade"><p><strong>LTI database tables created.</strong></p></div>
-                <?php
             }
         }
-
     }
 
     public function lti_maybe_create_site_blogs_meta_table() {
         $this->wpdb->blogsmetatable = $this->wpdb->base_prefix . 'blogs_meta';
 
         if ( is_user_logged_in() && is_super_admin() ) {
-            $created = 0;
             if ( $this->wpdb->get_var( "SHOW TABLES LIKE '{$this->wpdb->blogsmetatable}'" ) != $this->wpdb->blogsmetatable ) {
-
                 $this->wpdb->query(
                     "CREATE TABLE IF NOT EXISTS `{$this->wpdb->blogsmetatable}` (
                       id int(11) NOT NULL AUTO_INCREMENT,
@@ -238,12 +228,6 @@ class Ed_LTI_Data {
                     ON UPDATE CASCADE;"
                 );
 
-            }
-
-            if ( $created ) {
-                ?>
-                <div id="message" class="updated fade"><p><strong>Created blogs meta table</strong></p></div>
-                <?php
             }
         }
     }
