@@ -3,7 +3,7 @@
 Plugin Name: Ed-LTI
 Description: Allows LMSs to connect to site and create blogs
 Author: Richard Lawson (richard.lawson@ed.ac.uk)
-Version: 1.0
+Version: 1.0.0
 */
 
 require_once 'classes/class-ed-lti.php';
