@@ -12,7 +12,7 @@ class Ed_LTI_Settings {
         add_action( 'network_admin_menu', [ $this, 'lti_network_pages' ] );
     }
 
-    private function lti_consumer_keys_admin() {
+    public function lti_consumer_keys_admin() {
         global $current_site;
 
         $is_editing = false;
@@ -25,10 +25,10 @@ class Ed_LTI_Settings {
 
             switch ( $_POST['action'] ) {
                 case 'edit':
-                    $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->base_prefix}lti2_consumer WHERE consumer_key256 = %s", $consumer_key ) );
+                    $row = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT * FROM {$this->wpdb->base_prefix}lti2_consumer WHERE consumer_key256 = %s", $consumer_key ) );
 
                     if ( $row ) {
-                        lti_edit( $row );
+                        $this->lti_edit( $row );
                         $is_editing = true;
                     } else {
                         echo '<h3>Provider not found</h3>';
@@ -52,19 +52,19 @@ class Ed_LTI_Settings {
 
                     $enabled = isset( $_POST['enabled'] ) ? 1 : 0;
 
-                    $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->base_prefix}lti2_consumer WHERE consumer_key256 = %s", $consumer_key ) );
+                    $row = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT * FROM {$this->wpdb->base_prefix}lti2_consumer WHERE consumer_key256 = %s", $consumer_key ) );
 
                     if ( $row ) {
-                        $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->base_prefix}lti2_consumer SET  name = %s, secret = %s, enabled = %d, lti_version = %s  WHERE consumer_key256 = %s", $_POST['name'], $_POST['secret'], $enabled, $_POST['lti_version'], $consumer_key ) );
+                        $this->wpdb->query( $this->wpdb->prepare( "UPDATE {$this->wpdb->base_prefix}lti2_consumer SET  name = %s, secret = %s, enabled = %d, lti_version = %s  WHERE consumer_key256 = %s", $_POST['name'], $_POST['secret'], $enabled, $_POST['lti_version'], $consumer_key ) );
                         echo '<p><strong>Provider Updated</strong></p>';
                     } else {
-                        $wpdb->query( $wpdb->prepare( "INSERT INTO {$wpdb->base_prefix}lti2_consumer ( `name`, `consumer_key256`, `secret`, `enabled`, `lti_version`) VALUES ( %s, %s, %s, %d, %s)", $_POST['name'], $_POST['consumer_key'], $_POST['secret'], $enabled, $_POST['lti_version'] ) );
+                        $this->wpdb->query( $this->wpdb->prepare( "INSERT INTO {$this->wpdb->base_prefix}lti2_consumer ( `name`, `consumer_key256`, `secret`, `enabled`, `lti_version`) VALUES ( %s, %s, %s, %d, %s)", $_POST['name'], $_POST['consumer_key'], $_POST['secret'], $enabled, $_POST['lti_version'] ) );
                         echo '<p><strong>Provider Added</strong></p>';
                     }
 
                     break;
                 case 'del':
-                    $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->base_prefix}lti2_consumer WHERE consumer_key256 = %s", $consumer_key ) );
+                    $this->wpdb->query( $this->wpdb->prepare( "DELETE FROM {$this->wpdb->base_prefix}lti2_consumer WHERE consumer_key256 = %s", $consumer_key ) );
 
                     echo '<p><strong>Provider Deleted</strong></p>';
 
@@ -78,16 +78,16 @@ class Ed_LTI_Settings {
             $search = '';
 
             if ( isset( $_POST['search_txt'] ) ) {
-                $search = '%' . $wpdb->esc_like( addslashes( $_POST['search_txt'] ) ) . '%';
+                $search = '%' . $this->wpdb->esc_like( addslashes( $_POST['search_txt'] ) ) . '%';
 
-                $rows = $wpdb->get_results(
-                    $wpdb->prepare(
-                        "SELECT * FROM {$wpdb->base_prefix}lti2_consumer WHERE consumer_key256 LIKE %s OR name LIKE %s",
+                $rows = $this->wpdb->get_results(
+                    $this->wpdb->prepare(
+                        "SELECT * FROM {$this->wpdb->base_prefix}lti2_consumer WHERE consumer_key256 LIKE %s OR name LIKE %s",
                         [ $search, $search ]
                     )
                 );
 
-                lti_listing( $rows, 'Searching for ' . esc_html( $_POST['search_txt'] ) );
+                $this->lti_listing( $rows, 'Searching for ' . esc_html( $_POST['search_txt'] ) );
             }
 
             echo '<form method="POST">';
@@ -100,11 +100,11 @@ class Ed_LTI_Settings {
             echo '<p><input type="submit" class="button-secondary" value="Search"></p>';
             echo '</form><br>';
 
-            lti_edit();
+            $this->lti_edit();
 
-            $rows = $wpdb->get_results( "SELECT * FROM {$wpdb->base_prefix}lti2_consumer LIMIT 0,20" );
+            $rows = $this->wpdb->get_results( "SELECT * FROM {$this->wpdb->base_prefix}lti2_consumer LIMIT 0,20" );
 
-            lti_listing( $rows );
+            $this->lti_listing( $rows );
         }
     }
 
@@ -127,7 +127,7 @@ class Ed_LTI_Settings {
     }
 
 
-    function lti_edit( $row = false ) {
+    private function lti_edit( $row = false ) {
         $is_new = false;
 
         if ( is_object( $row ) ) {
@@ -162,7 +162,7 @@ class Ed_LTI_Settings {
         echo '<div id="lti-warning" class="updated fade"><p><strong>LTI Disabled</strong>You must <a href="http://codex.wordpress.org/Create_A_Network">create a network</a> for it to work.</p></div>';
     }
 
-    function lti_listing( $rows, $heading = '' ) {
+    private function lti_listing( $rows, $heading = '' ) {
         if ( $rows ) {
             if ( '' != $heading ) {
                 echo "<h3>$heading</h3>";
@@ -200,7 +200,7 @@ class Ed_LTI_Settings {
             'LTI Consumers Keys',
             'manage_options',
             'lti_consumer_keys_admin',
-            $this->lti_consumer_keys_admin()
+            [ $this, 'lti_consumer_keys_admin' ]
         );
     }
 }
