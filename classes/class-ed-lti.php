@@ -70,7 +70,8 @@ class Ed_LTI {
 		if ( $this->lti_is_basic_lti_request() && is_main_site() ) {
 			$this->lti_destroy_session();
 
-			$tool = new Ed_Tool_Provider( lti_get_db_connector() );
+			$tool = new Ed_Tool_Provider( $this->lti_get_db_connector() );
+
 			$tool->handleRequest();
 
 			if ( ! isset( $_SESSION['lti_okay'] ) ) {
@@ -131,7 +132,7 @@ class Ed_LTI {
 	}
 
 	private function is_student_blog_and_non_student( $type, Ed_Tool_Provider $tool ) {
-		return ( 'student' == $type && ! $tool->user->is_learner() );
+		return ( 'student' == $type && ! $tool->user->isLearner() );
 	}
 
 	private function lti_get_user_data( Ed_Tool_Provider $tool ) {
