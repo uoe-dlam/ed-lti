@@ -64,6 +64,7 @@ function lti_do_launch() {
 
         $user_roles = new User_LTI_Roles( $tool->user->roles );
         $blog_handler->add_user_to_blog( $user, $blog_id, $user_roles );
+        $blog_handler->add_user_to_top_level_blog( $user );
 
         lti_signin_user( $user, $blog_id );
 
