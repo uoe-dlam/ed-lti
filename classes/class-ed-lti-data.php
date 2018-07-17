@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Handles LTI tables in WordPress
+ *
+ * @author Richard Lawson <richard.lawson@ed.ac.uk>
+ */
 class Ed_LTI_Data {
 
     private $wpdb;
@@ -200,6 +205,11 @@ class Ed_LTI_Data {
         }
     }
 
+    /**
+     * Create blogs meta table if it doesn't exist
+     *
+     * @return void
+     */
     public function lti_maybe_create_site_blogs_meta_table() {
         $this->wpdb->blogsmetatable = $this->wpdb->base_prefix . 'blogs_meta';
 
@@ -227,7 +237,6 @@ class Ed_LTI_Data {
                     ON DELETE CASCADE
                     ON UPDATE CASCADE;"
                 );
-
             }
         }
     }
