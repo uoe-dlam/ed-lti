@@ -298,7 +298,7 @@ class Ed_LTI {
                . "ON {$this->wpdb->base_prefix}blogs.blog_id = {$this->wpdb->base_prefix}blogs_meta.blog_id "
                . "WHERE course_id = %s "
                . "AND resource_link_id = %s "
-               . "AND blog_type = %s",
+               . "AND blog_type = %s";
 
 		$blogs = $this->wpdb->get_results(
 			$this->wpdb->prepare(
