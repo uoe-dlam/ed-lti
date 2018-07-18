@@ -213,7 +213,7 @@ class Ed_LTI {
 
 			if ( ! $user_id ) {
                 $error_message = 'This Email address is already being used by another user. Please contact <a href="'
-                               . get_site_option( 'is_helpline_url' ) . '">IS Helpline</a> for assistance.'
+                               . get_site_option( 'is_helpline_url' ) . '">IS Helpline</a> for assistance.';
 
                 wp_die( $error_mesasge, 200 );
 			}

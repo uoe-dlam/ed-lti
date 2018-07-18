@@ -1,4 +1,5 @@
 <?php
+
 /*
 Plugin Name: Ed-LTI
 Description: Allows LMSs to connect to site and create blogs
