@@ -30,7 +30,7 @@ class Ed_LTI {
 		add_action( 'parse_request', [ $this, 'lti_do_launch' ] );
 		add_action( 'parse_request', [ $this, 'lti_add_staff_to_student_blog' ] );
 
-        new Ed_LTI_Settings();
+		new Ed_LTI_Settings();
 	}
 
 	/**
@@ -105,19 +105,19 @@ class Ed_LTI {
 		}
 	}
 
-    /**
-     * Check that the LTI request being received is a basic LTI request
-     *
-     * @return bool
-     */
+	/**
+	 * Check that the LTI request being received is a basic LTI request
+	 *
+	 * @return bool
+	 */
 	private function lti_is_basic_lti_request() {
-        $good_message_type	= isset( $_REQUEST['lti_message_type'] )
-                            ? 'basic-lti-launch-request' == $_REQUEST['lti_message_type']
-                            : false;
+		$good_message_type = isset( $_REQUEST['lti_message_type'] )
+							? 'basic-lti-launch-request' == $_REQUEST['lti_message_type']
+							: false;
 
-		$good_lti_version	= isset( $_REQUEST['lti_version'] ) ? 'LTI-1p0' == $_REQUEST['lti_version'] : false;
+		$good_lti_version   = isset( $_REQUEST['lti_version'] ) ? 'LTI-1p0' == $_REQUEST['lti_version'] : false;
 		$oauth_consumer_key = isset( $_REQUEST['oauth_consumer_key'] );
-		$resource_link_id	= isset( $_REQUEST['resource_link_id'] );
+		$resource_link_id   = isset( $_REQUEST['resource_link_id'] );
 
 		if ( $good_message_type && $good_lti_version && $oauth_consumer_key && $resource_link_id ) {
 			return true;
@@ -126,11 +126,11 @@ class Ed_LTI {
 		return false;
 	}
 
-    /**
-     * Destroy the LTI session
-     *
-     * @return void
-     */
+	/**
+	 * Destroy the LTI session
+	 *
+	 * @return void
+	 */
 	private function lti_destroy_session() {
 		wp_logout();
 		wp_set_current_user( 0 );
@@ -145,66 +145,66 @@ class Ed_LTI {
 		session_start();
 	}
 
-    /**
-     * Determine if a non-student user is accessing a student blog
-     *
-     * @return bool
-     */
+	/**
+	 * Determine if a non-student user is accessing a student blog
+	 *
+	 * @return bool
+	 */
 	private function is_student_blog_and_non_student( $blog_type, Ed_Tool_Provider $tool ) {
 		return ( 'student' == $blog_type && ! $tool->user->isLearner() );
 	}
 
-    /**
-     * Get the user data passed via LTI
-     *
-     * @return array
-     */
+	/**
+	 * Get the user data passed via LTI
+	 *
+	 * @return array
+	 */
 	private function lti_get_user_data( Ed_Tool_Provider $tool ) {
-        // LTI specs tell us that username should be set in the 'lis_person_sourcedid' param, but moodle doesn't do
-        // this. Moodle seems to use 'ext_user_username' instead
-        $username = '' != $_REQUEST['lis_person_sourcedid']
-                  ? $_REQUEST['lis_person_sourcedid']
-                  : $_REQUEST['ext_user_username'];
+		// LTI specs tell us that username should be set in the 'lis_person_sourcedid' param, but moodle doesn't do
+		// this. Moodle seems to use 'ext_user_username' instead
+		$username = '' != $_REQUEST['lis_person_sourcedid']
+				  ? $_REQUEST['lis_person_sourcedid']
+				  : $_REQUEST['ext_user_username'];
 
 		$user_data = [
-			'username'	=> $username,
-			'email'		=> $tool->user->email,
+			'username'  => $username,
+			'email'     => $tool->user->email,
 			'firstname' => $tool->user->firstname,
-			'lastname'	=> $tool->user->lastname,
-			'password'	=> $this->random_string(20, '0123456789ABCDEFGHIJKLMNOPQRSTUVWZYZabcdefghijklmnopqrstuvwxyz'),
+			'lastname'  => $tool->user->lastname,
+			'password'  => $this->random_string( 20, '0123456789ABCDEFGHIJKLMNOPQRSTUVWZYZabcdefghijklmnopqrstuvwxyz' ),
 		];
 
 		return $user_data;
 	}
 
-    /**
-     * Get site information for the LTI provider
-     *
-     * @return array
-     */
+	/**
+	 * Get site information for the LTI provider
+	 *
+	 * @return array
+	 */
 	private function lti_get_site_data() {
 		$site_category = isset( $_REQUEST['custom_site_category'] ) ? $_REQUEST['custom_site_category'] : 1;
 
-        $username = '' != $_REQUEST['lis_person_sourcedid']
-                  ? $_REQUEST['lis_person_sourcedid']
-                  : $_REQUEST['ext_user_username'];
+		$username = '' != $_REQUEST['lis_person_sourcedid']
+				  ? $_REQUEST['lis_person_sourcedid']
+				  : $_REQUEST['ext_user_username'];
 
 		return [
-			'course_id'		   => $_REQUEST['context_label'],
-			'course_title'	   => $_REQUEST['context_title'],
-			'domain'		   => get_current_site()->domain,
+			'course_id'        => $_REQUEST['context_label'],
+			'course_title'     => $_REQUEST['context_title'],
+			'domain'           => get_current_site()->domain,
 			'resource_link_id' => $_REQUEST['resource_link_id'],
-			'username'		   => $username,
+			'username'         => $username,
 			'site_category'    => $site_category,
-			'source_id'		   => get_site_option( 'default_site_template_id' ),
+			'source_id'        => get_site_option( 'default_site_template_id' ),
 		];
 	}
 
-    /**
-     * Create a WordPress user or return the logged in user
-     *
-     * @return WP_User
-     */
+	/**
+	 * Create a WordPress user or return the logged in user
+	 *
+	 * @return WP_User
+	 */
 	private function first_or_create_user( array $data ) {
 		$user = get_user_by( 'login', $data['username'] );
 
@@ -212,10 +212,10 @@ class Ed_LTI {
 			$user_id = wpmu_create_user( $data['username'], $data['password'], $data['email'] );
 
 			if ( ! $user_id ) {
-                $error_message = 'This Email address is already being used by another user. Please contact <a href="'
-                               . get_site_option( 'is_helpline_url' ) . '">IS Helpline</a> for assistance.';
+				$error_message = 'This Email address is already being used by another user. Please contact <a href="'
+							   . get_site_option( 'is_helpline_url' ) . '">IS Helpline</a> for assistance.';
 
-                wp_die( $error_mesasge, 200 );
+				wp_die( $error_mesasge, 200 );
 			}
 
 			$user = get_userdata( $user_id );
@@ -229,11 +229,11 @@ class Ed_LTI {
 		return $user;
 	}
 
-    /**
-     * Create a login session for a user that has visited the blog via an LTI connection
-     *
-     * @return void
-     */
+	/**
+	 * Create a login session for a user that has visited the blog via an LTI connection
+	 *
+	 * @return void
+	 */
 	private function lti_signin_user( $user, $blog_id ) {
 		switch_to_blog( $blog_id );
 
@@ -250,59 +250,58 @@ class Ed_LTI {
 		}
 	}
 
-    /**
-     * Create a list of student blogs for a given course for a member of staff
-     *
-     * @return void
-     */
+	/**
+	 * Create a list of student blogs for a given course for a member of staff
+	 *
+	 * @return void
+	 */
 	private function lti_show_staff_student_blogs_for_course( $course_id, $resource_link_id, Ed_Tool_Provider $tool ) {
-        $this->lti_add_staff_info_to_session(
-            $this->lti_get_user_data( $tool ),
-            new User_LTI_Roles( $tool->user->roles ),
-            $course_id,
-            $resource_link_id
-        );
+		$this->lti_add_staff_info_to_session(
+			$this->lti_get_user_data( $tool ),
+			new User_LTI_Roles( $tool->user->roles ),
+			$course_id,
+			$resource_link_id
+		);
 
 		$this->lti_render_student_blogs_list_view( $course_id, $resource_link_id );
 	}
 
-    /**
-     * Add staff details to a current LTI session
-     *
-     * @return void
-     */
-    private function lti_add_staff_info_to_session(
-        array $user_data,
-        User_LTI_Roles $user_roles,
-        $course_id,
-        $resource_link_id
-    ) {
-		$_SESSION['lti_staff']			  = true;
-		$_SESSION['lti_user_roles']		  = $user_roles;
+	/**
+	 * Add staff details to a current LTI session
+	 *
+	 * @return void
+	 */
+	private function lti_add_staff_info_to_session(
+		array $user_data,
+		User_LTI_Roles $user_roles,
+		$course_id,
+		$resource_link_id
+	) {
+		$_SESSION['lti_staff']            = true;
+		$_SESSION['lti_user_roles']       = $user_roles;
 		$_SESSION['lti_staff_user_data']  = $user_data;
 		$_SESSION['lti_staff_course_id']  = $course_id;
 		$_SESSION['lti_resource_link_id'] = $resource_link_id;
 	}
 
-    /**
-     * Render a list of student blogs
-     *
-     * @return void
-     */
+	/**
+	 * Render a list of student blogs
+	 *
+	 * @return void
+	 */
 	private function lti_render_student_blogs_list_view( $course_id, $resource_link_id ) {
 		$blog_type = 'student';
 
-
-        $query = "SELECT * FROM {$this->wpdb->base_prefix}blogs_meta "
-               . "INNER JOIN {$this->wpdb->base_prefix}blogs "
-               . "ON {$this->wpdb->base_prefix}blogs.blog_id = {$this->wpdb->base_prefix}blogs_meta.blog_id "
-               . "WHERE course_id = %s "
-               . "AND resource_link_id = %s "
-               . "AND blog_type = %s";
+		$query = "SELECT * FROM {$this->wpdb->base_prefix}blogs_meta "
+			   . "INNER JOIN {$this->wpdb->base_prefix}blogs "
+			   . "ON {$this->wpdb->base_prefix}blogs.blog_id = {$this->wpdb->base_prefix}blogs_meta.blog_id "
+			   . 'WHERE course_id = %s '
+			   . 'AND resource_link_id = %s '
+			   . 'AND blog_type = %s';
 
 		$blogs = $this->wpdb->get_results(
 			$this->wpdb->prepare(
-                $query,
+				$query,
 				$course_id,
 				$resource_link_id,
 				$blog_type
@@ -311,7 +310,7 @@ class Ed_LTI {
 
 		get_template_part( 'header' );
 
-	    echo '<div style="width:80%; margin: 0 auto">';
+		echo '<div style="width:80%; margin: 0 auto">';
 
 		if ( empty( $blogs ) ) {
 			echo '<p>No Student Blogs have been created for this course.</p>';
@@ -322,24 +321,24 @@ class Ed_LTI {
 			foreach ( $blogs as $blog ) {
 				$blog_details = get_blog_details( $blog->blog_id );
 
-                echo '<li><a href="index.php?lti_staff_view_blog=true&blog_id=' . $blog->blog_id . '"><' .
-                     $blog_details->blogname . '</a></li>';
-            }
+				echo '<li><a href="index.php?lti_staff_view_blog=true&blog_id=' . $blog->blog_id . '"><' .
+					 $blog_details->blogname . '</a></li>';
+			}
 		}
 
-        echo '<br><br>';
-        echo '</div>';
+		echo '<br><br>';
+		echo '</div>';
 
 		get_template_part( 'footer' );
 
 		exit;
 	}
 
-    /**
-     * Add staff members to student blogs
-     *
-     * @return void
-     */
+	/**
+	 * Add staff members to student blogs
+	 *
+	 * @return void
+	 */
 	public function lti_add_staff_to_student_blog() {
 		if ( isset( $_REQUEST['lti_staff_view_blog'] ) && 'true' == $_REQUEST['lti_staff_view_blog'] ) {
 			if ( session_status() == PHP_SESSION_NONE ) {
@@ -350,12 +349,12 @@ class Ed_LTI {
 				wp_die( 'You do not have permssion to view this page' );
 			}
 
-			$blog_id	= $_REQUEST['blog_id'];
-			$course_id	= $_SESSION['lti_staff_course_id'];
+			$blog_id    = $_REQUEST['blog_id'];
+			$course_id  = $_SESSION['lti_staff_course_id'];
 			$user_roles = $_SESSION['lti_user_roles'];
 
-            // If someone has been messing about with the blog id and the blog has nothing to do with the current
-            // course redirect them to the home page
+			// If someone has been messing about with the blog id and the blog has nothing to do with the current
+			// course redirect them to the home page
 			if ( ! Blog_Handler::is_course_blog( $course_id, $blog_id ) ) {
 				$this->lti_redirect_user_to_blog_without_login( $blog_id );
 			}
@@ -369,41 +368,41 @@ class Ed_LTI {
 		}
 	}
 
-    /**
-     * Redirect a user to the defined home URL
-     *
-     * @return void
-     */
+	/**
+	 * Redirect a user to the defined home URL
+	 *
+	 * @return void
+	 */
 	private function lti_redirect_user_to_blog_without_login( $blog_id ) {
 		switch_to_blog( $blog_id );
 		wp_safe_redirect( home_url() );
-        exit;
+		exit;
 	}
 
-    /**
-     * Generates a cryptographically secure random string of a given length which can be used for generating passwords
-     *
-     * Adapted from https://paragonie.com/blog/2015/07/how-safely-generate-random-strings-and-integers-in-php
-     *
-     * @return string
-     */
-    private function random_string($length, $alphabet) {
-        if ($length < 1) {
-            throw new InvalidArgumentException('Length must be a positive integer');
-        }
+	/**
+	 * Generates a cryptographically secure random string of a given length which can be used for generating passwords
+	 *
+	 * Adapted from https://paragonie.com/blog/2015/07/how-safely-generate-random-strings-and-integers-in-php
+	 *
+	 * @return string
+	 */
+	private function random_string( $length, $alphabet ) {
+		if ( $length < 1 ) {
+			throw new InvalidArgumentException( 'Length must be a positive integer' );
+		}
 
-        $str = '';
+		$str = '';
 
-        $alphamax = strlen($alphabet) - 1;
+		$alphamax = strlen( $alphabet ) - 1;
 
-        if ($alphamax < 1) {
-            throw new InvalidArgumentException('Invalid alphabet');
-        }
+		if ( $alphamax < 1 ) {
+			throw new InvalidArgumentException( 'Invalid alphabet' );
+		}
 
-        for ($i = 0; $i < $length; ++$i) {
-            $str .= $alphabet[random_int(0, $alphamax)];
-        }
+		for ( $i = 0; $i < $length; ++$i ) {
+			$str .= $alphabet[ random_int( 0, $alphamax ) ];
+		}
 
-        return $str;
-    }
+		return $str;
+	}
 }

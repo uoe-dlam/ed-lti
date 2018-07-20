@@ -40,11 +40,11 @@ class Course_Blog_Handler extends Blog_Handler {
 	 */
 	protected function blog_exists() {
 		$query = "SELECT * FROM {$this->wpdb->base_prefix}blogs_meta "
-            . "INNER JOIN {$this->wpdb->base_prefix}blogs "
-            . "ON {$this->wpdb->base_prefix}blogs.blog_id = {$this->wpdb->base_prefix}blogs_meta.blog_id "
-            . 'WHERE course_id = %s '
-            . 'AND resource_link_id = %s '
-            . 'AND blog_type = %s';
+			. "INNER JOIN {$this->wpdb->base_prefix}blogs "
+			. "ON {$this->wpdb->base_prefix}blogs.blog_id = {$this->wpdb->base_prefix}blogs_meta.blog_id "
+			. 'WHERE course_id = %s '
+			. 'AND resource_link_id = %s '
+			. 'AND blog_type = %s';
 
 		$blogs = $this->wpdb->get_results(
 			$this->wpdb->prepare(

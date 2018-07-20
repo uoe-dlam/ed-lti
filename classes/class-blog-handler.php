@@ -15,64 +15,64 @@ abstract class Blog_Handler {
 	protected $user = null;
 	protected $site_category;
 	protected $source_id;
-    protected $wpdb;
+	protected $wpdb;
 
-    /**
-     * TODO: Not sure what this does... what is the path used for?
-     *
-     * @return string
-     */
+	/**
+	 * TODO: Not sure what this does... what is the path used for?
+	 *
+	 * @return string
+	 */
 	abstract protected function get_path();
 
-    /**
-     * Return the type of blog this handler creates
-     *
-     * @return string
-     */
+	/**
+	 * Return the type of blog this handler creates
+	 *
+	 * @return string
+	 */
 	abstract public function get_blog_type();
 
-    /**
-     * Get the wordpress role for a given LTI user role
-     *
-     * @return string
-     */
+	/**
+	 * Get the WordPress role for a given LTI user role
+	 *
+	 * @return string
+	 */
 	abstract public function get_wordpress_role( User_LTI_Roles $roles );
 
-    /**
-     * Check if the blog we are trying to create already exists
-     *
-     * @return bool
-     */
+	/**
+	 * Check if the blog we are trying to create already exists
+	 *
+	 * @return bool
+	 */
 	abstract protected function blog_exists();
 
-    /**
-     * Get the maximum version of a blog type
-     *
-     * @return int
-     */
+	/**
+	 * Get the maximum version of a blog type
+	 *
+	 * @return int
+	 */
 	abstract public function get_blog_max_version();
 
-    /**
-     * Get the total number of blogs of this type
-     *
-     * TODO: Check why we are doing this
-     *
-     * @return int
-     */
+	/**
+	 * Get the total number of blogs of this type
+	 *
+	 * TODO: Check why we are doing this
+	 *
+	 * @return int
+	 */
 	abstract protected function get_blog_count();
 
-    /**
-     * Get the blog ID
-     *
-     * @return string
-     */
+	/**
+	 * Get the blog ID
+	 *
+	 * @return string
+	 */
 	abstract protected function get_blog_id();
 
-    /**
-     * TODO: Not sure what this is doing. Need to find its usage
-     *
-     * @return void
-     */
+	/**
+	 * TODO: Not sure what this is doing. Need to find its usage
+	 *
+	 * @return void
+	 */
 	public function init( array $data, $user = null ) {
 
 		foreach ( $data as $key => $value ) {
@@ -82,17 +82,17 @@ abstract class Blog_Handler {
 		$this->user = $user;
 	}
 
-    /**
-     * Create or return the existing blog
-     *
-     * @return int
-     */
+	/**
+	 * Create or return the existing blog
+	 *
+	 * @return int
+	 */
 	public function first_or_create_blog() {
-        if (
-            is_null( $this->course_id ) || is_null( $this->course_title ) || is_null( $this->domain ) ||
-            is_null( $this->resource_link_id ) || is_null( $this->username ) || is_null( $this->source_id ) ||
-            is_null( $this->site_category )
-        ) {
+		if (
+			is_null( $this->course_id ) || is_null( $this->course_title ) || is_null( $this->domain ) ||
+			is_null( $this->resource_link_id ) || is_null( $this->username ) || is_null( $this->source_id ) ||
+			is_null( $this->site_category )
+		) {
 			wp_die( 'Blog_Handler: You must set all data before calling first_or_create_blog' );
 		}
 
@@ -103,11 +103,11 @@ abstract class Blog_Handler {
 		return $this->create_blog();
 	}
 
-    /**
-     * Create a new blog
-     *
-     * @return int
-     */
+	/**
+	 * Create a new blog
+	 *
+	 * @return int
+	 */
 	protected function create_blog() {
 		$path  = $this->get_path();
 		$title = $this->get_title();
@@ -136,11 +136,11 @@ abstract class Blog_Handler {
 		return $blog_id;
 	}
 
-    /**
-     * Create a new blog using the NS Cloner plugin
-     *
-     * @return int
-     */
+	/**
+	 * Create a new blog using the NS Cloner plugin
+	 *
+	 * @return int
+	 */
 	protected function do_ns_cloner_create( array $data ) {
 		$_POST['action']         = 'process';
 		$_POST['clone_mode']     = 'core';
@@ -160,15 +160,15 @@ abstract class Blog_Handler {
 			return $site_id;
 		}
 
-		//TODO handle unsucessfull clone
+		// TODO handle unsucessfull clone
 		wp_die( 'NS CLoner did not create site' );
 	}
 
-    /**
-     * Add a newly created blog's details to the database
-     *
-     * @return void
-     */
+	/**
+	 * Add a newly created blog's details to the database
+	 *
+	 * @return void
+	 */
 	protected function add_blog_meta( $blog_id, $version = 1 ) {
 		$this->wpdb->insert(
 			$this->wpdb->base_prefix . 'blogs_meta', [
@@ -184,22 +184,22 @@ abstract class Blog_Handler {
 		);
 	}
 
-    /**
-     * Add a site category to a given blog
-     *
-     * @return void
-     */
+	/**
+	 * Add a site category to a given blog
+	 *
+	 * @return void
+	 */
 	protected function add_site_category( $blog_id ) {
 		switch_to_blog( $blog_id );
 		update_option( 'site_category', $this->site_category );
 		restore_current_blog();
 	}
 
-    /**
-     * Make a blog private
-     *
-     * @return void
-     */
+	/**
+	 * Make a blog private
+	 *
+	 * @return void
+	 */
 	protected function make_blog_private( $blog_id ) {
 		switch_to_blog( $blog_id );
 		update_option( 'blog_public', '-2' );
@@ -207,33 +207,34 @@ abstract class Blog_Handler {
 		update_blog_details( $blog_id, [ 'public' => '-2' ] );
 	}
 
-    /**
-     * Check if a given blog is associated with the given course ID
-     *
-     * @return bool
-     */
+	/**
+	 * Check if a given blog is associated with the given course ID
+	 *
+	 * @return bool
+	 */
 	public static function is_course_blog( $course_id, $blog_id ) {
-        $query = "SELECT COUNT(id) AS blog_count "
-               . "FROM {$this->wpdb->base_prefix}blogs_meta "
-               . "WHERE course_id = %s "
-               . "AND blog_id = %d";
+		$query = 'SELECT COUNT(id) AS blog_count '
+			. 'FROM %sblogs_meta '
+			. 'WHERE course_id = %s '
+			. 'AND blog_id = %d';
 
-		$blog_count = $this->wpdb->get_results(
-			$this->wpdb->prepare(
-                $query,
-				$course_id,
-				$blog_id
-			)
-		);
+        $prepared_statement = $this->wpdb->prepare(
+            $query,
+            $this->wpdb->base_prefix,
+            $course_id,
+            $blog_id
+        );
+
+		$blog_count = $this->wpdb->get_results( $prepared_statement );
 
 		return ( (int) $blog_count[0]->blog_count > 0 );
 	}
 
-    /**
-     * Get friendly path
-     *
-     * @return string
-     */
+	/**
+	 * Get friendly path
+	 *
+	 * @return string
+	 */
 	public function get_friendly_path( $path ) {
 		$path = str_replace( ' ', '-', $path ); // Replaces all spaces with hyphens.
 		$path = preg_replace( '/[^A-Za-z0-9\-\_]/', '', $path ); // Removes special chars.
@@ -242,20 +243,20 @@ abstract class Blog_Handler {
 		return $path;
 	}
 
-    /**
-     * Return the course title
-     *
-     * @string
-     */
+	/**
+	 * Return the course title
+	 *
+	 * @string
+	 */
 	protected function get_title() {
 		return $this->course_title;
 	}
 
-    /**
-     * Add a user to a blog
-     *
-     * @return void
-     */
+	/**
+	 * Add a user to a blog
+	 *
+	 * @return void
+	 */
 	public function add_user_to_blog( $user, $blog_id, User_LTI_Roles $user_roles ) {
 		if ( ! is_user_member_of_blog( $user->ID, $blog_id ) ) {
 			$role = $this->get_wordpress_role( $user_roles );

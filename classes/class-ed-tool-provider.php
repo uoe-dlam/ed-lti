@@ -9,20 +9,20 @@ use IMSGlobal\LTI\ToolProvider;
  */
 class Ed_Tool_Provider extends ToolProvider\ToolProvider {
 
-    /**
-     * On launch set the lti_okay session to true
-     *
-     * @return void
-     */
+	/**
+	 * On launch set the lti_okay session to true
+	 *
+	 * @return void
+	 */
 	public function onLaunch() {
 		$_SESSION['lti_okay'] = true;
 	}
 
-    /**
-     * Ensure errors in the LTI package are rendered correctly in WordPress
-     *
-     * @return void
-     */
+	/**
+	 * Ensure errors in the LTI package are rendered correctly in WordPress
+	 *
+	 * @return void
+	 */
 	public function onError() {
 		wp_die( $this->reason );
 		// TODO handle this exception
