@@ -46,6 +46,7 @@ class Course_Blog_Handler extends Blog_Handler {
 			. 'AND resource_link_id = %s '
 			. 'AND blog_type = %s';
 
+        // phpcs:disable
 		$blogs = $this->wpdb->get_results(
 			$this->wpdb->prepare(
 				$query,
@@ -54,6 +55,7 @@ class Course_Blog_Handler extends Blog_Handler {
 				$this->get_blog_type()
 			)
 		);
+        // phpcs:enable
 
 		return ( ! empty( $blogs ) );
 	}
@@ -65,9 +67,10 @@ class Course_Blog_Handler extends Blog_Handler {
 	 */
 	public function get_blog_max_version() {
 		$query = 'SELECT IFNULL(MAX(version), 0) AS max_version '
-			   . "FROM {$this->wpdb->base_prefix}blogs_meta "
-			   . 'WHERE course_id = %s AND blog_type = %s';
+			. "FROM {$this->wpdb->base_prefix}blogs_meta "
+			. 'WHERE course_id = %s AND blog_type = %s';
 
+        // phpcs:disable
 		$blog_max_version = $this->wpdb->get_results(
 			$this->wpdb->prepare(
 				$query,
@@ -75,6 +78,7 @@ class Course_Blog_Handler extends Blog_Handler {
 				$this->get_blog_type()
 			)
 		);
+        // phpcs:enable
 
 		return (int) $blog_max_version[0]->max_version;
 	}
@@ -92,6 +96,7 @@ class Course_Blog_Handler extends Blog_Handler {
 			. 'WHERE course_id = %s '
 			. 'AND blog_type = %s';
 
+        // phpcs:disable
 		$blog_count = $this->wpdb->get_results(
 			$this->wpdb->prepare(
 				$query,
@@ -99,6 +104,7 @@ class Course_Blog_Handler extends Blog_Handler {
 				$this->get_blog_type()
 			)
 		);
+        // phpcs:enable
 
 		return (int) $blog_count[0]->blog_count;
 	}
@@ -110,21 +116,23 @@ class Course_Blog_Handler extends Blog_Handler {
 	 */
 	protected function get_blog_id() {
 		$query = "SELECT {$this->wpdb->base_prefix}blogs_meta.blog_id AS blog_id "
-			   . "FROM {$this->wpdb->base_prefix}blogs_meta "
-			   . "INNER JOIN {$this->wpdb->base_prefix}blogs "
-			   . "ON {$this->wpdb->base_prefix}blogs.blog_id = {$this->wpdb->base_prefix}blogs_meta.blog_id "
-			   . 'WHERE course_id = %s '
-			   . 'AND resource_link_id = %s '
-			   . 'AND blog_type = %s';
+			. "FROM {$this->wpdb->base_prefix}blogs_meta "
+			. "INNER JOIN {$this->wpdb->base_prefix}blogs "
+			. "ON {$this->wpdb->base_prefix}blogs.blog_id = {$this->wpdb->base_prefix}blogs_meta.blog_id "
+			. 'WHERE course_id = %s '
+			. 'AND resource_link_id = %s '
+			. 'AND blog_type = %s';
 
+        // phpcs:disable
 		$blogs = $this->wpdb->get_results(
 			$this->wpdb->prepare(
-
+                $query,
 				$this->course_id,
 				$this->resource_link_id,
 				$this->get_blog_type()
 			)
 		);
+        // phpcs:enable
 
 		if ( ! $blogs ) {
 			return null;
