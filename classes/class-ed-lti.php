@@ -1,6 +1,6 @@
 <?php
 
-require_once '../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'class-ed-tool-provider.php';
 require_once 'class-user-lti-roles.php';
 require_once 'class-blog-handler-factory.php';
