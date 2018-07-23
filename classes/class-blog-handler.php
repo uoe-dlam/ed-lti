@@ -265,4 +265,19 @@ abstract class Blog_Handler {
 			add_user_to_blog( $blog_id, $user->ID, $role );
 		}
 	}
+
+	/**
+	 * Add a user to the top level blog so we don't get login issues if a user tries to login to the top level site
+	 *
+	 * @param WP_User $user
+	 *
+	 * @return void
+	 */
+	public function add_user_to_top_level_blog( $user ) {
+		$top_level_blog_id = get_main_site_id();
+
+		if ( ! is_user_member_of_blog( $user->ID, $top_level_blog_id ) ) {
+			add_user_to_blog( $top_level_blog_id, $user->ID, 'subscriber' );
+		}
+	}
 }
