@@ -82,6 +82,6 @@ class User_LTI_Roles {
 			$role = 'urn:lti:role:ims/lis/' . $role;
 		}
 
-		return in_array( $role, $this->roles );
+		return in_array( $role, $this->roles, true );
 	}
 }

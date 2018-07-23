@@ -24,7 +24,8 @@ class Ed_Tool_Provider extends ToolProvider\ToolProvider {
 	 * @return void
 	 */
 	public function onError() {
-		wp_die( $this->reason );
+		wp_die( esc_html( $this->reason ) );
+
 		// TODO handle this exception
 
 		/*

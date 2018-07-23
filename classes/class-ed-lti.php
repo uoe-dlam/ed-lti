@@ -78,10 +78,14 @@ class Ed_LTI {
 				wp_die( 'There is a problem with your lti connection.', 200 );
 			}
 
+            // phpcs:disable
 			$blog_type = isset( $_REQUEST['custom_blog_type'] ) ? $_REQUEST['custom_blog_type'] : '';
+            // phpcs:enable
 
 			if ( $this->is_student_blog_and_non_student( $blog_type, $tool ) ) {
+                // phpcs:disable
 				$course_id = $_REQUEST['context_label'];
+                // phpcs:enable
 
 				// phpcs:disable
 				$resource_link_id = $tool->resourceLink->getId();
@@ -111,6 +115,7 @@ class Ed_LTI {
 	 * @return bool
 	 */
 	private function lti_is_basic_lti_request() {
+        // phpcs:disable
 		$good_message_type = isset( $_REQUEST['lti_message_type'] )
 							? 'basic-lti-launch-request' == $_REQUEST['lti_message_type']
 							: false;
@@ -118,6 +123,7 @@ class Ed_LTI {
 		$good_lti_version   = isset( $_REQUEST['lti_version'] ) ? 'LTI-1p0' == $_REQUEST['lti_version'] : false;
 		$oauth_consumer_key = isset( $_REQUEST['oauth_consumer_key'] );
 		$resource_link_id   = isset( $_REQUEST['resource_link_id'] );
+        // phpcs:enable
 
 		if ( $good_message_type && $good_lti_version && $oauth_consumer_key && $resource_link_id ) {
 			return true;
@@ -135,7 +141,7 @@ class Ed_LTI {
 		wp_logout();
 		wp_set_current_user( 0 );
 
-		if ( session_status() == PHP_SESSION_NONE ) {
+		if ( session_status() === PHP_SESSION_NONE ) {
 			session_start();
 		}
 
@@ -148,10 +154,13 @@ class Ed_LTI {
 	/**
 	 * Determine if a non-student user is accessing a student blog
 	 *
+	 * @param string           $blog_type
+	 * @param Ed_Tool_Provider $tool
+	 *
 	 * @return bool
 	 */
 	private function is_student_blog_and_non_student( $blog_type, Ed_Tool_Provider $tool ) {
-		return ( 'student' == $blog_type && ! $tool->user->isLearner() );
+		return ( 'student' === $blog_type && ! $tool->user->isLearner() );
 	}
 
 	/**
@@ -162,9 +171,11 @@ class Ed_LTI {
 	private function lti_get_user_data( Ed_Tool_Provider $tool ) {
 		// LTI specs tell us that username should be set in the 'lis_person_sourcedid' param, but moodle doesn't do
 		// this. Moodle seems to use 'ext_user_username' instead
-		$username = '' != $_REQUEST['lis_person_sourcedid']
-				  ? $_REQUEST['lis_person_sourcedid']
-				  : $_REQUEST['ext_user_username'];
+        // phpcs:disable
+		$username = '' !== $_REQUEST['lis_person_sourcedid']
+            ? $_REQUEST['lis_person_sourcedid']
+            : $_REQUEST['ext_user_username'];
+        // phpcs:enable
 
 		$user_data = [
 			'username'  => $username,
@@ -183,11 +194,12 @@ class Ed_LTI {
 	 * @return array
 	 */
 	private function lti_get_site_data() {
+        // phpcs:disable
 		$site_category = isset( $_REQUEST['custom_site_category'] ) ? $_REQUEST['custom_site_category'] : 1;
 
-		$username = '' != $_REQUEST['lis_person_sourcedid']
-				  ? $_REQUEST['lis_person_sourcedid']
-				  : $_REQUEST['ext_user_username'];
+		$username = '' !== $_REQUEST['lis_person_sourcedid']
+            ? $_REQUEST['lis_person_sourcedid']
+            : $_REQUEST['ext_user_username'];
 
 		return [
 			'course_id'        => $_REQUEST['context_label'],
@@ -198,6 +210,7 @@ class Ed_LTI {
 			'site_category'    => $site_category,
 			'source_id'        => get_site_option( 'default_site_template_id' ),
 		];
+        // phpcs:enable
 	}
 
 	/**
@@ -213,9 +226,11 @@ class Ed_LTI {
 
 			if ( ! $user_id ) {
 				$error_message = 'This Email address is already being used by another user. Please contact <a href="'
-							   . get_site_option( 'is_helpline_url' ) . '">IS Helpline</a> for assistance.';
+					. get_site_option( 'is_helpline_url' ) . '">IS Helpline</a> for assistance.';
 
-				wp_die( $error_mesasge, 200 );
+                // phpcs:disable
+				wp_die( $error_message, 200 );
+                // phpcs:enable
 			}
 
 			$user = get_userdata( $user_id );
@@ -293,12 +308,13 @@ class Ed_LTI {
 		$blog_type = 'student';
 
 		$query = "SELECT * FROM {$this->wpdb->base_prefix}blogs_meta "
-			   . "INNER JOIN {$this->wpdb->base_prefix}blogs "
-			   . "ON {$this->wpdb->base_prefix}blogs.blog_id = {$this->wpdb->base_prefix}blogs_meta.blog_id "
-			   . 'WHERE course_id = %s '
-			   . 'AND resource_link_id = %s '
-			   . 'AND blog_type = %s';
+			. "INNER JOIN {$this->wpdb->base_prefix}blogs "
+			. "ON {$this->wpdb->base_prefix}blogs.blog_id = {$this->wpdb->base_prefix}blogs_meta.blog_id "
+			. 'WHERE course_id = %s '
+			. 'AND resource_link_id = %s '
+			. 'AND blog_type = %s';
 
+        // phpcs:disable
 		$blogs = $this->wpdb->get_results(
 			$this->wpdb->prepare(
 				$query,
@@ -307,6 +323,7 @@ class Ed_LTI {
 				$blog_type
 			)
 		);
+        // phpcs:enable
 
 		get_template_part( 'header' );
 
@@ -321,8 +338,8 @@ class Ed_LTI {
 			foreach ( $blogs as $blog ) {
 				$blog_details = get_blog_details( $blog->blog_id );
 
-				echo '<li><a href="index.php?lti_staff_view_blog=true&blog_id=' . $blog->blog_id . '"><' .
-					 $blog_details->blogname . '</a></li>';
+				echo '<li><a href="index.php?lti_staff_view_blog=true&blog_id=' . esc_attr( $blog->blog_id ) . '"><' .
+					esc_html( $blog_details->blogname ) . '</a></li>';
 			}
 		}
 
@@ -340,8 +357,10 @@ class Ed_LTI {
 	 * @return void
 	 */
 	public function lti_add_staff_to_student_blog() {
+        // phpcs:disable
 		if ( isset( $_REQUEST['lti_staff_view_blog'] ) && 'true' == $_REQUEST['lti_staff_view_blog'] ) {
-			if ( session_status() == PHP_SESSION_NONE ) {
+        // phpcs:enable
+			if ( session_status() === PHP_SESSION_NONE ) {
 				session_start();
 			}
 
@@ -349,7 +368,10 @@ class Ed_LTI {
 				wp_die( 'You do not have permssion to view this page' );
 			}
 
+            // phpcs:disable
 			$blog_id    = $_REQUEST['blog_id'];
+            // phpcs:enable
+
 			$course_id  = $_SESSION['lti_staff_course_id'];
 			$user_roles = $_SESSION['lti_user_roles'];
 

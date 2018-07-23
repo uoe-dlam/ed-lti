@@ -24,7 +24,12 @@ class Ed_LTI_Data {
 		$this->wpdb->ltitable = $this->wpdb->base_prefix . 'lti2_consumer';
 
 		if ( is_user_logged_in() && is_super_admin() ) {
-			if ( $this->wpdb->get_var( "SHOW TABLES LIKE '{$this->wpdb->ltitable}'" ) != $this->wpdb->ltitable ) {
+            // phpcs:disable
+			$lti_tables = $this->wpdb->get_var( "SHOW TABLES LIKE '{$this->wpdb->ltitable}'" );
+            // phpcs:enable
+
+			if ( $lti_tables !== $this->wpdb->ltitable ) {
+                // phpcs:disable
 				$this->wpdb->query(
 					"CREATE TABLE IF NOT EXISTS `{$this->wpdb->ltitable}` (
                       consumer_pk int(11) NOT NULL AUTO_INCREMENT,
@@ -201,6 +206,7 @@ class Ed_LTI_Data {
 					'ALTER TABLE `' . $this->wpdb->base_prefix . "lti2_share_key`
                     ADD INDEX {$this->wpdb->base_prefix}lti2_share_key_resource_link_pk_IDX (resource_link_pk ASC);"
 				);
+                // phpcs:enable
 			}
 		}
 	}
@@ -214,7 +220,12 @@ class Ed_LTI_Data {
 		$this->wpdb->blogsmetatable = $this->wpdb->base_prefix . 'blogs_meta';
 
 		if ( is_user_logged_in() && is_super_admin() ) {
-			if ( $this->wpdb->get_var( "SHOW TABLES LIKE '{$this->wpdb->blogsmetatable}'" ) != $this->wpdb->blogsmetatable ) {
+            // phpcs:disable
+            $blogs_meta_table = $this->wpdb->get_var( "SHOW TABLES LIKE '{$this->wpdb->blogsmetatable}'" );
+            // phpcs:enable
+
+			if ( $blogs_meta_table !== $this->wpdb->blogsmetatable ) {
+                // phpcs:disable
 				$this->wpdb->query(
 					"CREATE TABLE IF NOT EXISTS `{$this->wpdb->blogsmetatable}` (
                       id int(11) NOT NULL AUTO_INCREMENT,
@@ -237,6 +248,7 @@ class Ed_LTI_Data {
                     ON DELETE CASCADE
                     ON UPDATE CASCADE;"
 				);
+                // phpcs:enable
 			}
 		}
 	}

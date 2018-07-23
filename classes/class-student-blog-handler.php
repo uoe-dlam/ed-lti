@@ -47,14 +47,15 @@ class Student_Blog_Handler extends Blog_Handler {
 	 */
 	protected function blog_exists() {
 		$query = 'SELECT * '
-			   . "FROM {$this->wpdb->base_prefix}blogs_meta "
-			   . "INNER JOIN {$this->wpdb->base_prefix}blogs "
-			   . "ON {$this->wpdb->base_prefix}blogs.blog_id = {$this->wpdb->base_prefix}blogs_meta.blog_id "
-			   . 'WHERE course_id = %s '
-			   . 'AND resource_link_id = %s '
-			   . 'AND blog_type = %s '
-			   . 'AND creator_id = %d';
+			. "FROM {$this->wpdb->base_prefix}blogs_meta "
+			. "INNER JOIN {$this->wpdb->base_prefix}blogs "
+			. "ON {$this->wpdb->base_prefix}blogs.blog_id = {$this->wpdb->base_prefix}blogs_meta.blog_id "
+			. 'WHERE course_id = %s '
+			. 'AND resource_link_id = %s '
+			. 'AND blog_type = %s '
+			. 'AND creator_id = %d';
 
+        // phpcs:disable
 		$blogs = $this->wpdb->get_results(
 			$this->wpdb->prepare(
 				$query,
@@ -64,6 +65,7 @@ class Student_Blog_Handler extends Blog_Handler {
 				$this->user->ID
 			)
 		);
+        // phpcs:enable
 
 		return ( ! empty( $blogs ) );
 	}
@@ -75,11 +77,12 @@ class Student_Blog_Handler extends Blog_Handler {
 	 */
 	public function get_blog_max_version() {
 		$query = 'SELECT IFNULL(MAX(version), 0) AS max_version '
-			   . "FROM {$this->wpdb->base_prefix}blogs_meta "
-			   . 'WHERE course_id = %s '
-			   . 'AND blog_type = %s '
-			   . 'AND creator_id = %d';
+			. "FROM {$this->wpdb->base_prefix}blogs_meta "
+			. 'WHERE course_id = %s '
+			. 'AND blog_type = %s '
+			. 'AND creator_id = %d';
 
+        // phpcs:disable
 		$blog_max_version = $this->wpdb->get_results(
 			$this->wpdb->prepare(
 				$query,
@@ -88,6 +91,7 @@ class Student_Blog_Handler extends Blog_Handler {
 				$this->user->ID
 			)
 		);
+        // phpcs:enable
 
 		return (int) $blog_max_version[0]->max_version;
 	}
@@ -101,11 +105,12 @@ class Student_Blog_Handler extends Blog_Handler {
 	 */
 	protected function get_blog_count() {
 		$query = 'SELECT COUNT(id) AS blog_count '
-			   . "FROM {$this->wpdb->base_prefix}blogs_meta "
-			   . 'WHERE course_id = %s '
-			   . 'AND blog_type = %s '
-			   . 'AND creator_id = %d';
+			. "FROM {$this->wpdb->base_prefix}blogs_meta "
+			. 'WHERE course_id = %s '
+			. 'AND blog_type = %s '
+			. 'AND creator_id = %d';
 
+        // phpcs:disable
 		$blog_count = $this->wpdb->get_results(
 			$this->wpdb->prepare(
 				$query,
@@ -114,6 +119,7 @@ class Student_Blog_Handler extends Blog_Handler {
 				$this->user->ID
 			)
 		);
+        // phpcs:enable
 
 		return (int) $blog_count[0]->blog_count;
 	}
@@ -125,14 +131,15 @@ class Student_Blog_Handler extends Blog_Handler {
 	 */
 	protected function get_blog_id() {
 		$query = "SELECT {$this->wpdb->base_prefix}blogs_meta.blog_id AS blog_id "
-			   . "FROM {$this->wpdb->base_prefix}blogs_meta "
-			   . "INNER JOIN {$this->wpdb->base_prefix}blogs "
-			   . "ON {$this->wpdb->base_prefix}blogs.blog_id = {$this->wpdb->base_prefix}blogs_meta.blog_id "
-			   . 'WHERE course_id = %s '
-			   . 'AND resource_link_id = %s '
-			   . 'AND blog_type = %s '
-			   . 'AND creator_id = %d';
+			. "FROM {$this->wpdb->base_prefix}blogs_meta "
+			. "INNER JOIN {$this->wpdb->base_prefix}blogs "
+			. "ON {$this->wpdb->base_prefix}blogs.blog_id = {$this->wpdb->base_prefix}blogs_meta.blog_id "
+			. 'WHERE course_id = %s '
+			. 'AND resource_link_id = %s '
+			. 'AND blog_type = %s '
+			. 'AND creator_id = %d';
 
+        // phpcs:disable
 		$blogs = $this->wpdb->get_results(
 			$this->wpdb->prepare(
 				$query,
@@ -142,6 +149,7 @@ class Student_Blog_Handler extends Blog_Handler {
 				$this->user->ID
 			)
 		);
+        // phpcs:enable
 
 		if ( ! $blogs ) {
 			return null;

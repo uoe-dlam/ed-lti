@@ -218,14 +218,16 @@ abstract class Blog_Handler {
 			. 'WHERE course_id = %s '
 			. 'AND blog_id = %d';
 
-        $prepared_statement = $this->wpdb->prepare(
-            $query,
-            $this->wpdb->base_prefix,
-            $course_id,
-            $blog_id
-        );
+        // phpcs:disable
+		$prepared_statement = $this->wpdb->prepare(
+			$query,
+			$this->wpdb->base_prefix,
+			$course_id,
+			$blog_id
+		);
 
 		$blog_count = $this->wpdb->get_results( $prepared_statement );
+        // phpcs:enable
 
 		return ( (int) $blog_count[0]->blog_count > 0 );
 	}

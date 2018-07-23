@@ -35,7 +35,9 @@ class Ed_LTI_Settings {
 
 			switch ( $_POST['action'] ) {
 				case 'edit':
+                    // phpcs:disable
 					$row = $this->wpdb->get_row( $this->wpdb->prepare( $query, $consumer_key ) );
+                    // phpcs:enable
 
 					if ( $row ) {
 						$this->lti_edit( $row );
@@ -52,7 +54,7 @@ class Ed_LTI_Settings {
 						echo '<ul style="color:red">';
 
 						foreach ( $errors as $error ) {
-							echo '<li>' . $error . '</li>';
+							echo '<li>' . esc_html( $error ) . '</li>';
 						}
 
 						echo '</ul>';
@@ -62,13 +64,16 @@ class Ed_LTI_Settings {
 
 					$enabled = isset( $_POST['enabled'] ) ? 1 : 0;
 
+                    // phpcs:disable
 					$row = $this->wpdb->get_row( $this->wpdb->prepare( $query, $consumer_key ) );
+                    // phpcs:enable
 
 					if ( $row ) {
 						$update_query = "UPDATE {$this->wpdb->base_prefix}lti2_consumer "
-									  . 'SET  name = %s, secret = %s, enabled = %d, lti_version = %s '
-									  . 'WHERE consumer_key256 = %s';
+							. 'SET  name = %s, secret = %s, enabled = %d, lti_version = %s '
+							. 'WHERE consumer_key256 = %s';
 
+                        // phpcs:disable
 						$this->wpdb->query(
 							$this->wpdb->prepare(
 								$update_query,
@@ -79,13 +84,15 @@ class Ed_LTI_Settings {
 								$consumer_key
 							)
 						);
+                        // phpcs:enable
 
 						echo '<p><strong>Provider Updated</strong></p>';
 					} else {
 						$insert_query = "INSERT INTO {$this->wpdb->base_prefix}lti2_consumer "
-									  . '( `name`, `consumer_key256`, `secret`, `enabled`, `lti_version`) '
-									  . 'VALUES ( %s, %s, %s, %d, %s)';
+							. '( `name`, `consumer_key256`, `secret`, `enabled`, `lti_version`) '
+							. 'VALUES ( %s, %s, %s, %d, %s)';
 
+                        // phpcs:disable
 						$this->wpdb->query(
 							$this->wpdb->prepare(
 								$insert_query,
@@ -96,6 +103,7 @@ class Ed_LTI_Settings {
 								$_POST['lti_version']
 							)
 						);
+                        // phpcs:enable
 
 						echo '<p><strong>Provider Added</strong></p>';
 					}
@@ -104,7 +112,9 @@ class Ed_LTI_Settings {
 				case 'del':
 					$delete_query = "DELETE FROM {$this->wpdb->base_prefix}lti2_consumer WHERE consumer_key256 = %s";
 
+                    // phpcs:disable
 					$this->wpdb->query( $this->wpdb->prepare( $delete_query, $consumer_key ) );
+                    // phpcs:enable
 
 					echo '<p><strong>Provider Deleted</strong></p>';
 
@@ -121,14 +131,16 @@ class Ed_LTI_Settings {
 				$search = '%' . $this->wpdb->esc_like( addslashes( $_POST['search_txt'] ) ) . '%';
 
 				$search_query = "SELECT * FROM {$this->wpdb->base_prefix}lti2_consumer "
-							  . 'WHERE consumer_key256 LIKE %s '
-							  . 'OR name LIKE %s';
+					. 'WHERE consumer_key256 LIKE %s '
+					. 'OR name LIKE %s';
 
 				$rows = $this->wpdb->get_results(
+                    // phpcs:disable
 					$this->wpdb->prepare(
 						$search_query,
 						[ $search, $search ]
 					)
+                    // phpcs:enable
 				);
 
 				$this->lti_listing( $rows, 'Searching for ' . esc_html( $_POST['search_txt'] ) );
@@ -146,7 +158,9 @@ class Ed_LTI_Settings {
 
 			$this->lti_edit();
 
+            // phpcs:disable
 			$rows = $this->wpdb->get_results( "SELECT * FROM {$this->wpdb->base_prefix}lti2_consumer LIMIT 0,20" );
+            // phpcs:enable
 
 			$this->lti_listing( $rows );
 		}
@@ -160,17 +174,19 @@ class Ed_LTI_Settings {
 	private function lti_do_validation() {
 		$errors = [];
 
-		if ( '' == $_POST['name'] ) {
+        // phpcs:disable
+		if ( '' === $_POST['name'] ) {
 			$errors[] = 'Name is required';
 		}
 
-		if ( '' == $_POST['consumer_key'] ) {
+		if ( '' === $_POST['consumer_key'] ) {
 			$errors[] = 'Consumer key is required';
 		}
 
-		if ( '' == $_POST['secret'] ) {
+		if ( '' === $_POST['secret'] ) {
 			$errors[] = 'Secret is required';
 		}
+        // phpcs:enable
 
 		return $errors;
 	}
@@ -202,34 +218,26 @@ class Ed_LTI_Settings {
 		wp_nonce_field( 'lti' );
 
 		echo '<table class="form-table">';
-		echo '<tr><th>Name</th><td><input type="text" name="name" value="' . $row->name . '" required ></td></tr>';
+		echo '<tr><th>Name</th><td><input type="text" name="name" value="' . esc_attr( $row->name )
+			. '" required ></td></tr>';
 
+        // phpcs:disable
 		echo '<tr><th>Consumer key</th><td><input type="text" name="consumer_key" value="'
-		   . $row->consumer_key256 . '"' . ( ! $is_new ? 'readonly="readonly"' : '' ) . 'required ></td></tr>';
+            . $row->consumer_key256 . '"' . ( ! $is_new ? 'readonly="readonly"' : '' ) . 'required ></td></tr>';
 
 		echo '<tr><th>Secret</th><td><input type="text" name="secret" value="' . $row->secret
-		   . '" required ></td></tr>';
+            . '" required ></td></tr>';
+        // phpcs:enable
 
 		echo '<tr><th>LTI Version</th><td><select name="lti_version"><option value="LTI - 1p0"'
-			. ( 'LTI - 1p0' == $row->lti_version ? 'selected' : '' ) . '>LTI-1p0</option><option value="LTI - 2p0" '
-			. ( 'LTI - 2p0' == $row->lti_version ? 'selected' : '' ) . '>LTI-2p0</option></select></td></tr>';
+			. ( 'LTI - 1p0' === $row->lti_version ? 'selected' : '' ) . '>LTI-1p0</option><option value="LTI - 2p0" '
+			. ( 'LTI - 2p0' === $row->lti_version ? 'selected' : '' ) . '>LTI-2p0</option></select></td></tr>';
 
 		echo '<tr><th>Enabled</th><td><input type="checkbox" name="enabled" value="1" '
-		   . ( 1 == $row->enabled ? 'checked' : '' ) . '></td></tr>';
+			. ( 'on' === $row->enabled ? 'checked' : '' ) . '></td></tr>';
 
 		echo '</table>';
 		echo '<p><input type="submit" class="button - primary" value="Save"></p></form><br><br>';
-	}
-
-	/**
-	 * Display a warning if an admin tries to enable the LTI plugin on a non-multisite instance
-	 *
-	 * @return void
-	 */
-	function lti_network_warning() {
-		echo '<div id="lti-warning" class="updated fade"><p><strong>LTI Disabled</strong>'
-		   . 'You must <a href="http://codex.wordpress.org/Create_A_Network">create a network</a> for it to work.</p>'
-		   . '</div>';
 	}
 
 	/**
@@ -239,29 +247,29 @@ class Ed_LTI_Settings {
 	 */
 	private function lti_listing( $rows, $heading = '' ) {
 		if ( $rows ) {
-			if ( '' != $heading ) {
-				echo "<h3>$heading</h3>";
+			if ( '' !== $heading ) {
+				echo '<h3>' . esc_html( $heading ) . '</h3>';
 			}
 
 			echo '<table class="widefat" cellspacing="0"><thead><tr><th>Consumer name</th><th>Consumer key</th>'
-			   . '<th>LTI Version</th><th>Enabled</th><th>Edit</th><th>Delete</th></tr></thead><tbody>';
+				. '<th>LTI Version</th><th>Enabled</th><th>Edit</th><th>Delete</th></tr></thead><tbody>';
 
 			foreach ( $rows as $row ) {
-				echo "<tr><td>{$row->name}</td>";
-				echo "<td>{$row->consumer_key256}</td>";
+				echo '<tr><td>' . esc_html( $row->name ) . '</td>';
+				echo '<td>' . esc_html( $row->consumer_key256 ) . '</td>';
 				echo '<td>';
-				echo $row->lti_version;
+				echo esc_html( $row->lti_version );
 				echo '</td><td>';
-				echo 1 == $row->enabled ? 'Yes' : 'No';
+				echo 'on' === $row->enabled ? 'Yes' : 'No';
 
 				echo '</td><td><form method="POST"><input type="hidden" name="action" value="edit">'
-				   . '<input type="hidden" name="consumer_key" value="' . $row->consumer_key256 . '">';
+					. '<input type="hidden" name="consumer_key" value="' . esc_attr( $row->consumer_key256 ) . '">';
 
 				wp_nonce_field( 'lti' );
 
 				echo '<input type="submit" class="button-secondary" value="Edit"></form></td><td><form method="POST">'
-				   . '<input type="hidden" name="action" value="del"><input type="hidden" name="consumer_key" '
-				   . 'value="' . $row->consumer_key256 . '">';
+					. '<input type="hidden" name="action" value="del"><input type="hidden" name="consumer_key" '
+					. 'value="' . esc_attr( $row->consumer_key256 ) . '">';
 
 				wp_nonce_field( 'lti' );
 
