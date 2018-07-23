@@ -4,6 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
+    "hash": "96cf0f0428ab417924dabcf284ea6d24",
     "content-hash": "e2039907eb7d59f12e25d38e6d344083",
     "packages": [
         {
@@ -44,7 +45,7 @@
             "keywords": [
                 "LTI"
             ],
-            "time": "2016-09-18T04:22:22+00:00"
+            "time": "2016-09-18 04:22:22"
         }
     ],
     "packages-dev": [],
