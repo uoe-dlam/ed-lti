@@ -213,20 +213,20 @@ abstract class Blog_Handler {
 	 * @return bool
 	 */
 	public static function is_course_blog( $course_id, $blog_id ) {
-		$query = 'SELECT COUNT(id) AS blog_count '
-			. 'FROM %sblogs_meta '
+		global $wpdb;
+	    $query = 'SELECT COUNT(id) AS blog_count '
+			. 'FROM ' . $wpdb->base_prefix . 'blogs_meta '
 			. 'WHERE course_id = %s '
 			. 'AND blog_id = %d';
 
         // phpcs:disable
-		$prepared_statement = $this->wpdb->prepare(
+		$prepared_statement = $wpdb->prepare(
 			$query,
-			$this->wpdb->base_prefix,
 			$course_id,
 			$blog_id
 		);
 
-		$blog_count = $this->wpdb->get_results( $prepared_statement );
+		$blog_count = $wpdb->get_results( $prepared_statement );
         // phpcs:enable
 
 		return ( (int) $blog_count[0]->blog_count > 0 );
