@@ -343,7 +343,7 @@ class Ed_LTI {
 
 			foreach ( $blogs as $blog ) {
 				$blog_details = get_blog_details( $blog->blog_id );
-				$blog_name = $blog_details->blogname;
+				$blog_name    = $blog_details->blogname;
 
 				echo '<li><a href="index.php?lti_staff_view_blog=true&blog_id=' . esc_attr( $blog->blog_id ) . '">' .
 					esc_html( $blog_name ) . '</a></li>';
