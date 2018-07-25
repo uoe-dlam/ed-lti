@@ -173,9 +173,12 @@ class Ed_LTI {
 		// LTI specs tell us that username should be set in the 'lis_person_sourcedid' param, but moodle doesn't do
 		// this. Moodle seems to use 'ext_user_username' instead
         // phpcs:disable
-		$username = '' !== $_REQUEST['lis_person_sourcedid']
+        $username = isset( $_REQUEST['lis_person_sourcedid'] )
             ? $_REQUEST['lis_person_sourcedid']
-            : $_REQUEST['ext_user_username'];
+            : isset( $_REQUEST['ext_user_username'] )
+            ? $_REQUEST['ext_user_username']
+            : $_REQUEST['user_id'];
+
         // phpcs:enable
 
 		$user_data = [
@@ -198,9 +201,11 @@ class Ed_LTI {
         // phpcs:disable
 		$site_category = isset( $_REQUEST['custom_site_category'] ) ? $_REQUEST['custom_site_category'] : 1;
 
-		$username = '' !== $_REQUEST['lis_person_sourcedid']
+        $username = isset( $_REQUEST['lis_person_sourcedid'] )
             ? $_REQUEST['lis_person_sourcedid']
-            : $_REQUEST['ext_user_username'];
+            : isset( $_REQUEST['ext_user_username'] )
+            ? $_REQUEST['ext_user_username']
+            : $_REQUEST['user_id'];
 
 		return [
 			'course_id'        => $_REQUEST['context_label'],
