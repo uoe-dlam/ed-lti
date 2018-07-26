@@ -170,16 +170,7 @@ class Ed_LTI {
 	 * @return array
 	 */
 	private function lti_get_user_data( Ed_Tool_Provider $tool ) {
-		// LTI specs tell us that username should be set in the 'lis_person_sourcedid' param, but moodle doesn't do
-		// this. Moodle seems to use 'ext_user_username' instead
-        // phpcs:disable
-        $username = isset( $_REQUEST['lis_person_sourcedid'] )
-            ? $_REQUEST['lis_person_sourcedid']
-            : isset( $_REQUEST['ext_user_username'] )
-            ? $_REQUEST['ext_user_username']
-            : $_REQUEST['user_id'];
-
-        // phpcs:enable
+		$username = $this->lti_get_username_from_request();
 
 		$user_data = [
 			'username'  => $username,
@@ -193,6 +184,34 @@ class Ed_LTI {
 	}
 
 	/**
+	 * Get username from $_REQUEST
+	 *
+	 * @return string
+	 */
+	private function lti_get_username_from_request() {
+		// LTI specs tell us that username should be set in the 'lis_person_sourcedid' param, but moodle doesn't do
+		// this. Moodle seems to use 'ext_user_username' instead
+        // phpcs:disable
+        if( isset( $_REQUEST['lis_person_sourcedid'] ) && '' !== $_REQUEST['lis_person_sourcedid'] ) {
+            return $_REQUEST['lis_person_sourcedid'];
+        }
+
+        if( isset( $_REQUEST['ext_user_username'] ) && '' !== $_REQUEST['ext_user_username'] ) {
+            return $_REQUEST['ext_user_username'];
+        }
+
+        if( isset( $_REQUEST['user_id'] ) && '' !== $_REQUEST['user_id'] ) {
+            return $_REQUEST['user_id'];
+        }
+
+        $error_message = 'Your username has not be passed to our site. Please contact <a href="'
+            . get_site_option( 'is_helpline_url' ) . '">IS Helpline</a> for assistance.';
+
+        wp_die( $error_message, 200 );
+        // phpcs:enable
+	}
+
+	/**
 	 * Get site information for the LTI provider
 	 *
 	 * @return array
@@ -201,11 +220,7 @@ class Ed_LTI {
         // phpcs:disable
 		$site_category = isset( $_REQUEST['custom_site_category'] ) ? $_REQUEST['custom_site_category'] : 1;
 
-        $username = isset( $_REQUEST['lis_person_sourcedid'] )
-            ? $_REQUEST['lis_person_sourcedid']
-            : isset( $_REQUEST['ext_user_username'] )
-            ? $_REQUEST['ext_user_username']
-            : $_REQUEST['user_id'];
+        $username = $this->lti_get_username_from_request();
 
 		return [
 			'course_id'        => $_REQUEST['context_label'],
