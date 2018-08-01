@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: UOE LTI
-Description: Allows LMSs to connect to site and create blogs
-Author: Richard Lawson (richard.lawson@ed.ac.uk)
+Plugin Name: UoE LTI
+Description: Allows LMS's to connect to our website and create blogs.
+Author: DLAM Applications Development
 Version: 1.0
 */
 
