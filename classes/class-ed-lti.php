@@ -241,7 +241,7 @@ class Ed_LTI {
 
 			wp_update_user( $user );
 
-            // set current user back to 0. If not, the user that we created will be used in blog creation and made an admin. We may not want this.
+            // set current user back to 0. If not, this user will be used in blog creation and made an admin. We may not want this.
             wp_set_current_user( 0 );
 		}
 
