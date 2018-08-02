@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: UoE LTI
-Description: Allows LMS's to connect to our website and create blogs.
-Author: DLAM Applications Development
+Description: Allows LMSs to connect to our website and create blogs.
+Author: DLAM Applications Development Team
 Version: 1.0
 */
 
