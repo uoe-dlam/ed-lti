@@ -240,6 +240,9 @@ class Ed_LTI {
 			$user->last_name  = $data['lastname'];
 
 			wp_update_user( $user );
+
+            // set current user to null so that no administrator is added to a newly created blog.
+            wp_set_current_user( null );
 		}
 
 		return $user;
