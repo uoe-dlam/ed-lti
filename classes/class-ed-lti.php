@@ -97,7 +97,7 @@ class Ed_LTI {
 			}
 
 			$user = $this->first_or_create_user( $this->lti_get_user_data( $tool ) );
-            set_user_name_temporarily_to_vle_name( $user, $tool );
+            $this->set_user_name_temporarily_to_vle_name( $user, $tool );
 
 			$blog_handler = Blog_Handler_Factory::instance( $blog_type );
 			$blog_handler->init( $this->lti_get_site_data(), $user );
