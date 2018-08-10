@@ -97,6 +97,7 @@ class Ed_LTI {
 			}
 
 			$user = $this->first_or_create_user( $this->lti_get_user_data( $tool ) );
+            $this->set_user_name_temporarily_to_vle_name( $user, $tool );
 
 			$blog_handler = Blog_Handler_Factory::instance( $blog_type );
 			$blog_handler->init( $this->lti_get_site_data(), $user );
@@ -268,6 +269,18 @@ class Ed_LTI {
 
 		return $user;
 	}
+
+    /**
+     * Set user first and last name to info supplied by vle. We do not want to save this permanently, however, as that could undo changes the user made on the wordpress end.
+     *
+     * @return void
+     */
+    private function set_user_name_temporarily_to_vle_name( $user, Ed_Tool_Provider $tool ) {
+        if( $tool->user->firstname !== '' || $tool->user->lastname !== '' ) {
+            $user->first_name = $tool->user->firstname;
+            $user->last_name = $tool->user->lastname;
+        }
+    }
 
 	/**
 	 * Create a login session for a user that has visited the blog via an LTI connection
