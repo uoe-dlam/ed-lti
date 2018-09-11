@@ -41,6 +41,14 @@ class Ed_LTI {
 	 * @return void
 	 */
 	public static function activate() {
+
+        // Throw an error in the wordpress admin console if ns cloner is not installed
+	    if ( ! is_plugin_active( 'ns-cloner-site-copier/ns-cloner.php' ) ) {
+            deactivate_plugins( __FILE__ );
+	        $error_message = __( 'This plugin requires the <a href="https://wordpress.org/plugins/ns-cloner-site-copier/">NS Cloner</a> plugin to be active!');
+            die( $error_message );
+        }
+
 		$lti_data = new Ed_LTI_Data();
 
 		$lti_data->lti_maybe_create_db();
