@@ -87,7 +87,8 @@ abstract class Blog_Handler {
 	 *
 	 * @return int
 	 */
-	public function first_or_create_blog() {
+	public function first_or_create_blog( $make_private = false ) {
+
 		if (
 			is_null( $this->course_id ) || is_null( $this->course_title ) || is_null( $this->domain ) ||
 			is_null( $this->resource_link_id ) || is_null( $this->username ) || is_null( $this->source_id ) ||
@@ -100,7 +101,7 @@ abstract class Blog_Handler {
 			return $this->get_blog_id();
 		}
 
-		return $this->create_blog();
+		return $this->create_blog( $make_private );
 	}
 
 	/**
@@ -108,7 +109,8 @@ abstract class Blog_Handler {
 	 *
 	 * @return int
 	 */
-	protected function create_blog() {
+	protected function create_blog( $make_private = false ) {
+
 		$path  = $this->get_path();
 		$title = $this->get_title();
 
@@ -131,7 +133,10 @@ abstract class Blog_Handler {
 		$blog_id = $this->do_ns_cloner_create( $blog_data );
 		$this->add_blog_meta( $blog_id, $version );
 		$this->add_site_category( $blog_id );
-		$this->make_blog_private( $blog_id );
+
+		if ( $make_private ) {
+			$this->make_blog_private( $blog_id );
+		}
 
 		return $blog_id;
 	}
@@ -214,7 +219,7 @@ abstract class Blog_Handler {
 	 */
 	public static function is_course_blog( $course_id, $blog_id ) {
 		global $wpdb;
-	    $query = 'SELECT COUNT(id) AS blog_count '
+		$query = 'SELECT COUNT(id) AS blog_count '
 			. 'FROM ' . $wpdb->base_prefix . 'blogs_meta '
 			. 'WHERE course_id = %s '
 			. 'AND blog_id = %d';

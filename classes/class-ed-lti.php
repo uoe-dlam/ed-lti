@@ -9,6 +9,7 @@ require_once 'class-course-blog-handler.php';
 require_once 'class-student-blog-handler.php';
 require_once 'class-ed-lti-data.php';
 require_once 'class-ed-lti-settings.php';
+require_once 'class-ed-lti-config.php';
 
 use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 use IMSGlobal\LTI\ToolProvider;
@@ -31,6 +32,7 @@ class Ed_LTI {
 		add_action( 'parse_request', [ $this, 'lti_add_staff_to_student_blog' ] );
 
 		new Ed_LTI_Settings();
+        new Ed_LTI_Config();
 	}
 
 	/**
@@ -101,7 +103,9 @@ class Ed_LTI {
 
 			$blog_handler = Blog_Handler_Factory::instance( $blog_type );
 			$blog_handler->init( $this->lti_get_site_data(), $user );
-			$blog_id = $blog_handler->first_or_create_blog();
+
+			$make_private = get_site_option( 'lti_make_sites_private' ) ? true : false;
+			$blog_id = $blog_handler->first_or_create_blog( $make_private );
 
 			$user_roles = new User_LTI_Roles( $tool->user->roles );
 			$blog_handler->add_user_to_blog( $user, $blog_id, $user_roles );
