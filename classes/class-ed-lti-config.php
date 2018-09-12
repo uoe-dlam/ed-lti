@@ -7,6 +7,7 @@
 class Ed_LTI_Config {
 
 	public $updated;
+    public $errors = [];
 
 	public function __construct() {
 		$this->initialize_options();
@@ -30,6 +31,10 @@ class Ed_LTI_Config {
 		if ( ! get_site_option( 'default_site_template_id' ) ) {
 			add_site_option( 'default_site_template_id', 1 );
 		}
+
+        if ( ! get_site_option( 'default_site_template_slug' ) ) {
+            add_site_option( 'default_site_template_slug', '' );
+        }
 	}
 
 	/**
@@ -67,13 +72,20 @@ class Ed_LTI_Config {
 					<p><?php _e( 'Settings updated successfully!', 'lti-config-group' ); ?></p>
 				</div>
 			<?php endif; ?>
+            <?php if ( ! empty( $this->errors ) ) : ?>
+                <div class="notice notice-error">
+                    <?php foreach ( $this->errors as $error ) : ?>
+                    <p><?php _e( $error, 'lti-config-group' ); ?></p>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
 
 			<form method="post">
 
 				<table class="form-table">
 				<?php if ( is_plugin_active( 'sitewide-privacy-options/sitewide-privacy-options.php' ) ) : ?>
 					<tr>
-						<th scope="row"><label for="default_site_template_id"><?php _e( 'Do you want to make sites private on creation?', 'lti-config-group' ); ?></label></th>
+						<th scope="row"><label for="lti_make_sites_private"><?php _e( 'Do you want to make sites private on creation?', 'lti-config-group' ); ?></label></th>
 						<td>
 							<input name="lti_make_sites_private" type="checkbox" value="1" <?php checked( '1', get_site_option( 'lti_make_sites_private' ) ); ?>>
 						</td>
@@ -81,11 +93,17 @@ class Ed_LTI_Config {
 				<?php endif ?>
 
 				<tr>
-					<th scope="row"><label for="default_site_template_id"><?php _e( 'Default Site Template ID', 'lti-config-group' ); ?></label></th>
+					<th scope="row"><label for="default_site_template_url"><?php _e( 'Default Site Template URL', 'lti-config-group' ); ?></label></th>
 					<td>
-						<input type="number" min="0" id="default_site_template_id" name="default_site_template_id" value="<?php echo get_site_option( 'default_site_template_id' ); ?>" />
+						<?php echo get_site_url() ?>/<input type="text" id="default_site_template_slug" name="default_site_template_slug" value="<?php echo $this->get_saved_slug() ; ?>" />
 					</td>
+
 				</tr>
+                <tr>
+                    <td colspan="2">
+                        <?php _e( 'NB: If you do not add a subsite ( i.e. enter a value in the above field ), this plugin will use the top level site as the template URL.' ) ?>
+                    </td>
+                </tr>
 				</table>
 				<?php wp_nonce_field( 'lti_config_nonce', 'lti_config_nonce' ); ?>
 				<?php submit_button(); ?>
@@ -127,9 +145,19 @@ class Ed_LTI_Config {
 	public function update_settings() {
 		$settings = array();
 
-		if ( isset( $_POST['default_site_template_id'] ) && is_numeric( $_POST['default_site_template_id'] ) ) {
-			$default_site_id = sanitize_text_field( $_POST['default_site_template_id'] );
-			update_site_option( 'default_site_template_id', $default_site_id );
+        if ( isset( $_POST['default_site_template_slug'] ) ) {
+		    $slug = sanitize_text_field( $_POST['default_site_template_slug'] );
+            $path = $this->turn_slug_into_path( $slug );
+
+            if ( ! domain_exists( get_current_site()->domain, $path) ) {
+                $this->errors[] = 'The URL that you entered does not exist.';
+                return;
+            }
+
+            $blog_id = get_blog_id_from_url( get_current_site()->domain, $path );
+
+            update_site_option( 'default_site_template_slug', $slug );
+            update_site_option( 'default_site_template_id', $blog_id );
 		}
 
 		if ( is_plugin_active( 'sitewide-privacy-options/sitewide-privacy-options.php' ) ) {
@@ -139,11 +167,37 @@ class Ed_LTI_Config {
 			} else {
 				update_site_option( 'lti_make_sites_private', 0 );
 			}
+
 		} else {
 			update_site_option( 'lti_make_sites_private', 0 );
 		}
 
 		$this->updated = true;
 	}
+
+	/*
+	 *  Get slug with slashes so it is a valid wordpress path
+	 *
+	 * @param string $slug
+	 *
+	 * @return void
+	 */
+	protected function turn_slug_into_path( $slug ) {
+        $path = '/' . $slug;
+        $path = rtrim( $path, '/' ) . '/';
+        return $path;
+    }
+
+    /*
+	 *  Get slug from DB
+     *  Note: we get the slug from the blog itself, because it is possible that the template id has changed else where making the existing slug out of date.
+	 *
+	 * @return void
+	 */
+    protected function get_saved_slug() {
+        $slashed_slug = get_blog_details( get_site_option( 'default_site_template_id' ) )->path;
+        $slug = str_replace( '/', '', $slashed_slug );
+        return $slug;
+    }
 
 }
