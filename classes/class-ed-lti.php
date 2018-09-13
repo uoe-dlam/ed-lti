@@ -1,12 +1,17 @@
 <?php
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once ABSPATH . 'wp-admin/includes/plugin.php';
 require_once 'class-ed-tool-provider.php';
 require_once 'class-user-lti-roles.php';
 require_once 'class-blog-handler-factory.php';
 require_once 'class-blog-handler.php';
 require_once 'class-course-blog-handler.php';
 require_once 'class-student-blog-handler.php';
+require_once 'class-blog-creator-factory.php';
+require_once 'interface-blog-creator.php';
+require_once 'class-ns-cloner-blog-creator.php';
+require_once 'class-wp-blog-creator.php';
 require_once 'class-ed-lti-data.php';
 require_once 'class-ed-lti-settings.php';
 require_once 'class-ed-lti-config.php';
@@ -32,7 +37,7 @@ class Ed_LTI {
 		add_action( 'parse_request', [ $this, 'lti_add_staff_to_student_blog' ] );
 
 		new Ed_LTI_Settings();
-        new Ed_LTI_Config();
+		new Ed_LTI_Config();
 	}
 
 	/**
@@ -41,16 +46,7 @@ class Ed_LTI {
 	 * @return void
 	 */
 	public static function activate() {
-
-        // Throw an error in the wordpress admin console if ns cloner is not installed
-	    if ( ! is_plugin_active( 'ns-cloner-site-copier/ns-cloner.php' ) ) {
-            deactivate_plugins( __FILE__ );
-	        $error_message = __( 'This plugin requires the <a href="https://wordpress.org/plugins/ns-cloner-site-copier/">NS Cloner</a> plugin to be active!');
-            die( $error_message );
-        }
-
 		$lti_data = new Ed_LTI_Data();
-
 		$lti_data->lti_maybe_create_db();
 		$lti_data->lti_maybe_create_site_blogs_meta_table();
 	}
@@ -78,6 +74,7 @@ class Ed_LTI {
 	 */
 	public function lti_do_launch() {
 		if ( $this->lti_is_basic_lti_request() && is_main_site() ) {
+
 			$this->lti_destroy_session();
 
 			$tool = new Ed_Tool_Provider( $this->lti_get_db_connector() );
@@ -107,13 +104,13 @@ class Ed_LTI {
 			}
 
 			$user = $this->first_or_create_user( $this->lti_get_user_data( $tool ) );
-            $this->set_user_name_temporarily_to_vle_name( $user, $tool );
+			$this->set_user_name_temporarily_to_vle_name( $user, $tool );
 
 			$blog_handler = Blog_Handler_Factory::instance( $blog_type );
 			$blog_handler->init( $this->lti_get_site_data(), $user );
 
 			$make_private = get_site_option( 'lti_make_sites_private' ) ? true : false;
-			$blog_id = $blog_handler->first_or_create_blog( $make_private );
+			$blog_id      = $blog_handler->first_or_create_blog( $make_private );
 
 			$user_roles = new User_LTI_Roles( $tool->user->roles );
 			$blog_handler->add_user_to_blog( $user, $blog_id, $user_roles );
@@ -180,6 +177,8 @@ class Ed_LTI {
 	/**
 	 * Get the user data passed via LTI
 	 *
+	 * @param Ed_Tool_Provider $tool
+	 *
 	 * @return array
 	 */
 	private function lti_get_user_data( Ed_Tool_Provider $tool ) {
@@ -204,7 +203,6 @@ class Ed_LTI {
 	private function lti_get_username_from_request() {
 		// LTI specs tell us that username should be set in the 'lis_person_sourcedid' param, but moodle doesn't do
 		// this. Moodle seems to use 'ext_user_username' instead
-
         // phpcs:disable
 		if ( isset( $_REQUEST['lis_person_sourcedid'] ) && '' !== $_REQUEST['lis_person_sourcedid'] ) {
 			return $_REQUEST['lis_person_sourcedid'];
@@ -251,6 +249,8 @@ class Ed_LTI {
 	/**
 	 * Create a WordPress user or return the logged in user
 	 *
+	 * @param array $data
+	 *
 	 * @return WP_User
 	 */
 	private function first_or_create_user( array $data ) {
@@ -275,27 +275,33 @@ class Ed_LTI {
 
 			wp_update_user( $user );
 
-            // set current user to null so that no administrator is added to a newly created blog.
-            wp_set_current_user( null );
+			// set current user to null so that no administrator is added to a newly created blog.
+			wp_set_current_user( null );
 		}
 
 		return $user;
 	}
 
-    /**
-     * Set user first and last name to info supplied by vle. We do not want to save this permanently, however, as that could undo changes the user made on the wordpress end.
-     *
-     * @return void
-     */
-    private function set_user_name_temporarily_to_vle_name( $user, Ed_Tool_Provider $tool ) {
-        if( $tool->user->firstname !== '' || $tool->user->lastname !== '' ) {
-            $user->first_name = $tool->user->firstname;
-            $user->last_name = $tool->user->lastname;
-        }
-    }
+	/**
+	 * Set user first and last name to info supplied by vle. We do not want to save this permanently, however, as that could undo changes the user made on the WordPress end.
+	 *
+	 * @param WP_User          $user
+	 * @param Ed_Tool_Provider $tool
+	 *
+	 * @return void
+	 */
+	private function set_user_name_temporarily_to_vle_name( $user, Ed_Tool_Provider $tool ) {
+		if ( $tool->user->firstname !== '' || $tool->user->lastname !== '' ) {
+			$user->first_name = $tool->user->firstname;
+			$user->last_name  = $tool->user->lastname;
+		}
+	}
 
 	/**
 	 * Create a login session for a user that has visited the blog via an LTI connection
+	 *
+	 * @param WP_User $user
+	 * @param int     $blog_id
 	 *
 	 * @return void
 	 */
@@ -318,6 +324,10 @@ class Ed_LTI {
 	/**
 	 * Create a list of student blogs for a given course for a member of staff
 	 *
+	 * @param int              $course_id
+	 * @param string           $resource_link_id
+	 * @param Ed_Tool_Provider $tool
+	 *
 	 * @return void
 	 */
 	private function lti_show_staff_student_blogs_for_course( $course_id, $resource_link_id, Ed_Tool_Provider $tool ) {
@@ -333,6 +343,11 @@ class Ed_LTI {
 
 	/**
 	 * Add staff details to a current LTI session
+	 *
+	 * @param array          $user_data
+	 * @param User_LTI_Roles $user_roles
+	 * @param int            $course_id
+	 * @param string         $resource_link_id
 	 *
 	 * @return void
 	 */
@@ -351,6 +366,9 @@ class Ed_LTI {
 
 	/**
 	 * Render a list of student blogs
+	 *
+	 * @param int    $course_id
+	 * @param string $resource_link_id
 	 *
 	 * @return void
 	 */
@@ -444,6 +462,8 @@ class Ed_LTI {
 	/**
 	 * Redirect a user to the defined home URL
 	 *
+	 * @param int $blog_id
+	 *
 	 * @return void
 	 */
 	private function lti_redirect_user_to_blog_without_login( $blog_id ) {
@@ -477,5 +497,27 @@ class Ed_LTI {
 		}
 
 		return $str;
+	}
+
+	/**
+	 * Is NS Cloner Installed
+	 *
+	 * @return boolean
+	 */
+	public static function is_nscloner_installed() {
+		return is_plugin_active( 'ns-cloner-site-copier/ns-cloner.php' );
+	}
+
+	/*
+	 *  Get slug with slashes so it is a valid WordPress path
+	 *
+	 * @param string $slug
+	 *
+	 * @return void
+	 */
+	public static function turn_slug_into_path( $slug ) {
+		$path = '/' . $slug;
+		$path = rtrim( $path, '/' ) . '/';
+		return $path;
 	}
 }

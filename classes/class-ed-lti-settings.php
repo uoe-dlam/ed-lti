@@ -194,6 +194,8 @@ class Ed_LTI_Settings {
 	/**
 	 * Edit an existing LTI setting
 	 *
+	 * @param array $row
+	 *
 	 * @return void
 	 */
 	private function lti_edit( $row = false ) {
@@ -242,6 +244,9 @@ class Ed_LTI_Settings {
 
 	/**
 	 * List all LTI configurations
+	 *
+	 * @param array  $rows
+	 * @param string $heading
 	 *
 	 * @return void
 	 */

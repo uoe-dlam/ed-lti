@@ -27,7 +27,6 @@ class Ed_Tool_Provider extends ToolProvider\ToolProvider {
 		wp_die( esc_html( $this->reason ) );
 
 		// TODO handle this exception
-
 		/*
 		 *  TODO log reason on error
 		 *

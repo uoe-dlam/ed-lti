@@ -144,6 +144,8 @@ class Course_Blog_Handler extends Blog_Handler {
 	/**
 	 * Get the WordPress role for a given LTI user role
 	 *
+	 * @param User_LTI_Roles $user_roles
+	 *
 	 * @return string
 	 */
 	public function get_wordpress_role( User_LTI_Roles $user_roles ) {
