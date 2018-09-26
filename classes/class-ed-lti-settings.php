@@ -236,7 +236,7 @@ class Ed_LTI_Settings {
 			. ( 'LTI - 2p0' === $row->lti_version ? 'selected' : '' ) . '>LTI-2p0</option></select></td></tr>';
 
 		echo '<tr><th>Enabled</th><td><input type="checkbox" name="enabled" value="1" '
-			. ( 'on' === $row->enabled ? 'checked' : '' ) . '></td></tr>';
+			. ( '1' === $row->enabled ? 'checked' : '' ) . '></td></tr>';
 
 		echo '</table>';
 		echo '<p><input type="submit" class="button - primary" value="Save"></p></form><br><br>';
@@ -265,7 +265,7 @@ class Ed_LTI_Settings {
 				echo '<td>';
 				echo esc_html( $row->lti_version );
 				echo '</td><td>';
-				echo 'on' === $row->enabled ? 'Yes' : 'No';
+				echo '1' === $row->enabled ? 'Yes' : 'No';
 
 				echo '</td><td><form method="POST"><input type="hidden" name="action" value="edit">'
 					. '<input type="hidden" name="consumer_key" value="' . esc_attr( $row->consumer_key256 ) . '">';
