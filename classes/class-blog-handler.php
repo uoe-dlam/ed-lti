@@ -1,9 +1,10 @@
 <?php
 
 /**
- * Abstract class used to handle different types of WordPress blogs
+ * Abstract class used to handle different types of WordPress blogs.
  *
- * @author Richard Lawson <richard.lawson@ed.ac.uk>
+ * @author    Learning Applications Development Team <ltw-apps-dev@ed.ac.uk>
+ * @copyright University of Edinburgh
  */
 abstract class Blog_Handler {
 
