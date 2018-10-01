@@ -1,4 +1,10 @@
 <?php
+/**
+ * Class for coordinating main LTI functions.
+ *
+ * @author    Learning Applications Development Team <ltw-apps-dev@ed.ac.uk>
+ * @copyright University of Edinburgh
+ */
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'class-ed-tool-provider.php';
@@ -14,11 +20,6 @@ require_once 'class-ed-lti-config.php';
 use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 use IMSGlobal\LTI\ToolProvider;
 
-/**
- * Class for coordinating main LTI functions.
- *
- * @author Richard Lawson <richard.lawson@ed.ac.uk>
- */
 class Ed_LTI {
 
 	private $wpdb;
@@ -32,7 +33,7 @@ class Ed_LTI {
 		add_action( 'parse_request', [ $this, 'lti_add_staff_to_student_blog' ] );
 
 		new Ed_LTI_Settings();
-        new Ed_LTI_Config();
+		new Ed_LTI_Config();
 	}
 
 	/**
@@ -42,12 +43,12 @@ class Ed_LTI {
 	 */
 	public static function activate() {
 
-        // Throw an error in the wordpress admin console if ns cloner is not installed
-	    if ( ! is_plugin_active( 'ns-cloner-site-copier/ns-cloner.php' ) ) {
-            deactivate_plugins( __FILE__ );
-	        $error_message = __( 'This plugin requires the <a href="https://wordpress.org/plugins/ns-cloner-site-copier/">NS Cloner</a> plugin to be active!');
-            die( $error_message );
-        }
+		// Throw an error in the WordPress admin console if ns cloner is not installed
+		if ( ! is_plugin_active( 'ns-cloner-site-copier/ns-cloner.php' ) ) {
+			deactivate_plugins( __FILE__ );
+			$error_message = __( 'This plugin requires the <a href="https://wordpress.org/plugins/ns-cloner-site-copier/">NS Cloner</a> plugin to be active!' );
+			die( $error_message );
+		}
 
 		$lti_data = new Ed_LTI_Data();
 
@@ -107,13 +108,13 @@ class Ed_LTI {
 			}
 
 			$user = $this->first_or_create_user( $this->lti_get_user_data( $tool ) );
-            $this->set_user_name_temporarily_to_vle_name( $user, $tool );
+			$this->set_user_name_temporarily_to_vle_name( $user, $tool );
 
 			$blog_handler = Blog_Handler_Factory::instance( $blog_type );
 			$blog_handler->init( $this->lti_get_site_data(), $user );
 
 			$make_private = get_site_option( 'lti_make_sites_private' ) ? true : false;
-			$blog_id = $blog_handler->first_or_create_blog( $make_private );
+			$blog_id      = $blog_handler->first_or_create_blog( $make_private );
 
 			$user_roles = new User_LTI_Roles( $tool->user->roles );
 			$blog_handler->add_user_to_blog( $user, $blog_id, $user_roles );
@@ -275,24 +276,24 @@ class Ed_LTI {
 
 			wp_update_user( $user );
 
-            // set current user to null so that no administrator is added to a newly created blog.
-            wp_set_current_user( null );
+			// set current user to null so that no administrator is added to a newly created blog.
+			wp_set_current_user( null );
 		}
 
 		return $user;
 	}
 
-    /**
-     * Set user first and last name to info supplied by vle. We do not want to save this permanently, however, as that could undo changes the user made on the wordpress end.
-     *
-     * @return void
-     */
-    private function set_user_name_temporarily_to_vle_name( $user, Ed_Tool_Provider $tool ) {
-        if( $tool->user->firstname !== '' || $tool->user->lastname !== '' ) {
-            $user->first_name = $tool->user->firstname;
-            $user->last_name = $tool->user->lastname;
-        }
-    }
+	/**
+	 * Set user first and last name to info supplied by vle. We do not want to save this permanently, however, as that could undo changes the user made on the WordPress end.
+	 *
+	 * @return void
+	 */
+	private function set_user_name_temporarily_to_vle_name( $user, Ed_Tool_Provider $tool ) {
+		if ( $tool->user->firstname !== '' || $tool->user->lastname !== '' ) {
+			$user->first_name = $tool->user->firstname;
+			$user->last_name  = $tool->user->lastname;
+		}
+	}
 
 	/**
 	 * Create a login session for a user that has visited the blog via an LTI connection
