@@ -2,7 +2,8 @@
 /**
  * Handles LTI Config Settings.
  *
- * @author Richard Lawson <richard.lawson@ed.ac.uk>
+ * @author    Learning Applications Development Team <ltw-apps-dev@ed.ac.uk>
+ * @copyright University of Edinburgh
  */
 class Ed_LTI_Config {
 
