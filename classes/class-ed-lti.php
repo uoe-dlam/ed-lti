@@ -193,14 +193,13 @@ class Ed_LTI {
 		// LTI specs tell us that username should be set in the 'lis_person_sourcedid' param, but moodle doesn't do
 		// this. Moodle seems to use 'ext_user_username' instead
 
-        // phpcs:disable
-		if ( isset( $_REQUEST['lis_person_sourcedid'] ) && '' !== $_REQUEST['lis_person_sourcedid'] ) {
-			return $_REQUEST['lis_person_sourcedid'];
-		}
-
 		if ( isset( $_REQUEST['ext_user_username'] ) && '' !== $_REQUEST['ext_user_username'] ) {
 			return $_REQUEST['ext_user_username'];
 		}
+
+        if ( isset( $_REQUEST['lis_person_sourcedid'] ) && '' !== $_REQUEST['lis_person_sourcedid'] ) {
+            return $_REQUEST['lis_person_sourcedid'];
+        }
 
 		if ( isset( $_REQUEST['user_id'] ) && '' !== $_REQUEST['user_id'] ) {
 			return $_REQUEST['user_id'];
