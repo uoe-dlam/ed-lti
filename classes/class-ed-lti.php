@@ -79,7 +79,7 @@ class Ed_LTI {
 			}
 
             // phpcs:disable
-			$blog_type = isset( $_REQUEST['custom_blog_type'] ) ? $_REQUEST['custom_blog_type'] : '';
+			$blog_type = $_REQUEST['custom_blog_type'] ?? '';
             // phpcs:enable
 
 			if ( $this->is_student_blog_and_non_student( $blog_type, $tool ) ) {
@@ -119,19 +119,15 @@ class Ed_LTI {
 	private function lti_is_basic_lti_request() {
         // phpcs:disable
 		$good_message_type = isset( $_REQUEST['lti_message_type'] )
-							? 'basic-lti-launch-request' == $_REQUEST['lti_message_type']
+							? 'basic-lti-launch-request' === $_REQUEST['lti_message_type']
 							: false;
 
-		$good_lti_version   = isset( $_REQUEST['lti_version'] ) ? 'LTI-1p0' == $_REQUEST['lti_version'] : false;
+		$good_lti_version   = isset( $_REQUEST['lti_version'] ) ? 'LTI-1p0' === $_REQUEST['lti_version'] : false;
 		$oauth_consumer_key = isset( $_REQUEST['oauth_consumer_key'] );
 		$resource_link_id   = isset( $_REQUEST['resource_link_id'] );
         // phpcs:enable
 
-		if ( $good_message_type && $good_lti_version && $oauth_consumer_key && $resource_link_id ) {
-			return true;
-		}
-
-		return false;
+		return $good_message_type && $good_lti_version && $oauth_consumer_key && $resource_link_id;
 	}
 
 	/**
@@ -221,7 +217,7 @@ class Ed_LTI {
 	 */
 	private function lti_get_site_data() {
         // phpcs:disable
-		$site_category = isset( $_REQUEST['custom_site_category'] ) ? $_REQUEST['custom_site_category'] : 1;
+		$site_category = $_REQUEST['custom_site_category'] ?? 1;
 
         $username = $this->lti_get_username_from_request();
 
@@ -418,7 +414,7 @@ class Ed_LTI {
 	 */
 	public function lti_add_staff_to_student_blog() {
         // phpcs:disable
-		if ( isset( $_REQUEST['lti_staff_view_blog'] ) && 'true' == $_REQUEST['lti_staff_view_blog'] ) {
+		if ( isset( $_REQUEST['lti_staff_view_blog'] ) && 'true' === $_REQUEST['lti_staff_view_blog'] ) {
         // phpcs:enable
 			if ( session_status() === PHP_SESSION_NONE ) {
 				session_start();
