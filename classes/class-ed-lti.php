@@ -278,7 +278,7 @@ class Ed_LTI {
 	 * @return void
 	 */
 	private function set_user_name_temporarily_to_vle_name( $user, Ed_Tool_Provider $tool ) {
-		if ( $tool->user->firstname !== '' || $tool->user->lastname !== '' ) {
+		if ( '' !== $tool->user->firstname || '' !== $tool->user->lastname !== '' ) {
 			$user->first_name = $tool->user->firstname;
 			$user->last_name  = $tool->user->lastname;
 		}
@@ -421,7 +421,7 @@ class Ed_LTI {
 			}
 
 			if ( ! isset( $_SESSION['lti_staff'] ) ) {
-				wp_die( 'You do not have permssion to view this page' );
+				wp_die( 'You do not have permission to view this page' );
 			}
 
             // phpcs:disable
