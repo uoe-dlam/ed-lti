@@ -97,7 +97,7 @@ class Ed_LTI {
 			}
 
 			$user = $this->first_or_create_user( $this->lti_get_user_data( $tool ) );
-            $this->set_user_name_temporarily_to_vle_name( $user, $tool );
+			$this->set_user_name_temporarily_to_vle_name( $user, $tool );
 
 			$blog_handler = Blog_Handler_Factory::instance( $blog_type );
 			$blog_handler->init( $this->lti_get_site_data(), $user );
@@ -164,8 +164,8 @@ class Ed_LTI {
 	/**
 	 * Get the user data passed via LTI
 	 *
-     * @param Ed_Tool_Provider $tool
-     *
+	 * @param Ed_Tool_Provider $tool
+	 *
 	 * @return array
 	 */
 	private function lti_get_user_data( Ed_Tool_Provider $tool ) {
@@ -235,8 +235,8 @@ class Ed_LTI {
 
 	/**
 	 * Create a WordPress user or return the logged in user
-     *
-     * @param array $data
+	 *
+	 * @param array $data
 	 *
 	 * @return WP_User
 	 */
@@ -262,34 +262,34 @@ class Ed_LTI {
 
 			wp_update_user( $user );
 
-            // set current user to null so that no administrator is added to a newly created blog.
-            wp_set_current_user( null );
+			// set current user to null so that no administrator is added to a newly created blog.
+			wp_set_current_user( null );
 		}
 
 		return $user;
 	}
 
-    /**
-     * Set user first and last name to info supplied by vle. We do not want to save this permanently, however, as that could undo changes the user made on the wordpress end.
-     *
-     * @param WP_User          $user
-     * @param Ed_Tool_Provider $tool
-     *
-     * @return void
-     */
-    private function set_user_name_temporarily_to_vle_name( $user, Ed_Tool_Provider $tool ) {
-        if( $tool->user->firstname !== '' || $tool->user->lastname !== '' ) {
-            $user->first_name = $tool->user->firstname;
-            $user->last_name = $tool->user->lastname;
-        }
-    }
+	/**
+	 * Set user first and last name to info supplied by vle. We do not want to save this permanently, however, as that could undo changes the user made on the WordPress end.
+	 *
+	 * @param WP_User          $user
+	 * @param Ed_Tool_Provider $tool
+	 *
+	 * @return void
+	 */
+	private function set_user_name_temporarily_to_vle_name( $user, Ed_Tool_Provider $tool ) {
+		if ( $tool->user->firstname !== '' || $tool->user->lastname !== '' ) {
+			$user->first_name = $tool->user->firstname;
+			$user->last_name  = $tool->user->lastname;
+		}
+	}
 
 	/**
 	 * Create a login session for a user that has visited the blog via an LTI connection
 	 *
-     * @param WP_User $user
-     * @param int     $blog_id
-     *
+	 * @param WP_User $user
+	 * @param int     $blog_id
+	 *
 	 * @return void
 	 */
 	private function lti_signin_user( $user, $blog_id ) {
@@ -311,10 +311,10 @@ class Ed_LTI {
 	/**
 	 * Create a list of student blogs for a given course for a member of staff
 	 *
-     * @param string           $course_id
-     * @param string           $resource_link_id
-     * @param Ed_Tool_Provider $tool
-     *
+	 * @param string           $course_id
+	 * @param string           $resource_link_id
+	 * @param Ed_Tool_Provider $tool
+	 *
 	 * @return void
 	 */
 	private function lti_show_staff_student_blogs_for_course( $course_id, $resource_link_id, Ed_Tool_Provider $tool ) {
@@ -331,11 +331,11 @@ class Ed_LTI {
 	/**
 	 * Add staff details to a current LTI session
 	 *
-     * @param array          $user_data
-     * @param User_LTI_Roles $user_roles
-     * @param string         $course_id
-     * @param string         $resource_link_id
-     *
+	 * @param array          $user_data
+	 * @param User_LTI_Roles $user_roles
+	 * @param string         $course_id
+	 * @param string         $resource_link_id
+	 *
 	 * @return void
 	 */
 	private function lti_add_staff_info_to_session(
@@ -353,9 +353,9 @@ class Ed_LTI {
 
 	/**
 	 * Render a list of student blogs
-     *
-     * @param string $course_id
-     * @param string $resource_link_id
+	 *
+	 * @param string $course_id
+	 * @param string $resource_link_id
 	 *
 	 * @return void
 	 */
@@ -449,8 +449,8 @@ class Ed_LTI {
 	/**
 	 * Redirect a user to the defined home URL
 	 *
-     * @param string $blog_id
-     *
+	 * @param string $blog_id
+	 *
 	 * @return void
 	 */
 	private function lti_redirect_user_to_blog_without_login( $blog_id ) {
@@ -464,12 +464,12 @@ class Ed_LTI {
 	 * Generates a cryptographically secure random string of a given length which can be used for generating passwords
 	 *
 	 * Adapted from https://paragonie.com/blog/2015/07/how-safely-generate-random-strings-and-integers-in-php
-     *
-     * @param int    $length
-     * @param string $alphabet
+	 *
+	 * @param int    $length
+	 * @param string $alphabet
 	 *
 	 * @return string
-     * @throws InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	private function random_string( $length, $alphabet ) {
 		if ( $length < 1 ) {
