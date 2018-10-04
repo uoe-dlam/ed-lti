@@ -278,7 +278,7 @@ class Ed_LTI {
 	 * @return void
 	 */
 	private function set_user_name_temporarily_to_vle_name( $user, Ed_Tool_Provider $tool ) {
-		if ( '' !== $tool->user->firstname || '' !== $tool->user->lastname !== '' ) {
+		if ( '' !== $tool->user->firstname || '' !== $tool->user->lastname ) {
 			$user->first_name = $tool->user->firstname;
 			$user->last_name  = $tool->user->lastname;
 		}
