@@ -79,7 +79,7 @@ class Ed_LTI {
 			}
 
             // phpcs:disable
-			$blog_type = isset( $_REQUEST['custom_blog_type'] ) ? $_REQUEST['custom_blog_type'] : '';
+			$blog_type = $_REQUEST['custom_blog_type'] ?? '';
             // phpcs:enable
 
 			if ( $this->is_student_blog_and_non_student( $blog_type, $tool ) ) {
@@ -97,7 +97,7 @@ class Ed_LTI {
 			}
 
 			$user = $this->first_or_create_user( $this->lti_get_user_data( $tool ) );
-            $this->set_user_name_temporarily_to_vle_name( $user, $tool );
+			$this->set_user_name_temporarily_to_vle_name( $user, $tool );
 
 			$blog_handler = Blog_Handler_Factory::instance( $blog_type );
 			$blog_handler->init( $this->lti_get_site_data(), $user );
@@ -119,19 +119,15 @@ class Ed_LTI {
 	private function lti_is_basic_lti_request() {
         // phpcs:disable
 		$good_message_type = isset( $_REQUEST['lti_message_type'] )
-							? 'basic-lti-launch-request' == $_REQUEST['lti_message_type']
+							? 'basic-lti-launch-request' === $_REQUEST['lti_message_type']
 							: false;
 
-		$good_lti_version   = isset( $_REQUEST['lti_version'] ) ? 'LTI-1p0' == $_REQUEST['lti_version'] : false;
+		$good_lti_version   = isset( $_REQUEST['lti_version'] ) ? 'LTI-1p0' === $_REQUEST['lti_version'] : false;
 		$oauth_consumer_key = isset( $_REQUEST['oauth_consumer_key'] );
 		$resource_link_id   = isset( $_REQUEST['resource_link_id'] );
         // phpcs:enable
 
-		if ( $good_message_type && $good_lti_version && $oauth_consumer_key && $resource_link_id ) {
-			return true;
-		}
-
-		return false;
+		return $good_message_type && $good_lti_version && $oauth_consumer_key && $resource_link_id;
 	}
 
 	/**
@@ -168,6 +164,8 @@ class Ed_LTI {
 	/**
 	 * Get the user data passed via LTI
 	 *
+	 * @param Ed_Tool_Provider $tool
+	 *
 	 * @return array
 	 */
 	private function lti_get_user_data( Ed_Tool_Provider $tool ) {
@@ -191,16 +189,15 @@ class Ed_LTI {
 	 */
 	private function lti_get_username_from_request() {
 		// LTI specs tell us that username should be set in the 'lis_person_sourcedid' param, but moodle doesn't do
-		// this. Moodle seems to use 'ext_user_username' instead
-
+		// this. In some instances, Moodle uses 'ext_user_username' instead
         // phpcs:disable
-		if ( isset( $_REQUEST['lis_person_sourcedid'] ) && '' !== $_REQUEST['lis_person_sourcedid'] ) {
-			return $_REQUEST['lis_person_sourcedid'];
-		}
-
 		if ( isset( $_REQUEST['ext_user_username'] ) && '' !== $_REQUEST['ext_user_username'] ) {
 			return $_REQUEST['ext_user_username'];
 		}
+
+        if ( isset( $_REQUEST['lis_person_sourcedid'] ) && '' !== $_REQUEST['lis_person_sourcedid'] ) {
+            return $_REQUEST['lis_person_sourcedid'];
+        }
 
 		if ( isset( $_REQUEST['user_id'] ) && '' !== $_REQUEST['user_id'] ) {
 			return $_REQUEST['user_id'];
@@ -220,7 +217,7 @@ class Ed_LTI {
 	 */
 	private function lti_get_site_data() {
         // phpcs:disable
-		$site_category = isset( $_REQUEST['custom_site_category'] ) ? $_REQUEST['custom_site_category'] : 1;
+		$site_category = $_REQUEST['custom_site_category'] ?? 1;
 
         $username = $this->lti_get_username_from_request();
 
@@ -238,6 +235,8 @@ class Ed_LTI {
 
 	/**
 	 * Create a WordPress user or return the logged in user
+	 *
+	 * @param array $data
 	 *
 	 * @return WP_User
 	 */
@@ -263,27 +262,33 @@ class Ed_LTI {
 
 			wp_update_user( $user );
 
-            // set current user to null so that no administrator is added to a newly created blog.
-            wp_set_current_user( null );
+			// set current user to null so that no administrator is added to a newly created blog.
+			wp_set_current_user( null );
 		}
 
 		return $user;
 	}
 
-    /**
-     * Set user first and last name to info supplied by vle. We do not want to save this permanently, however, as that could undo changes the user made on the wordpress end.
-     *
-     * @return void
-     */
-    private function set_user_name_temporarily_to_vle_name( $user, Ed_Tool_Provider $tool ) {
-        if( $tool->user->firstname !== '' || $tool->user->lastname !== '' ) {
-            $user->first_name = $tool->user->firstname;
-            $user->last_name = $tool->user->lastname;
-        }
-    }
+	/**
+	 * Set user first and last name to info supplied by vle. We do not want to save this permanently, however, as that could undo changes the user made on the WordPress end.
+	 *
+	 * @param WP_User          $user
+	 * @param Ed_Tool_Provider $tool
+	 *
+	 * @return void
+	 */
+	private function set_user_name_temporarily_to_vle_name( $user, Ed_Tool_Provider $tool ) {
+		if ( '' !== $tool->user->firstname || '' !== $tool->user->lastname ) {
+			$user->first_name = $tool->user->firstname;
+			$user->last_name  = $tool->user->lastname;
+		}
+	}
 
 	/**
 	 * Create a login session for a user that has visited the blog via an LTI connection
+	 *
+	 * @param WP_User $user
+	 * @param int     $blog_id
 	 *
 	 * @return void
 	 */
@@ -306,6 +311,10 @@ class Ed_LTI {
 	/**
 	 * Create a list of student blogs for a given course for a member of staff
 	 *
+	 * @param string           $course_id
+	 * @param string           $resource_link_id
+	 * @param Ed_Tool_Provider $tool
+	 *
 	 * @return void
 	 */
 	private function lti_show_staff_student_blogs_for_course( $course_id, $resource_link_id, Ed_Tool_Provider $tool ) {
@@ -321,6 +330,11 @@ class Ed_LTI {
 
 	/**
 	 * Add staff details to a current LTI session
+	 *
+	 * @param array          $user_data
+	 * @param User_LTI_Roles $user_roles
+	 * @param string         $course_id
+	 * @param string         $resource_link_id
 	 *
 	 * @return void
 	 */
@@ -339,6 +353,9 @@ class Ed_LTI {
 
 	/**
 	 * Render a list of student blogs
+	 *
+	 * @param string $course_id
+	 * @param string $resource_link_id
 	 *
 	 * @return void
 	 */
@@ -397,14 +414,14 @@ class Ed_LTI {
 	 */
 	public function lti_add_staff_to_student_blog() {
         // phpcs:disable
-		if ( isset( $_REQUEST['lti_staff_view_blog'] ) && 'true' == $_REQUEST['lti_staff_view_blog'] ) {
+		if ( isset( $_REQUEST['lti_staff_view_blog'] ) && 'true' === $_REQUEST['lti_staff_view_blog'] ) {
         // phpcs:enable
 			if ( session_status() === PHP_SESSION_NONE ) {
 				session_start();
 			}
 
 			if ( ! isset( $_SESSION['lti_staff'] ) ) {
-				wp_die( 'You do not have permssion to view this page' );
+				wp_die( 'You do not have permission to view this page' );
 			}
 
             // phpcs:disable
@@ -432,11 +449,14 @@ class Ed_LTI {
 	/**
 	 * Redirect a user to the defined home URL
 	 *
+	 * @param string $blog_id
+	 *
 	 * @return void
 	 */
 	private function lti_redirect_user_to_blog_without_login( $blog_id ) {
 		switch_to_blog( $blog_id );
 		wp_safe_redirect( home_url() );
+
 		exit;
 	}
 
@@ -445,7 +465,11 @@ class Ed_LTI {
 	 *
 	 * Adapted from https://paragonie.com/blog/2015/07/how-safely-generate-random-strings-and-integers-in-php
 	 *
+	 * @param int    $length
+	 * @param string $alphabet
+	 *
 	 * @return string
+	 * @throws InvalidArgumentException
 	 */
 	private function random_string( $length, $alphabet ) {
 		if ( $length < 1 ) {
