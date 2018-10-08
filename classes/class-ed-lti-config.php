@@ -26,7 +26,6 @@ class Ed_LTI_Config {
 	 * @return void
 	 */
 	public function initialize_options() {
-
 		if ( ! get_site_option( 'lti_make_sites_private' ) ) {
 			add_site_option( 'lti_make_sites_private', 0 );
 		}
