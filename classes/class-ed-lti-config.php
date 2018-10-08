@@ -12,8 +12,10 @@ class Ed_LTI_Config {
 
 	public function __construct() {
 		$this->initialize_options();
+
 		// register page
 		add_action( 'network_admin_menu', [ $this, 'create_setup_page' ] );
+
 		// update settings
 		add_action( 'network_admin_menu', [ $this, 'update' ] );
 	}
