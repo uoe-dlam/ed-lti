@@ -18,7 +18,6 @@ require_once 'class-ed-lti-settings.php';
 require_once 'class-ed-lti-config.php';
 
 use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
-use IMSGlobal\LTI\ToolProvider;
 
 class Ed_LTI {
 
@@ -473,17 +472,18 @@ class Ed_LTI {
 		exit;
 	}
 
-	/**
-	 * Generates a cryptographically secure random string of a given length which can be used for generating passwords
-	 *
-	 * Adapted from https://paragonie.com/blog/2015/07/how-safely-generate-random-strings-and-integers-in-php
-	 *
-	 * @param int    $length
-	 * @param string $alphabet
-	 *
-	 * @return string
-	 * @throws InvalidArgumentException
-	 */
+    /**
+     * Generates a cryptographically secure random string of a given length which can be used for generating passwords
+     *
+     * Adapted from https://paragonie.com/blog/2015/07/how-safely-generate-random-strings-and-integers-in-php
+     *
+     * @param int $length
+     * @param string $alphabet
+     *
+     * @return string
+     * @throws Exception
+     * @throws InvalidArgumentException
+     */
 	private function random_string( $length, $alphabet ) {
 		if ( $length < 1 ) {
 			throw new InvalidArgumentException( 'Length must be a positive integer' );
