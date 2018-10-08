@@ -1,4 +1,10 @@
 <?php
+/**
+ * Class for coordinating main LTI functions.
+ *
+ * @author    Learning Applications Development Team <ltw-apps-dev@ed.ac.uk>
+ * @copyright University of Edinburgh
+ */
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'class-ed-tool-provider.php';
@@ -9,15 +15,10 @@ require_once 'class-course-blog-handler.php';
 require_once 'class-student-blog-handler.php';
 require_once 'class-ed-lti-data.php';
 require_once 'class-ed-lti-settings.php';
+require_once 'class-ed-lti-config.php';
 
 use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
-use IMSGlobal\LTI\ToolProvider;
 
-/**
- * Class for coordinating main LTI functions.
- *
- * @author Richard Lawson <richard.lawson@ed.ac.uk>
- */
 class Ed_LTI {
 
 	private $wpdb;
@@ -31,6 +32,7 @@ class Ed_LTI {
 		add_action( 'parse_request', [ $this, 'lti_add_staff_to_student_blog' ] );
 
 		new Ed_LTI_Settings();
+		new Ed_LTI_Config();
 	}
 
 	/**
@@ -39,6 +41,14 @@ class Ed_LTI {
 	 * @return void
 	 */
 	public static function activate() {
+
+		// Throw an error in the WordPress admin console if ns cloner is not installed
+		if ( ! is_plugin_active( 'ns-cloner-site-copier/ns-cloner.php' ) ) {
+			deactivate_plugins( __FILE__ );
+			$error_message = __( 'This plugin requires the <a href="https://wordpress.org/plugins/ns-cloner-site-copier/">NS Cloner</a> plugin to be active!' );
+			die( $error_message );
+		}
+
 		$lti_data = new Ed_LTI_Data();
 
 		$lti_data->lti_maybe_create_db();
@@ -101,7 +111,9 @@ class Ed_LTI {
 
 			$blog_handler = Blog_Handler_Factory::instance( $blog_type );
 			$blog_handler->init( $this->lti_get_site_data(), $user );
-			$blog_id = $blog_handler->first_or_create_blog();
+
+			$make_private = get_site_option( 'lti_make_sites_private' ) ? true : false;
+			$blog_id      = $blog_handler->first_or_create_blog( $make_private );
 
 			$user_roles = new User_LTI_Roles( $tool->user->roles );
 			$blog_handler->add_user_to_blog( $user, $blog_id, $user_roles );
@@ -460,17 +472,18 @@ class Ed_LTI {
 		exit;
 	}
 
-	/**
-	 * Generates a cryptographically secure random string of a given length which can be used for generating passwords
-	 *
-	 * Adapted from https://paragonie.com/blog/2015/07/how-safely-generate-random-strings-and-integers-in-php
-	 *
-	 * @param int    $length
-	 * @param string $alphabet
-	 *
-	 * @return string
-	 * @throws InvalidArgumentException
-	 */
+    /**
+     * Generates a cryptographically secure random string of a given length which can be used for generating passwords
+     *
+     * Adapted from https://paragonie.com/blog/2015/07/how-safely-generate-random-strings-and-integers-in-php
+     *
+     * @param int $length
+     * @param string $alphabet
+     *
+     * @return string
+     * @throws Exception
+     * @throws InvalidArgumentException
+     */
 	private function random_string( $length, $alphabet ) {
 		if ( $length < 1 ) {
 			throw new InvalidArgumentException( 'Length must be a positive integer' );

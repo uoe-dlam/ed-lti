@@ -1,9 +1,10 @@
 <?php
 
 /**
- * Abstract class used to handle different types of WordPress blogs
+ * Abstract class used to handle different types of WordPress blogs.
  *
- * @author Richard Lawson <richard.lawson@ed.ac.uk>
+ * @author    Learning Applications Development Team <ltw-apps-dev@ed.ac.uk>
+ * @copyright University of Edinburgh
  */
 abstract class Blog_Handler {
 
@@ -12,7 +13,7 @@ abstract class Blog_Handler {
 	protected $domain;
 	protected $resource_link_id;
 	protected $username;
-	protected $user = null;
+	protected $user;
 	protected $site_category;
 	protected $source_id;
 	protected $wpdb;
@@ -33,6 +34,8 @@ abstract class Blog_Handler {
 
 	/**
 	 * Get the WordPress role for a given LTI user role
+     *
+     * @param User_LTI_Roles $roles
 	 *
 	 * @return string
 	 */
@@ -70,6 +73,9 @@ abstract class Blog_Handler {
 
 	/**
 	 * TODO: Not sure what this is doing. Need to find its usage
+     *
+     * @param array   $data
+     * @param WP_User $user
 	 *
 	 * @return void
 	 */
@@ -85,13 +91,15 @@ abstract class Blog_Handler {
 	/**
 	 * Create or return the existing blog
 	 *
+     * @param bool $make_private
+     *
 	 * @return int
 	 */
-	public function first_or_create_blog() {
+	public function first_or_create_blog( $make_private = false ) {
 		if (
-			is_null( $this->course_id ) || is_null( $this->course_title ) || is_null( $this->domain ) ||
-			is_null( $this->resource_link_id ) || is_null( $this->username ) || is_null( $this->source_id ) ||
-			is_null( $this->site_category )
+		    null === $this->course_id || null === $this->course_title || null === $this->domain ||
+			null === $this->resource_link_id || null === $this->username || null === $this->source_id ||
+			null === $this->site_category
 		) {
 			wp_die( 'Blog_Handler: You must set all data before calling first_or_create_blog' );
 		}
@@ -100,15 +108,18 @@ abstract class Blog_Handler {
 			return $this->get_blog_id();
 		}
 
-		return $this->create_blog();
+		return $this->create_blog( $make_private );
 	}
 
 	/**
 	 * Create a new blog
 	 *
+     * @param bool $make_private
+     *
 	 * @return int
 	 */
-	protected function create_blog() {
+	protected function create_blog( $make_private = false ) {
+
 		$path  = $this->get_path();
 		$title = $this->get_title();
 
@@ -131,7 +142,10 @@ abstract class Blog_Handler {
 		$blog_id = $this->do_ns_cloner_create( $blog_data );
 		$this->add_blog_meta( $blog_id, $version );
 		$this->add_site_category( $blog_id );
-		$this->make_blog_private( $blog_id );
+
+		if ( $make_private ) {
+			$this->make_blog_private( $blog_id );
+		}
 
 		return $blog_id;
 	}
@@ -139,6 +153,8 @@ abstract class Blog_Handler {
 	/**
 	 * Create a new blog using the NS Cloner plugin
 	 *
+     * @param array $data
+     *
 	 * @return int
 	 */
 	protected function do_ns_cloner_create( array $data ) {
@@ -167,6 +183,9 @@ abstract class Blog_Handler {
 	/**
 	 * Add a newly created blog's details to the database
 	 *
+     * @param int $blog_id
+     * @param int $version
+     *
 	 * @return void
 	 */
 	protected function add_blog_meta( $blog_id, $version = 1 ) {
@@ -187,6 +206,8 @@ abstract class Blog_Handler {
 	/**
 	 * Add a site category to a given blog
 	 *
+     * @param int $blog_id
+     *
 	 * @return void
 	 */
 	protected function add_site_category( $blog_id ) {
@@ -198,6 +219,8 @@ abstract class Blog_Handler {
 	/**
 	 * Make a blog private
 	 *
+     * @param int $blog_id
+     *
 	 * @return void
 	 */
 	protected function make_blog_private( $blog_id ) {
@@ -210,11 +233,14 @@ abstract class Blog_Handler {
 	/**
 	 * Check if a given blog is associated with the given course ID
 	 *
-	 * @return bool
+     * @param int $course_id
+     * @param int $blog_id
+     *
+     * @return bool
 	 */
 	public static function is_course_blog( $course_id, $blog_id ) {
 		global $wpdb;
-	    $query = 'SELECT COUNT(id) AS blog_count '
+		$query = 'SELECT COUNT(id) AS blog_count '
 			. 'FROM ' . $wpdb->base_prefix . 'blogs_meta '
 			. 'WHERE course_id = %s '
 			. 'AND blog_id = %d';
@@ -234,6 +260,8 @@ abstract class Blog_Handler {
 
 	/**
 	 * Get friendly path
+     *
+     * @param string $path
 	 *
 	 * @return string
 	 */
@@ -256,6 +284,10 @@ abstract class Blog_Handler {
 
 	/**
 	 * Add a user to a blog
+     *
+     * @param WP_User        $user
+     * @param int            $blog_id
+     * @param User_LTI_Roles $user_roles
 	 *
 	 * @return void
 	 */
