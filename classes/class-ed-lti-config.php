@@ -176,29 +176,31 @@ class Ed_LTI_Config {
 		$this->updated = true;
 	}
 
-	/*
-	 *  Get slug with slashes so it is a valid WordPress path
+	/**
+	 * Get slug with slashes so it is a valid WordPress path.
 	 *
 	 * @param string $slug
 	 *
-	 * @return void
+	 * @return string
 	 */
 	protected function turn_slug_into_path( $slug ) {
 		$path = '/' . $slug;
 		$path = rtrim( $path, '/' ) . '/';
+
 		return $path;
 	}
 
-	/*
-	 *  Get slug from DB
-	 *  Note: we get the slug from the blog itself, because it is possible that the template id has changed else where making the existing slug out of date.
+	/**
+	 * Get slug from DB
 	 *
-	 * @return void
+     * Note: we get the slug from the blog itself, because it is possible that the template id has changed else where
+     * making the existing slug out of date.
+	 *
+	 * @return string
 	 */
 	protected function get_saved_slug() {
 		$slashed_slug = get_blog_details( get_site_option( 'default_site_template_id' ) )->path;
 
 		return str_replace( '/', '', $slashed_slug );
 	}
-
 }
