@@ -41,7 +41,7 @@ class Ed_LTI_Config {
 	/**
 	 * Creates LTI Config settings page and menu item.
 	 *
-	 * @return void
+	 * @return Ed_LTI_Config
 	 */
 	public function create_setup_page() {
 		add_submenu_page(
@@ -86,19 +86,26 @@ class Ed_LTI_Config {
 				<table class="form-table">
 				<?php if ( is_plugin_active( 'sitewide-privacy-options/sitewide-privacy-options.php' ) ) : ?>
 					<tr>
-						<th scope="row"><label for="lti_make_sites_private"><?php _e( 'Do you want to make sites private on creation?', 'lti-config-group' ); ?></label></th>
+						<th scope="row">
+                            <label for="lti_make_sites_private">
+                                <?php _e( 'Do you want to make sites private on creation?', 'lti-config-group' ); ?>
+                            </label>
+                        </th>
 						<td>
-							<input name="lti_make_sites_private" type="checkbox" value="1" <?php checked( '1', get_site_option( 'lti_make_sites_private' ) ); ?>>
+							<input id="lti_make_sites_private" name="lti_make_sites_private" type="checkbox" value="1" <?php checked( '1', get_site_option( 'lti_make_sites_private' ) ); ?>>
 						</td>
 					</tr>
 				<?php endif ?>
 
 				<tr>
-					<th scope="row"><label for="default_site_template_url"><?php _e( 'Default Site Template URL', 'lti-config-group' ); ?></label></th>
+					<th scope="row">
+                        <label for="default_site_template_slug">
+                            <?php _e( 'Default Site Template URL', 'lti-config-group' ); ?>
+                        </label>
+                    </th>
 					<td>
 						<?php echo get_site_url(); ?>/<input type="text" id="default_site_template_slug" name="default_site_template_slug" value="<?php echo $this->get_saved_slug(); ?>" />
 					</td>
-
 				</tr>
 				<tr>
 					<td colspan="2">
@@ -144,8 +151,6 @@ class Ed_LTI_Config {
 	 * @return void
 	 */
 	public function update_settings() {
-		$settings = array();
-
 		if ( isset( $_POST['default_site_template_slug'] ) ) {
 			$slug = sanitize_text_field( $_POST['default_site_template_slug'] );
 			$path = $this->turn_slug_into_path( $slug );
@@ -161,13 +166,8 @@ class Ed_LTI_Config {
 			update_site_option( 'default_site_template_id', $blog_id );
 		}
 
-		if ( is_plugin_active( 'sitewide-privacy-options/sitewide-privacy-options.php' ) ) {
-
-			if ( isset( $_POST['lti_make_sites_private'] ) ) {
-				update_site_option( 'lti_make_sites_private', 1 );
-			} else {
-				update_site_option( 'lti_make_sites_private', 0 );
-			}
+		if ( is_plugin_active( 'sitewide-privacy-options/sitewide-privacy-options.php' ) && isset( $_POST['lti_make_sites_private'] ) ) {
+            update_site_option( 'lti_make_sites_private', 1 );
 		} else {
 			update_site_option( 'lti_make_sites_private', 0 );
 		}
@@ -196,8 +196,8 @@ class Ed_LTI_Config {
 	 */
 	protected function get_saved_slug() {
 		$slashed_slug = get_blog_details( get_site_option( 'default_site_template_id' ) )->path;
-		$slug         = str_replace( '/', '', $slashed_slug );
-		return $slug;
+
+		return str_replace( '/', '', $slashed_slug );
 	}
 
 }
