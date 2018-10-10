@@ -88,10 +88,10 @@ class Ed_LTI_Config {
 				<?php if ( is_plugin_active( 'sitewide-privacy-options/sitewide-privacy-options.php' ) ) : ?>
 					<tr>
 						<th scope="row">
-                            <label for="lti_make_sites_private">
-                                <?php _e( 'Do you want to make sites private on creation?', 'lti-config-group' ); ?>
-                            </label>
-                        </th>
+							<label for="lti_make_sites_private">
+								<?php _e( 'Do you want to make sites private on creation?', 'lti-config-group' ); ?>
+							</label>
+						</th>
 						<td>
 							<input id="lti_make_sites_private" name="lti_make_sites_private" type="checkbox" value="1" <?php checked( '1', get_site_option( 'lti_make_sites_private' ) ); ?>>
 						</td>
@@ -100,10 +100,10 @@ class Ed_LTI_Config {
 
 				<tr>
 					<th scope="row">
-                        <label for="default_site_template_slug">
-                            <?php _e( 'Default Site Template URL', 'lti-config-group' ); ?>
-                        </label>
-                    </th>
+						<label for="default_site_template_slug">
+							<?php _e( 'Default Site Template URL', 'lti-config-group' ); ?>
+						</label>
+					</th>
 					<td>
 						<?php echo get_site_url(); ?>/<input type="text" id="default_site_template_slug" name="default_site_template_slug" value="<?php echo $this->get_saved_slug(); ?>" />
 					</td>
@@ -168,7 +168,7 @@ class Ed_LTI_Config {
 		}
 
 		if ( is_plugin_active( 'sitewide-privacy-options/sitewide-privacy-options.php' ) && isset( $_POST['lti_make_sites_private'] ) ) {
-            update_site_option( 'lti_make_sites_private', 1 );
+			update_site_option( 'lti_make_sites_private', 1 );
 		} else {
 			update_site_option( 'lti_make_sites_private', 0 );
 		}
