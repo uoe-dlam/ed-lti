@@ -2,7 +2,7 @@
 /**
  * Class for coordinating main LTI functions.
  *
- * @author    Learning Applications Development Team <ltw-apps-dev@ed.ac.uk>
+ * @author    DLAM Applications Development Team <ltw-apps-dev@ed.ac.uk>
  * @copyright University of Edinburgh
  */
 
@@ -169,13 +169,14 @@ class Ed_LTI {
 		return ( 'student' === $blog_type && ! $tool->user->isLearner() );
 	}
 
-	/**
-	 * Get the user data passed via LTI
-	 *
-	 * @param Ed_Tool_Provider $tool
-	 *
-	 * @return array
-	 */
+    /**
+     * Get the user data passed via LTI
+     *
+     * @param Ed_Tool_Provider $tool
+     *
+     * @return array
+     * @throws Exception
+     */
 	private function lti_get_user_data( Ed_Tool_Provider $tool ) {
 		$username = $this->lti_get_username_from_request();
 
@@ -514,7 +515,7 @@ class Ed_LTI {
 	 *
 	 * @param string $slug
 	 *
-	 * @return void
+	 * @return string
 	 */
 	public static function turn_slug_into_path( $slug ) {
 		return rtrim( '/' . $slug, '/' ) . '/';

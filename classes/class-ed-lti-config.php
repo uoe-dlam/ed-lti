@@ -167,7 +167,7 @@ class Ed_LTI_Config {
 			update_site_option( 'default_site_template_id', $blog_id );
 		}
 
-		if ( is_plugin_active( 'sitewide-privacy-options/sitewide-privacy-options.php' ) && isset( $_POST['lti_make_sites_private'] ) ) {
+		if ( isset( $_POST['lti_make_sites_private'] ) && is_plugin_active( 'sitewide-privacy-options/sitewide-privacy-options.php' ) ) {
 			update_site_option( 'lti_make_sites_private', 1 );
 		} else {
 			update_site_option( 'lti_make_sites_private', 0 );

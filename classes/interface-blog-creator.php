@@ -8,12 +8,12 @@
  */
 interface Blog_Creator {
 
-    /**
-     * Create the blog.
-     *
-     * @param array $data
-     *
-     * @return void
-     */
+	/**
+	 * Create the blog.
+	 *
+	 * @param array $data
+	 *
+	 * @return void
+	 */
 	public function create( array $data );
 }

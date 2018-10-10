@@ -58,7 +58,7 @@ class Course_Blog_Handler extends Blog_Handler {
 		);
         // phpcs:enable
 
-		return ( ! empty( $blogs ) );
+		return ! empty( $blogs );
 	}
 
 	/**

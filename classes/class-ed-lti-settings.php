@@ -126,8 +126,6 @@ class Ed_LTI_Settings {
 		if ( ! $is_editing ) {
 			echo '<h3>Search</h3>';
 
-			$search = '';
-
 			if ( isset( $_POST['search_txt'] ) ) {
 				$search = '%' . $this->wpdb->esc_like( addslashes( $_POST['search_txt'] ) ) . '%';
 
@@ -195,7 +193,7 @@ class Ed_LTI_Settings {
 	/**
 	 * Edit an existing LTI setting.
 	 *
-	 * @param array $row
+	 * @param mixed $row
 	 *
 	 * @return void
 	 */

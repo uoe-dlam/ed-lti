@@ -91,8 +91,8 @@ abstract class Blog_Handler {
 	/**
 	 * Create or return the existing blog.
 	 *
-     * @param bool $make_private
-     *
+	 * @param bool $make_private
+	 *
 	 * @return int
 	 */
 	public function first_or_create_blog( $make_private = false ) {
@@ -114,8 +114,8 @@ abstract class Blog_Handler {
 	/**
 	 * Create a new blog.
 	 *
-     * @param bool $make_private
-     *
+	 * @param bool $make_private
+	 *
 	 * @return int
 	 */
 	protected function create_blog( $make_private = false ) {
@@ -155,9 +155,9 @@ abstract class Blog_Handler {
 	/**
 	 * Add a newly created blog's details to the database.
 	 *
-     * @param int $blog_id
-     * @param int $version
-     *
+	 * @param int $blog_id
+	 * @param int $version
+	 *
 	 * @return void
 	 */
 	protected function add_blog_meta( $blog_id, $version = 1 ) {
@@ -232,7 +232,7 @@ abstract class Blog_Handler {
 
 	/**
 	 * Get friendly path.
-     *
+	 *
 	 * @param string $path
 	 *
 	 * @return string
@@ -256,10 +256,6 @@ abstract class Blog_Handler {
 
 	/**
 	 * Add a user to a blog.
-	 *
-	 * @param WP_User        $user
-	 * @param int            $blog_id
-	 * @param User_LTI_Roles $user_roles
 	 *
 	 * @param WP_User        $user
 	 * @param int            $blog_id

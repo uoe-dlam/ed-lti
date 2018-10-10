@@ -15,6 +15,6 @@ class Blog_Creator_Factory {
 			return new NS_Cloner_Blog_Creator();
 		}
 
-		return new WP_Cloner_Blog_Creator();
+		return new WP_Blog_Creator();
 	}
 }

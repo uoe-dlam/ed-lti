@@ -3,7 +3,8 @@
 /**
  * Handles student blog types
  *
- * @author Richard Lawson <richard.lawson@ed.ac.uk>
+ * @author    DLAM Applications Development Team <ltw-apps-dev@ed.ac.uk>
+ * @copyright University of Edinburgh
  */
 class Student_Blog_Handler extends Blog_Handler {
 
@@ -67,7 +68,7 @@ class Student_Blog_Handler extends Blog_Handler {
 		);
         // phpcs:enable
 
-		return ( ! empty( $blogs ) );
+		return ! empty( $blogs );
 	}
 
 	/**

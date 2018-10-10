@@ -18,11 +18,12 @@ class Ed_Tool_Provider extends ToolProvider\ToolProvider {
 		$_SESSION['lti_okay'] = true;
 	}
 
-	/**
-	 * Ensure errors in the LTI package are rendered correctly in WordPress
-	 *
-	 * @return void
-	 */
+    /**
+     * Ensure errors in the LTI package are rendered correctly in WordPress
+     *
+     * @return void
+     * @throws Exception
+     */
 	public function onError() {
 		wp_die( esc_html( $this->reason ) );
 
