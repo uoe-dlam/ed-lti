@@ -1,16 +1,17 @@
 <?php
 
 /**
- * NS Cloner Blog Creator
+ * NS Cloner Blog Creator.
  *
  * Uses NS Cloner to create blog.
  *
- * @author Richard Lawson <richard.lawson@ed.ac.uk>
+ * @author   DLAM Applications Development Team <ltw-apps-dev@ed.ac.uk>
+ * @copyrigh University of Edinburgh
  */
 class NS_Cloner_Blog_Creator implements Blog_Creator {
 
-	/*
-	 * Create blog using NS Cloner
+	/**
+	 * Create blog using NS Cloner.
 	 *
 	 * @param array $data
 	 *

@@ -1,16 +1,17 @@
 <?php
 
 /**
- * WP Blog Creator
+ * WP Blog Creator.
  *
  * Uses wp core methods to create blog.
  *
- * @author Richard Lawson <richard.lawson@ed.ac.uk>
+ * @author    DLAM Applications Development Team <ltw-apps-dev@ed.ac.uk>
+ * @copyright University of Edinburgh
  */
 class WP_Cloner_Blog_Creator implements Blog_Creator {
 
-	/*
-	 * Create blog using WP core methods
+	/**
+	 * Create blog using WP core methods.
 	 *
 	 * @param array $data
 	 *
@@ -27,6 +28,7 @@ class WP_Cloner_Blog_Creator implements Blog_Creator {
 		if ( $site_info ) {
 			$this->set_blog_template( $site_id );
 			remove_user_from_blog( $default_user_id, $site_id );
+
 			return $site_id;
 		}
 
@@ -34,8 +36,8 @@ class WP_Cloner_Blog_Creator implements Blog_Creator {
 		wp_die( 'WP did not create site' );
 	}
 
-	/*
-	 * Set blog template for newly created blog to use template sites theme
+	/**
+	 * Set blog template for newly created blog to use template sites theme.
 	 *
 	 * @param int $site_id
 	 *
@@ -43,8 +45,11 @@ class WP_Cloner_Blog_Creator implements Blog_Creator {
 	 */
 	protected function set_blog_template( $site_id ) {
 		$template = get_blog_option( get_site_option( 'default_site_template_id' ), 'template' );
+
 		update_blog_option( $site_id, 'template', $template );
+
 		$stylesheet = get_blog_option( get_site_option( 'default_site_template_id' ), 'stylesheet' );
+
 		update_blog_option( $site_id, 'stylesheet', $stylesheet );
 	}
 }

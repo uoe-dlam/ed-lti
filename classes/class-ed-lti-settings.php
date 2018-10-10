@@ -1,9 +1,10 @@
 <?php
 
 /**
- * Control the LTI settings for WordPress
+ * Control the LTI settings for WordPress.
  *
- * @author Richard Lawson <richard.lawson@ed.ac.uk>
+ * @author    DLAM Applications Development Team <ltw-apps-dev@ed.ac.uk>
+ * @copyright University of Edinburgh
  */
 class Ed_LTI_Settings {
 
@@ -192,7 +193,7 @@ class Ed_LTI_Settings {
 	}
 
 	/**
-	 * Edit an existing LTI setting
+	 * Edit an existing LTI setting.
 	 *
 	 * @param array $row
 	 *
@@ -243,7 +244,7 @@ class Ed_LTI_Settings {
 	}
 
 	/**
-	 * List all LTI configurations
+	 * List all LTI configurations.
 	 *
 	 * @param array  $rows
 	 * @param string $heading

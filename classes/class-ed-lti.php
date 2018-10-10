@@ -74,7 +74,6 @@ class Ed_LTI {
 	 */
 	public function lti_do_launch() {
 		if ( $this->lti_is_basic_lti_request() && is_main_site() ) {
-
 			$this->lti_destroy_session();
 
 			$tool = new Ed_Tool_Provider( $this->lti_get_db_connector() );
@@ -502,7 +501,7 @@ class Ed_LTI {
 	}
 
 	/**
-	 * Is NS Cloner Installed
+	 * Is NS Cloner Installed.
 	 *
 	 * @return boolean
 	 */
@@ -510,16 +509,14 @@ class Ed_LTI {
 		return is_plugin_active( 'ns-cloner-site-copier/ns-cloner.php' );
 	}
 
-	/*
-	 *  Get slug with slashes so it is a valid WordPress path
+	/**
+	 * Get slug with slashes so it is a valid WordPress path.
 	 *
 	 * @param string $slug
 	 *
 	 * @return void
 	 */
 	public static function turn_slug_into_path( $slug ) {
-		$path = '/' . $slug;
-		$path = rtrim( $path, '/' ) . '/';
-		return $path;
+		return rtrim( '/' . $slug, '/' ) . '/';
 	}
 }

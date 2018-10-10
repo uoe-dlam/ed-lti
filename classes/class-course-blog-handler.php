@@ -1,11 +1,12 @@
 <?php
 
 /**
- * Course Blog Handler
+ * Course Blog Handler.
  *
  * Handles the creation of a blog for a course.
  *
- * @author Richard Lawson <richard.lawson@ed.ac.uk>
+ * @author    DLAM Applications Development Team <ltw-apps-dev@ed.ac.uk>
+ * @copyright University of Edinburgh
  */
 class Course_Blog_Handler extends Blog_Handler {
 
@@ -16,7 +17,7 @@ class Course_Blog_Handler extends Blog_Handler {
 	}
 
 	/**
-	 * Return the type of blog this handler creates
+	 * Return the type of blog this handler creates.
 	 *
 	 * @return string
 	 */
@@ -142,7 +143,7 @@ class Course_Blog_Handler extends Blog_Handler {
 	}
 
 	/**
-	 * Get the WordPress role for a given LTI user role
+	 * Get the WordPress role for a given LTI user role.
 	 *
 	 * @param User_LTI_Roles $user_roles
 	 *

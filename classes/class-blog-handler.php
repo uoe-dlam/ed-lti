@@ -19,7 +19,7 @@ abstract class Blog_Handler {
 	protected $wpdb;
 
 	/**
-	 * Returns the subdirectory name for the blog: path/slug
+	 * Returns the subdirectory name for the blog: path/slug.
 	 *
 	 * @return string
 	 */
@@ -33,7 +33,7 @@ abstract class Blog_Handler {
 	abstract public function get_blog_type();
 
 	/**
-	 * Get the WordPress role for a given LTI user role
+	 * Get the WordPress role for a given LTI user role.
 	 *
 	 * @param User_LTI_Roles $roles
 	 *
@@ -72,10 +72,7 @@ abstract class Blog_Handler {
 	abstract protected function get_blog_id();
 
 	/**
-	 * Set class properties using array
-	 *
-	 * @param array   $data
-	 * @param WP_User $user
+	 * Set class properties using array.
 	 *
 	 * @param array   $data
 	 * @param WP_User $user
@@ -92,10 +89,10 @@ abstract class Blog_Handler {
 	}
 
 	/**
-	 * Create or return the existing blog
+	 * Create or return the existing blog.
 	 *
-		 * @param bool $make_private
-		 *
+     * @param bool $make_private
+     *
 	 * @return int
 	 */
 	public function first_or_create_blog( $make_private = false ) {
@@ -115,14 +112,13 @@ abstract class Blog_Handler {
 	}
 
 	/**
-	 * Create a new blog
+	 * Create a new blog.
 	 *
-		 * @param bool $make_private
-		 *
+     * @param bool $make_private
+     *
 	 * @return int
 	 */
 	protected function create_blog( $make_private = false ) {
-
 		$path  = $this->get_path();
 		$title = $this->get_title();
 
@@ -145,6 +141,7 @@ abstract class Blog_Handler {
 		// get blog creator. if ns cloner is installed we will use the ns cloner blog creator, else we will us the wp creator.
 		$blog_creator = Blog_Creator_Factory::instance();
 		$blog_id      = $blog_creator->create( $blog_data );
+
 		$this->add_blog_meta( $blog_id, $version );
 		$this->add_site_category( $blog_id );
 
@@ -156,13 +153,11 @@ abstract class Blog_Handler {
 	}
 
 	/**
-	 * @param array $data
+	 * Add a newly created blog's details to the database.
 	 *
-	 * Add a newly created blog's details to the database
-	 *
-		 * @param int $blog_id
-		 * @param int $version
-		 *
+     * @param int $blog_id
+     * @param int $version
+     *
 	 * @return void
 	 */
 	protected function add_blog_meta( $blog_id, $version = 1 ) {
@@ -236,8 +231,8 @@ abstract class Blog_Handler {
 	}
 
 	/**
-	 * Get friendly path
-		 *
+	 * Get friendly path.
+     *
 	 * @param string $path
 	 *
 	 * @return string
@@ -260,7 +255,7 @@ abstract class Blog_Handler {
 	}
 
 	/**
-	 * Add a user to a blog
+	 * Add a user to a blog.
 	 *
 	 * @param WP_User        $user
 	 * @param int            $blog_id
@@ -293,5 +288,4 @@ abstract class Blog_Handler {
 			add_user_to_blog( $top_level_blog_id, $user->ID, 'subscriber' );
 		}
 	}
-
 }

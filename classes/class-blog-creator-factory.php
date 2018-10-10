@@ -1,11 +1,12 @@
 <?php
 
 /**
- * Blog creator factory
+ * Blog creator factory.
  *
  * Factory that returns either a ns cloner or wp blog creator object.
  *
- * @author Richard Lawson <richard.lawson@ed.ac.uk>
+ * @author    DLAM Applications Development Team <ltw-apps-dev@ed.ac.uk>
+ * @copyright Edinburgh University
  */
 class Blog_Creator_Factory {
 	public static function instance() {
