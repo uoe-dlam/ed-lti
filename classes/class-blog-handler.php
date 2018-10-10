@@ -138,7 +138,7 @@ abstract class Blog_Handler {
 			'source_id' => $this->source_id,
 		];
 
-		// get blog creator. if ns cloner is installed we will use the ns cloner blog creator, else we will us the wp creator.
+		// if NS Cloner is installed we will use the NS Cloner blog creator, else we will us the wp creator.
 		$blog_creator = Blog_Creator_Factory::instance();
 		$blog_id      = $blog_creator->create( $blog_data );
 
