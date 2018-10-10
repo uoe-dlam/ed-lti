@@ -1,9 +1,10 @@
 <?php
 
 /**
- * Abstract class used to handle different types of WordPress blogs
+ * Abstract class used to handle different types of WordPress blogs.
  *
- * @author Richard Lawson <richard.lawson@ed.ac.uk>
+ * @author    Learning Applications Development Team <ltw-apps-dev@ed.ac.uk>
+ * @copyright University of Edinburgh
  */
 abstract class Blog_Handler {
 
@@ -12,7 +13,7 @@ abstract class Blog_Handler {
 	protected $domain;
 	protected $resource_link_id;
 	protected $username;
-	protected $user = null;
+	protected $user;
 	protected $site_category;
 	protected $source_id;
 	protected $wpdb;
@@ -33,6 +34,8 @@ abstract class Blog_Handler {
 
 	/**
 	 * Get the WordPress role for a given LTI user role
+     *
+     * @param User_LTI_Roles $roles
 	 *
 	 * @return string
 	 */
@@ -73,6 +76,9 @@ abstract class Blog_Handler {
 	 *
 	 * @param array   $data
 	 * @param WP_User $user
+     *
+     * @param array   $data
+     * @param WP_User $user
 	 *
 	 * @return void
 	 */
@@ -88,16 +94,15 @@ abstract class Blog_Handler {
 	/**
 	 * Create or return the existing blog
 	 *
-	 * @param boolean $make_private
-	 *
+         * @param bool $make_private
+         *
 	 * @return int
 	 */
 	public function first_or_create_blog( $make_private = false ) {
-
 		if (
-			is_null( $this->course_id ) || is_null( $this->course_title ) || is_null( $this->domain ) ||
-			is_null( $this->resource_link_id ) || is_null( $this->username ) || is_null( $this->source_id ) ||
-			is_null( $this->site_category )
+		    null === $this->course_id || null === $this->course_title || null === $this->domain ||
+			null === $this->resource_link_id || null === $this->username || null === $this->source_id ||
+			null === $this->site_category
 		) {
 			wp_die( 'Blog_Handler: You must set all data before calling first_or_create_blog' );
 		}
@@ -112,8 +117,8 @@ abstract class Blog_Handler {
 	/**
 	 * Create a new blog
 	 *
-	 * @param boolean $make_private
-	 *
+         * @param bool $make_private
+         *
 	 * @return int
 	 */
 	protected function create_blog( $make_private = false ) {
@@ -151,11 +156,13 @@ abstract class Blog_Handler {
 	}
 
 	/**
+     * @param array $data
+     *
 	 * Add a newly created blog's details to the database
 	 *
-	 * @param int $blog_id
-	 * @param int $version
-	 *
+         * @param int $blog_id
+         * @param int $version
+         *
 	 * @return void
 	 */
 	protected function add_blog_meta( $blog_id, $version = 1 ) {
@@ -206,7 +213,7 @@ abstract class Blog_Handler {
 	 * @param int $course_id
 	 * @param int $blog_id
 	 *
-	 * @return bool
+         * @return bool
 	 */
 	public static function is_course_blog( $course_id, $blog_id ) {
 		global $wpdb;
@@ -230,7 +237,7 @@ abstract class Blog_Handler {
 
 	/**
 	 * Get friendly path
-	 *
+         *
 	 * @param string $path
 	 *
 	 * @return string
@@ -254,6 +261,10 @@ abstract class Blog_Handler {
 
 	/**
 	 * Add a user to a blog
+     *
+     * @param WP_User        $user
+     * @param int            $blog_id
+     * @param User_LTI_Roles $user_roles
 	 *
 	 * @param WP_User        $user
 	 * @param int            $blog_id

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Class for coordinating main LTI functions.
+ *
+ * @author    Learning Applications Development Team <ltw-apps-dev@ed.ac.uk>
+ * @copyright University of Edinburgh
+ */
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -17,13 +23,7 @@ require_once 'class-ed-lti-settings.php';
 require_once 'class-ed-lti-config.php';
 
 use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
-use IMSGlobal\LTI\ToolProvider;
 
-/**
- * Class for coordinating main LTI functions.
- *
- * @author Richard Lawson <richard.lawson@ed.ac.uk>
- */
 class Ed_LTI {
 
 	private $wpdb;
@@ -86,7 +86,7 @@ class Ed_LTI {
 			}
 
             // phpcs:disable
-			$blog_type = isset( $_REQUEST['custom_blog_type'] ) ? $_REQUEST['custom_blog_type'] : '';
+			$blog_type = $_REQUEST['custom_blog_type'] ?? '';
             // phpcs:enable
 
 			if ( $this->is_student_blog_and_non_student( $blog_type, $tool ) ) {
@@ -128,19 +128,15 @@ class Ed_LTI {
 	private function lti_is_basic_lti_request() {
         // phpcs:disable
 		$good_message_type = isset( $_REQUEST['lti_message_type'] )
-							? 'basic-lti-launch-request' == $_REQUEST['lti_message_type']
+							? 'basic-lti-launch-request' === $_REQUEST['lti_message_type']
 							: false;
 
-		$good_lti_version   = isset( $_REQUEST['lti_version'] ) ? 'LTI-1p0' == $_REQUEST['lti_version'] : false;
+		$good_lti_version   = isset( $_REQUEST['lti_version'] ) ? 'LTI-1p0' === $_REQUEST['lti_version'] : false;
 		$oauth_consumer_key = isset( $_REQUEST['oauth_consumer_key'] );
 		$resource_link_id   = isset( $_REQUEST['resource_link_id'] );
         // phpcs:enable
 
-		if ( $good_message_type && $good_lti_version && $oauth_consumer_key && $resource_link_id ) {
-			return true;
-		}
-
-		return false;
+		return $good_message_type && $good_lti_version && $oauth_consumer_key && $resource_link_id;
 	}
 
 	/**
@@ -202,15 +198,15 @@ class Ed_LTI {
 	 */
 	private function lti_get_username_from_request() {
 		// LTI specs tell us that username should be set in the 'lis_person_sourcedid' param, but moodle doesn't do
-		// this. Moodle seems to use 'ext_user_username' instead
+		// this. In some instances, Moodle uses 'ext_user_username' instead
         // phpcs:disable
-		if ( isset( $_REQUEST['lis_person_sourcedid'] ) && '' !== $_REQUEST['lis_person_sourcedid'] ) {
-			return $_REQUEST['lis_person_sourcedid'];
-		}
-
 		if ( isset( $_REQUEST['ext_user_username'] ) && '' !== $_REQUEST['ext_user_username'] ) {
 			return $_REQUEST['ext_user_username'];
 		}
+
+        if ( isset( $_REQUEST['lis_person_sourcedid'] ) && '' !== $_REQUEST['lis_person_sourcedid'] ) {
+            return $_REQUEST['lis_person_sourcedid'];
+        }
 
 		if ( isset( $_REQUEST['user_id'] ) && '' !== $_REQUEST['user_id'] ) {
 			return $_REQUEST['user_id'];
@@ -230,7 +226,7 @@ class Ed_LTI {
 	 */
 	private function lti_get_site_data() {
         // phpcs:disable
-		$site_category = isset( $_REQUEST['custom_site_category'] ) ? $_REQUEST['custom_site_category'] : 1;
+		$site_category = $_REQUEST['custom_site_category'] ?? 1;
 
         $username = $this->lti_get_username_from_request();
 
@@ -291,7 +287,7 @@ class Ed_LTI {
 	 * @return void
 	 */
 	private function set_user_name_temporarily_to_vle_name( $user, Ed_Tool_Provider $tool ) {
-		if ( $tool->user->firstname !== '' || $tool->user->lastname !== '' ) {
+		if ( '' !== $tool->user->firstname || '' !== $tool->user->lastname ) {
 			$user->first_name = $tool->user->firstname;
 			$user->last_name  = $tool->user->lastname;
 		}
@@ -324,7 +320,7 @@ class Ed_LTI {
 	/**
 	 * Create a list of student blogs for a given course for a member of staff
 	 *
-	 * @param int              $course_id
+	 * @param string           $course_id
 	 * @param string           $resource_link_id
 	 * @param Ed_Tool_Provider $tool
 	 *
@@ -346,7 +342,7 @@ class Ed_LTI {
 	 *
 	 * @param array          $user_data
 	 * @param User_LTI_Roles $user_roles
-	 * @param int            $course_id
+	 * @param string         $course_id
 	 * @param string         $resource_link_id
 	 *
 	 * @return void
@@ -367,7 +363,7 @@ class Ed_LTI {
 	/**
 	 * Render a list of student blogs
 	 *
-	 * @param int    $course_id
+	 * @param string $course_id
 	 * @param string $resource_link_id
 	 *
 	 * @return void
@@ -427,14 +423,14 @@ class Ed_LTI {
 	 */
 	public function lti_add_staff_to_student_blog() {
         // phpcs:disable
-		if ( isset( $_REQUEST['lti_staff_view_blog'] ) && 'true' == $_REQUEST['lti_staff_view_blog'] ) {
+		if ( isset( $_REQUEST['lti_staff_view_blog'] ) && 'true' === $_REQUEST['lti_staff_view_blog'] ) {
         // phpcs:enable
 			if ( session_status() === PHP_SESSION_NONE ) {
 				session_start();
 			}
 
 			if ( ! isset( $_SESSION['lti_staff'] ) ) {
-				wp_die( 'You do not have permssion to view this page' );
+				wp_die( 'You do not have permission to view this page' );
 			}
 
             // phpcs:disable
@@ -462,23 +458,29 @@ class Ed_LTI {
 	/**
 	 * Redirect a user to the defined home URL
 	 *
-	 * @param int $blog_id
+	 * @param string $blog_id
 	 *
 	 * @return void
 	 */
 	private function lti_redirect_user_to_blog_without_login( $blog_id ) {
 		switch_to_blog( $blog_id );
 		wp_safe_redirect( home_url() );
+
 		exit;
 	}
 
-	/**
-	 * Generates a cryptographically secure random string of a given length which can be used for generating passwords
-	 *
-	 * Adapted from https://paragonie.com/blog/2015/07/how-safely-generate-random-strings-and-integers-in-php
-	 *
-	 * @return string
-	 */
+    /**
+     * Generates a cryptographically secure random string of a given length which can be used for generating passwords
+     *
+     * Adapted from https://paragonie.com/blog/2015/07/how-safely-generate-random-strings-and-integers-in-php
+     *
+     * @param int $length
+     * @param string $alphabet
+     *
+     * @return string
+     * @throws Exception
+     * @throws InvalidArgumentException
+     */
 	private function random_string( $length, $alphabet ) {
 		if ( $length < 1 ) {
 			throw new InvalidArgumentException( 'Length must be a positive integer' );
