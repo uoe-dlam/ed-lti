@@ -21,19 +21,20 @@ class WP_Blog_Creator implements Blog_Creator {
 		// We need to make sure our path is not just a slug and contains appropriate slashes.
 		$path = Ed_LTI::turn_slug_into_path( $data['path'] );
 
-		$default_user_id = 0;
+        // Unlike NS Cloner, wordpress requires a user to create a blog
+        $default_user_id = wp_get_current_user()->ID;
 		$site_id         = wpmu_create_blog( $data['domain'], $path, $data['title'], $default_user_id );
 		$site_info       = get_blog_details( $site_id );
 
 		if ( $site_info ) {
 			$this->set_blog_template( $site_id );
+            // we don't want the default user to be the site owner, so remove them from the blog we just created
 			remove_user_from_blog( $default_user_id, $site_id );
 
 			return $site_id;
 		}
 
-		// TODO handle unsucessfull blog creation
-		wp_die( 'WP did not create site' );
+		wp_die( 'WP did not create site. Please contact the site administrator.' );
 	}
 
 	/**
