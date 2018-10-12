@@ -35,7 +35,7 @@ class NS_Cloner_Blog_Creator implements Blog_Creator {
 		if ( $site_info ) {
 			return $site_id;
 		}
-		
+
 		wp_die( 'NS CLoner did not create site. Please contact the site administrator.' );
 	}
 }
