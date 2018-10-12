@@ -169,14 +169,14 @@ class Ed_LTI {
 		return ( 'student' === $blog_type && ! $tool->user->isLearner() );
 	}
 
-    /**
-     * Get the user data passed via LTI
-     *
-     * @param Ed_Tool_Provider $tool
-     *
-     * @return array
-     * @throws Exception
-     */
+	/**
+	 * Get the user data passed via LTI
+	 *
+	 * @param Ed_Tool_Provider $tool
+	 *
+	 * @return array
+	 * @throws Exception
+	 */
 	private function lti_get_user_data( Ed_Tool_Provider $tool ) {
 		$username = $this->lti_get_username_from_request();
 
