@@ -88,10 +88,10 @@ class Ed_LTI_Config {
 				<?php if ( is_plugin_active( 'sitewide-privacy-options/sitewide-privacy-options.php' ) ) : ?>
 					<tr>
 						<th scope="row">
-                            <label for="lti_make_sites_private">
-                                <?php _e( 'Do you want to make sites private on creation?', 'lti-config-group' ); ?>
-                            </label>
-                        </th>
+							<label for="lti_make_sites_private">
+								<?php _e( 'Do you want to make sites private on creation?', 'lti-config-group' ); ?>
+							</label>
+						</th>
 						<td>
 							<input id="lti_make_sites_private" name="lti_make_sites_private" type="checkbox" value="1" <?php checked( '1', get_site_option( 'lti_make_sites_private' ) ); ?>>
 						</td>
@@ -100,10 +100,10 @@ class Ed_LTI_Config {
 
 				<tr>
 					<th scope="row">
-                        <label for="default_site_template_slug">
-                            <?php _e( 'Default Site Template URL', 'lti-config-group' ); ?>
-                        </label>
-                    </th>
+						<label for="default_site_template_slug">
+							<?php _e( 'Default Site Template URL', 'lti-config-group' ); ?>
+						</label>
+					</th>
 					<td>
 						<?php echo get_site_url(); ?>/<input type="text" id="default_site_template_slug" name="default_site_template_slug" value="<?php echo $this->get_saved_slug(); ?>" />
 					</td>
@@ -154,7 +154,7 @@ class Ed_LTI_Config {
 	public function update_settings() {
 		if ( isset( $_POST['default_site_template_slug'] ) ) {
 			$slug = sanitize_text_field( $_POST['default_site_template_slug'] );
-			$path = $this->turn_slug_into_path( $slug );
+			$path = Ed_LTI::turn_slug_into_path( $slug );
 
 			if ( ! domain_exists( get_current_site()->domain, $path ) ) {
 				$this->errors[] = 'The URL that you entered does not exist.';
@@ -167,36 +167,19 @@ class Ed_LTI_Config {
 			update_site_option( 'default_site_template_id', $blog_id );
 		}
 
-		if ( is_plugin_active( 'sitewide-privacy-options/sitewide-privacy-options.php' ) && isset( $_POST['lti_make_sites_private'] ) ) {
-            update_site_option( 'lti_make_sites_private', 1 );
+		if ( isset( $_POST['lti_make_sites_private'] ) && is_plugin_active( 'sitewide-privacy-options/sitewide-privacy-options.php' ) ) {
+			update_site_option( 'lti_make_sites_private', 1 );
 		} else {
 			update_site_option( 'lti_make_sites_private', 0 );
 		}
-
 		$this->updated = true;
 	}
 
-	/**
-	 * Get slug with slashes so it is a valid WordPress path.
+	/*
+	 *  Get slug from DB
+	 *  Note: we get the slug from the blog itself, because it is possible that the template id has changed else where making the existing slug out of date.
 	 *
-	 * @param string $slug
-	 *
-	 * @return string
-	 */
-	protected function turn_slug_into_path( $slug ) {
-		$path = '/' . $slug;
-		$path = rtrim( $path, '/' ) . '/';
-
-		return $path;
-	}
-
-	/**
-	 * Get slug from DB
-	 *
-     * Note: we get the slug from the blog itself, because it is possible that the template id has changed else where
-     * making the existing slug out of date.
-	 *
-	 * @return string
+	 * @return void
 	 */
 	protected function get_saved_slug() {
 		$slashed_slug = get_blog_details( get_site_option( 'default_site_template_id' ) )->path;

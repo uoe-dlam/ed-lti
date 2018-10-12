@@ -1,9 +1,10 @@
 <?php
 
 /**
- * Control the LTI settings for WordPress
+ * Control the LTI settings for WordPress.
  *
- * @author Richard Lawson <richard.lawson@ed.ac.uk>
+ * @author    DLAM Applications Development Team <ltw-apps-dev@ed.ac.uk>
+ * @copyright University of Edinburgh
  */
 class Ed_LTI_Settings {
 
@@ -125,8 +126,6 @@ class Ed_LTI_Settings {
 		if ( ! $is_editing ) {
 			echo '<h3>Search</h3>';
 
-			$search = '';
-
 			if ( isset( $_POST['search_txt'] ) ) {
 				$search = '%' . $this->wpdb->esc_like( addslashes( $_POST['search_txt'] ) ) . '%';
 
@@ -192,7 +191,9 @@ class Ed_LTI_Settings {
 	}
 
 	/**
-	 * Edit an existing LTI setting
+	 * Edit an existing LTI setting.
+	 *
+	 * @param mixed $row
 	 *
 	 * @return void
 	 */
@@ -241,7 +242,10 @@ class Ed_LTI_Settings {
 	}
 
 	/**
-	 * List all LTI configurations
+	 * List all LTI configurations.
+	 *
+	 * @param array  $rows
+	 * @param string $heading
 	 *
 	 * @return void
 	 */

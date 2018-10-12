@@ -19,7 +19,7 @@ abstract class Blog_Handler {
 	protected $wpdb;
 
 	/**
-	 * TODO: Not sure what this does... what is the path used for?
+	 * Returns the subdirectory name for the blog: path/slug.
 	 *
 	 * @return string
 	 */
@@ -33,9 +33,9 @@ abstract class Blog_Handler {
 	abstract public function get_blog_type();
 
 	/**
-	 * Get the WordPress role for a given LTI user role
-     *
-     * @param User_LTI_Roles $roles
+	 * Get the WordPress role for a given LTI user role.
+	 *
+	 * @param User_LTI_Roles $roles
 	 *
 	 * @return string
 	 */
@@ -72,10 +72,10 @@ abstract class Blog_Handler {
 	abstract protected function get_blog_id();
 
 	/**
-	 * TODO: Not sure what this is doing. Need to find its usage
-     *
-     * @param array   $data
-     * @param WP_User $user
+	 * Set class properties using array.
+	 *
+	 * @param array   $data
+	 * @param WP_User $user
 	 *
 	 * @return void
 	 */
@@ -89,15 +89,15 @@ abstract class Blog_Handler {
 	}
 
 	/**
-	 * Create or return the existing blog
+	 * Create or return the existing blog.
 	 *
-     * @param bool $make_private
-     *
+	 * @param bool $make_private
+	 *
 	 * @return int
 	 */
 	public function first_or_create_blog( $make_private = false ) {
 		if (
-		    null === $this->course_id || null === $this->course_title || null === $this->domain ||
+			null === $this->course_id || null === $this->course_title || null === $this->domain ||
 			null === $this->resource_link_id || null === $this->username || null === $this->source_id ||
 			null === $this->site_category
 		) {
@@ -112,14 +112,13 @@ abstract class Blog_Handler {
 	}
 
 	/**
-	 * Create a new blog
+	 * Create a new blog.
 	 *
-     * @param bool $make_private
-     *
+	 * @param bool $make_private
+	 *
 	 * @return int
 	 */
 	protected function create_blog( $make_private = false ) {
-
 		$path  = $this->get_path();
 		$title = $this->get_title();
 
@@ -139,7 +138,10 @@ abstract class Blog_Handler {
 			'source_id' => $this->source_id,
 		];
 
-		$blog_id = $this->do_ns_cloner_create( $blog_data );
+		// if NS Cloner is installed we will use the NS Cloner blog creator, else we will us the wp creator.
+		$blog_creator = Blog_Creator_Factory::instance();
+		$blog_id      = $blog_creator->create( $blog_data );
+
 		$this->add_blog_meta( $blog_id, $version );
 		$this->add_site_category( $blog_id );
 
@@ -151,41 +153,11 @@ abstract class Blog_Handler {
 	}
 
 	/**
-	 * Create a new blog using the NS Cloner plugin
+	 * Add a newly created blog's details to the database.
 	 *
-     * @param array $data
-     *
-	 * @return int
-	 */
-	protected function do_ns_cloner_create( array $data ) {
-		$_POST['action']         = 'process';
-		$_POST['clone_mode']     = 'core';
-		$_POST['source_id']      = $data['source_id'];
-		$_POST['target_name']    = $data['path'];
-		$_POST['target_title']   = $data['title'];
-		$_POST['disable_addons'] = true;
-		$_POST['clone_nonce']    = wp_create_nonce( 'ns_cloner' );
-
-		$ns_site_cloner = new ns_cloner();
-		$ns_site_cloner->process();
-
-		$site_id   = $ns_site_cloner->target_id;
-		$site_info = get_blog_details( $site_id );
-
-		if ( $site_info ) {
-			return $site_id;
-		}
-
-		// TODO handle unsucessfull clone
-		wp_die( 'NS CLoner did not create site' );
-	}
-
-	/**
-	 * Add a newly created blog's details to the database
+	 * @param int $blog_id
+	 * @param int $version
 	 *
-     * @param int $blog_id
-     * @param int $version
-     *
 	 * @return void
 	 */
 	protected function add_blog_meta( $blog_id, $version = 1 ) {
@@ -206,8 +178,8 @@ abstract class Blog_Handler {
 	/**
 	 * Add a site category to a given blog
 	 *
-     * @param int $blog_id
-     *
+	 * @param int $blog_id
+	 *
 	 * @return void
 	 */
 	protected function add_site_category( $blog_id ) {
@@ -219,8 +191,8 @@ abstract class Blog_Handler {
 	/**
 	 * Make a blog private
 	 *
-     * @param int $blog_id
-     *
+	 * @param int $blog_id
+	 *
 	 * @return void
 	 */
 	protected function make_blog_private( $blog_id ) {
@@ -233,10 +205,10 @@ abstract class Blog_Handler {
 	/**
 	 * Check if a given blog is associated with the given course ID
 	 *
-     * @param int $course_id
-     * @param int $blog_id
-     *
-     * @return bool
+	 * @param int $course_id
+	 * @param int $blog_id
+	 *
+		 * @return bool
 	 */
 	public static function is_course_blog( $course_id, $blog_id ) {
 		global $wpdb;
@@ -259,9 +231,9 @@ abstract class Blog_Handler {
 	}
 
 	/**
-	 * Get friendly path
-     *
-     * @param string $path
+	 * Get friendly path.
+	 *
+	 * @param string $path
 	 *
 	 * @return string
 	 */
@@ -283,11 +255,11 @@ abstract class Blog_Handler {
 	}
 
 	/**
-	 * Add a user to a blog
-     *
-     * @param WP_User        $user
-     * @param int            $blog_id
-     * @param User_LTI_Roles $user_roles
+	 * Add a user to a blog.
+	 *
+	 * @param WP_User        $user
+	 * @param int            $blog_id
+	 * @param User_LTI_Roles $user_roles
 	 *
 	 * @return void
 	 */
