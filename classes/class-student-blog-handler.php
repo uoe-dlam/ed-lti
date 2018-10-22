@@ -41,38 +41,37 @@ class Student_Blog_Handler extends Blog_Handler {
 		return $this->user->first_name . ' ' . $this->user->last_name . ' / ' . $this->course_title;
 	}
 
-    /**
-     * Create or return the existing blog.
-     * Note that we are overidding the parent method for this class.
-     *
-     * @param bool $make_private
-     *
-     * @return int
-     */
-    public function first_or_create_blog( $make_private = false )
-    {
-        if (
-            null === $this->course_id || null === $this->course_title || null === $this->domain ||
-            null === $this->resource_link_id || null === $this->username || null === $this->source_id ||
-            null === $this->site_category
-        ) {
-            wp_die('Blog_Handler: You must set all data before calling first_or_create_blog');
-        }
+	/**
+	 * Create or return the existing blog.
+	 * Note that we are overidding the parent method for this class.
+	 *
+	 * @param bool $make_private
+	 *
+	 * @return int
+	 */
+	public function first_or_create_blog( $make_private = false ) {
+		if (
+			null === $this->course_id || null === $this->course_title || null === $this->domain ||
+			null === $this->resource_link_id || null === $this->username || null === $this->source_id ||
+			null === $this->site_category
+		) {
+			wp_die( 'Blog_Handler: You must set all data before calling first_or_create_blog' );
+		}
 
-        if ( $this->blog_exists() ) {
-            return $this->get_blog_id();
-        }
+		if ( $this->blog_exists() ) {
+			return $this->get_blog_id();
+		}
 
-        // If the blog path already exists, this user must already have created a student blog already. However, their id must have changed. The most likely reason is that they were deleted from the system and then added again.
-        $blog_id = $this->get_blog_id_for_path();
+		// If the blog path already exists, this user must already have created a student blog already. However, their id must have changed. The most likely reason is that they were deleted from the system and then added again.
+		$blog_id = $this->get_blog_id_for_path();
 
-        if ( ! empty( $blog_id ) ) {
-            $this->update_blog_meta_with_user_id( $blog_id );
-            return $this->get_blog_id();
-        }
+		if ( ! empty( $blog_id ) ) {
+			$this->update_blog_meta_with_user_id( $blog_id );
+			return $this->get_blog_id();
+		}
 
-        return $this->create_blog( $make_private );
-    }
+		return $this->create_blog( $make_private );
+	}
 
 	/**
 	 * Check if the blog we are trying to create already exists
@@ -192,41 +191,42 @@ class Student_Blog_Handler extends Blog_Handler {
 		return $blogs[0]->blog_id;
 	}
 
-    /**
-     * Get blog id for a given path. If no match 0 is returned.
-     *
-     * @return int
-     */
-    protected function get_blog_id_for_path() {
-        $path  = $this->get_path();
-        $version = $this->get_blog_max_version();
-        $version++;
+	/**
+	 * Get blog id for a given path. If no match 0 is returned.
+	 *
+	 * @return int
+	 */
+	protected function get_blog_id_for_path() {
+		$path    = $this->get_path();
+		$version = $this->get_blog_max_version();
+		$version++;
 
-        if ( $version > 1 ) {
-            // we already have a main blog, so create new blog and increment version number
-            $path  .= '_v' . $version;
-        }
+		if ( $version > 1 ) {
+			// we already have a main blog, so create new blog and increment version number.
+			$path .= '_v' . $version;
+		}
 
-        $path = '/' . $path . '/';
+		$path = '/' . $path . '/';
 
-        return get_blog_id_from_url( $this->domain , $path );
-    }
+		return get_blog_id_from_url( $this->domain, $path );
+	}
 
-    /**
-     * Get blog id for a given path. If no match 0 is returned.
-     *
-     * @return int
-     */
-    protected function update_blog_meta_with_user_id( $blog_id ) {
-        $this->wpdb->update(
-            $this->wpdb->base_prefix . 'blogs_meta', [
-                'creator_id' => $this->user->ID,
-            ],
-            ['blog_id' => $blog_id ]
-        );
-    }
+	/**
+	 * Get blog id for a given path. If no match 0 is returned.
+	 *
+	 * @param int $blog_id
+	 *
+	 * @return void
+	 */
+	protected function update_blog_meta_with_user_id( $blog_id ) {
+		$this->wpdb->update(
+			$this->wpdb->base_prefix . 'blogs_meta',
+			[ 'creator_id' => $this->user->ID ],
+			[ 'blog_id' => $blog_id ]
+		);
+	}
 
-    /**
+	/**
 	 * Get the WordPress role for a given LTI user role
 	 *
 	 * @param User_LTI_Roles $user_roles
