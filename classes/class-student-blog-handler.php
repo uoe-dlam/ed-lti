@@ -212,7 +212,7 @@ class Student_Blog_Handler extends Blog_Handler {
 	}
 
 	/**
-	 * Get blog id for a given path. If no match 0 is returned.
+	 * Update blog meta with new user id. This usually happens when a user has been deleted and then re-added to the system.
 	 *
 	 * @param int $blog_id
 	 *
