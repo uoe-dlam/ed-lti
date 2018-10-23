@@ -114,21 +114,21 @@ class Ed_LTI_Config {
 					</td>
 				</tr>
 
-                    <tr>
-                    <th scope="row">
-                        <label for="is_helpline_url">
-                            <?php _e( 'Helpline URL', 'lti-config-group' ); ?>
-                        </label>
-                    </th>
-                    <td>
-                        <input type="text" id="is_helpline_url" name="is_helpline_url" value="<?php echo get_site_option( 'is_helpline_url'  ); ?>">
-                    </td>
-                </tr>
-                    <tr>
-                        <td colspan="2">
-                            <?php _e( 'NB: If you do not add a helpline URL, a helpline link will not be included in error messages.' ); ?>
-                        </td>
-                    </tr>
+					<tr>
+					<th scope="row">
+						<label for="is_helpline_url">
+							<?php _e( 'Helpline URL', 'lti-config-group' ); ?>
+						</label>
+					</th>
+					<td>
+						<input type="text" id="is_helpline_url" name="is_helpline_url" value="<?php echo get_site_option( 'is_helpline_url' ); ?>">
+					</td>
+				</tr>
+					<tr>
+						<td colspan="2">
+							<?php _e( 'NB: If you do not add a helpline URL, a helpline link will not be included in error messages.' ); ?>
+						</td>
+					</tr>
 
 				</table>
 				<?php wp_nonce_field( 'lti_config_nonce', 'lti_config_nonce' ); ?>
@@ -184,9 +184,9 @@ class Ed_LTI_Config {
 			update_site_option( 'default_site_template_id', $blog_id );
 		}
 
-        if ( isset( $_POST['is_helpline_url'] ) ) {
-            update_site_option( 'is_helpline_url', $_POST['is_helpline_url'] );
-        }
+		if ( isset( $_POST['is_helpline_url'] ) ) {
+			update_site_option( 'is_helpline_url', $_POST['is_helpline_url'] );
+		}
 
 		if ( isset( $_POST['lti_make_sites_private'] ) && is_plugin_active( 'sitewide-privacy-options/sitewide-privacy-options.php' ) ) {
 			update_site_option( 'lti_make_sites_private', 1 );
