@@ -474,7 +474,7 @@ class Ed_LTI {
 	 *
 	 * Adapted from https://paragonie.com/blog/2015/07/how-safely-generate-random-strings-and-integers-in-php
 	 *
-	 * @param int $length
+	 * @param int    $length
 	 * @param string $alphabet
 	 *
 	 * @return string
