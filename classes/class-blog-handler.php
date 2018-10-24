@@ -162,7 +162,8 @@ abstract class Blog_Handler {
 	 */
 	protected function add_blog_meta( $blog_id, $version = 1 ) {
 		$this->wpdb->insert(
-			$this->wpdb->base_prefix . 'blogs_meta', [
+			$this->wpdb->base_prefix . 'blogs_meta',
+			[
 				'blog_id'           => $blog_id,
 				'version'           => $version,
 				'course_id'         => $this->course_id,
@@ -208,7 +209,7 @@ abstract class Blog_Handler {
 	 * @param int $course_id
 	 * @param int $blog_id
 	 *
-		 * @return bool
+	 * @return bool
 	 */
 	public static function is_course_blog( $course_id, $blog_id ) {
 		global $wpdb;
