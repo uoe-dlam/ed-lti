@@ -85,7 +85,7 @@ class Ed_LTI_Config {
 			<form method="post">
 
 				<table class="form-table">
-				<?php if ( is_plugin_active( 'sitewide-privacy-options/sitewide-privacy-options.php' ) ) : ?>
+				<?php if ( is_plugin_active( 'sitewide-privacy-options/sitewide-privacy-options.php' ) || is_plugin_active( 'more-privacy-options/ds_wp3_private_blog.php' ) ) : ?>
 					<tr>
 						<th scope="row">
 							<label for="lti_make_sites_private">
@@ -184,11 +184,7 @@ class Ed_LTI_Config {
 			update_site_option( 'default_site_template_id', $blog_id );
 		}
 
-		if ( isset( $_POST['is_helpline_url'] ) ) {
-			update_site_option( 'is_helpline_url', $_POST['is_helpline_url'] );
-		}
-
-		if ( isset( $_POST['lti_make_sites_private'] ) && is_plugin_active( 'sitewide-privacy-options/sitewide-privacy-options.php' ) ) {
+		if ( isset( $_POST['lti_make_sites_private'] ) && ( is_plugin_active( 'sitewide-privacy-options/sitewide-privacy-options.php' ) || is_plugin_active( 'more-privacy-options/ds_wp3_private_blog.php' ) ) ) {
 			update_site_option( 'lti_make_sites_private', 1 );
 		} else {
 			update_site_option( 'lti_make_sites_private', 0 );
