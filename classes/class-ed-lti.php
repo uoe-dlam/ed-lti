@@ -212,8 +212,7 @@ class Ed_LTI {
 			return $_REQUEST['user_id'];
 		}
 
-		$error_message = 'Your username has not be passed to our site. Please contact <a href="'
-			. get_site_option( 'is_helpline_url' ) . '">IS Helpline</a> for assistance.';
+		$error_message = 'Your username has not be passed to our site.' . $this->get_helpline_message();
 
 		wp_die( $error_message, 200 );
         // phpcs:enable
@@ -256,9 +255,7 @@ class Ed_LTI {
 			$user_id = wpmu_create_user( $data['username'], $data['password'], $data['email'] );
 
 			if ( ! $user_id ) {
-				$error_message = 'This Email address is already being used by another user. Please contact <a href="'
-					. get_site_option( 'is_helpline_url' ) . '">IS Helpline</a> for assistance.';
-
+				$error_message = 'This Email address is already being used by another user.' . $this->get_helpline_message();
                 // phpcs:disable
 				wp_die( $error_message, 200 );
                 // phpcs:enable
@@ -519,5 +516,20 @@ class Ed_LTI {
 	 */
 	public static function turn_slug_into_path( $slug ) {
 		return rtrim( '/' . $slug, '/' ) . '/';
+	}
+
+	/**
+	 * Get helpline message text.
+	 *
+	 * @return string
+	 */
+	protected function get_helpline_message() {
+		$helpline_message = '';
+
+		if ( ! empty( get_site_option( 'is_helpline_url' ) ) ) {
+			$helpline_message = ' Please contact the <a href="' . get_site_option( 'is_helpline_url' ) . '">Helpline</a> for assistance.';
+		}
+
+		return $helpline_message;
 	}
 }

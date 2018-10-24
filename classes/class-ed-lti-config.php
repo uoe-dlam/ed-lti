@@ -113,6 +113,23 @@ class Ed_LTI_Config {
 						<?php _e( 'NB: If you do not add a subsite ( i.e. enter a value in the above field ), this plugin will use the top level site as the template URL.' ); ?>
 					</td>
 				</tr>
+
+					<tr>
+					<th scope="row">
+						<label for="is_helpline_url">
+							<?php _e( 'Helpline URL', 'lti-config-group' ); ?>
+						</label>
+					</th>
+					<td>
+						<input type="text" id="is_helpline_url" name="is_helpline_url" value="<?php echo get_site_option( 'is_helpline_url' ); ?>">
+					</td>
+				</tr>
+					<tr>
+						<td colspan="2">
+							<?php _e( 'NB: If you do not add a helpline URL, a helpline link will not be included in error messages.' ); ?>
+						</td>
+					</tr>
+
 				</table>
 				<?php wp_nonce_field( 'lti_config_nonce', 'lti_config_nonce' ); ?>
 				<?php submit_button(); ?>
