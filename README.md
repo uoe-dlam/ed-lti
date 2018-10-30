@@ -90,7 +90,7 @@ If you have any questions about ed-lti  _please_  open a ticket here; please  **
 
 ## License
 
-This package is released under the MIT License. See the bundled  [LICENSE](https://github.com/uoe-dlam/ed-lti/blob/master/LICENSE)  file for details.
+This package is released under the GNU License. See the bundled  [LICENSE](https://github.com/uoe-dlam/ed-lti/blob/master/LICENSE)  file for details.
 
 ## Credits
 
