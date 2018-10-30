@@ -40,7 +40,7 @@ Note: It is very possible that this plugin will work with earlier versions of Wo
 
 ## Installation 
 
-Copy the ed-gel folder to the plugins folder.
+Copy the ed-lti folder to the plugins folder.
 
 Activate the plugin on the plugins page in WordPress admin (Network Admin -> Plugins). 
 
