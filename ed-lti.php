@@ -1,7 +1,7 @@
 <?php
 
 /*
-Plugin Name: UoE LTI
+Plugin Name: UoE LTI TEST PUSHER
 Description: Allows LMSs to connect to our website and create blogs.
 Author: DLAM Applications Development Team
 Version: 1.0
