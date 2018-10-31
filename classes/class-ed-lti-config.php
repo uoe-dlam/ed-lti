@@ -105,7 +105,8 @@ class Ed_LTI_Config {
 						</label>
 					</th>
 					<td>
-						<?php echo get_site_url(); ?>/<input type="text" id="default_site_template_slug" name="default_site_template_slug" value="<?php echo $this->get_saved_slug(); ?>" />
+						<?php $protocol = stripos( $_SERVER['SERVER_PROTOCOL'], 'https' ) === true ? 'https://' : 'http://'; ?>
+						<?php echo $protocol . $_SERVER['SERVER_NAME']; ?>/<input type="text" id="default_site_template_slug" name="default_site_template_slug" value="<?php echo $this->get_saved_slug(); ?>" />
 					</td>
 				</tr>
 				<tr>
@@ -189,18 +190,20 @@ class Ed_LTI_Config {
 		} else {
 			update_site_option( 'lti_make_sites_private', 0 );
 		}
+
 		$this->updated = true;
 	}
 
-	/*
-	 *  Get slug from DB
+	/**
+	 *  Get slug from DB.
 	 *  Note: we get the slug from the blog itself, because it is possible that the template id has changed else where making the existing slug out of date.
 	 *
-	 * @return void
+	 * @return string
 	 */
 	protected function get_saved_slug() {
 		$slashed_slug = get_blog_details( get_site_option( 'default_site_template_id' ) )->path;
-
-		return str_replace( '/', '', $slashed_slug );
+		$slashed_slug = ltrim( $slashed_slug, '/' );
+		$slashed_slug = rtrim( $slashed_slug, '/' );
+		return $slashed_slug;
 	}
 }
