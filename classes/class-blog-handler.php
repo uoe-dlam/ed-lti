@@ -126,7 +126,7 @@ abstract class Blog_Handler {
 		$version++;
 
 		if ( $version > 1 ) {
-			// we already have a main blog, so create new blog and increment version number
+			// we already have a main blog, so create new blog and increment version number.
 			$path  .= '_v' . $version;
 			$title .= ' ' . $version;
 		}
@@ -241,9 +241,34 @@ abstract class Blog_Handler {
 	public function get_friendly_path( $path ) {
 		$path = str_replace( ' ', '-', $path ); // Replaces all spaces with hyphens.
 		$path = preg_replace( '/[^A-Za-z0-9\-\_]/', '', $path ); // Removes special chars.
-		$path = strtolower( $path ); // Convert to lowercase
+		$path = strtolower( $path ); // Convert to lowercase.
+
+		if ( $this->is_subdirectory_install() ) {
+			$path = $this->append_subdirectory_install_base_path( $path );
+		}
 
 		return $path;
+	}
+
+	/**
+	 * Let's us know if the current site has been installed in a subdirectory; e.g. http:://mysite.co.uk/wp rather than http:://mysite.co.uk.
+	 *
+	 * @return boolean
+	 */
+	public function is_subdirectory_install() {
+		return ( get_current_site()->path !== '/' );
+	}
+
+	/**
+	 * Append the subdirectory base install path. If your site is installed on http:://mysite.co.uk/wp for example, wp/ will be prepended to the path.
+	 *
+	 * @param string $path
+	 *
+	 * @return string
+	 */
+	public function append_subdirectory_install_base_path( $path ) {
+		$site_base = ltrim( get_current_site()->path, '/' );
+		return $site_base . $path;
 	}
 
 	/**
