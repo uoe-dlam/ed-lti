@@ -1,13 +1,15 @@
 # ed-lti
 
-This plugin allows Virtual Learning Environment (VLE) users to create blogs on a WordPress multisite installation through the use of Learning Tools Interoperability (LTI) tools. In this case, the LTI Consumer is the VLE (e.g. Moodle) and WordPress is the LTI Provider. VLE roles are mapped to appropriate WordPress roles in all cases.
+This plugin allows Virtual Learning Environment (VLE) users to create blogs on a WordPress multisite installation through the use of Learning Tools Interoperability (LTI) tools. The plugin is designed to make it easy to  integrate WordPress with a VLE course to provide an individual or group working space for students. It isn't designed to support course materials on an external WordPress site being included in the VLE.
 
-This is a single WordPress plugin that supports 2 different use cases:
+In this case, the LTI Consumer is the VLE (e.g. Moodle) and WordPress is the LTI Provider. VLE roles are mapped to appropriate WordPress roles in all cases.
+
+This is a single plugin that supports 2 different use cases:
 
 1.	**Course Blog:** A single blog that is shared by all students in a course. 
 2.	**Student Blog:** A single blog for every student in a course. 
 
-Differentiating these two quite different uses of blogs is done as part of setting up the LTI tool in your VLE of choice. Essentially you set up the LTI tool at system level twice in the VLE, giving each instance a suitably descriptive name, and including custom parameters that tells the plugin in WordPress which behaviour to provide. 
+Differentiating these two different uses of blogs is done as part of setting up the LTI tool in your VLE of choice. You set up the LTI tool at system level twice in the VLE, giving each instance a suitably descriptive name, and including custom parameters that tells the plugin in WordPress which behaviour to provide. 
 
 Teachers are then able to drop an instance of the tool into their course wherever it’s required. 
 
