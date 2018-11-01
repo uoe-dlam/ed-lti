@@ -2,15 +2,24 @@
 
 This plugin allows Virtual Learning Environment (VLE) users to create blogs on a WordPress multisite installation through the use of Learning Tools Interoperability (LTI) tools. In this case, the LTI Consumer is the VLE (e.g. Moodle) and WordPress is the LTI Provider. VLE roles are mapped to appropriate WordPress roles in all cases.
 
-The plugin supports the creation of two blog types: course blogs and student blogs.
+This is a single WordPress plugin that supports 2 different use cases:
 
-## Course Blogs
+1.	Course Blog: A single blog that is shared by all students in a course. 
+2.	Student Blog: A single blog for every student in a course. 
 
-The first VLE user to click on a course blog tool link will be taken to the WordPress multisite install and a blog will be created for the course. The user will also be made a member of the blog. Any subsequent users that click on the link are added to the blog as a member. In most cases, staff (for example, a user with a teacher role) will be given the WordPress administrator role and students the WordPress author role. 
+Differentiating these two quite different uses of blogs is done as part of setting up the LTI tool in your VLE of choice. Essentially you set up the LTI tool at system level twice in the VLE, giving each instance a suitably descriptive name, and including custom parameters that tells the plugin in WordPress which behaviour to provide. 
 
-## Student Blogs
+Teachers are then able to drop an instance of the tool into their course wherever it’s required. 
 
-If a VLE user with the student role clicks on a student blog tool link they are taken to the WordPress multisite install and a blog is created for them. The student is also added to the blog as an administrator.  In most cases, if a member staff (for example, a user with the teacher role) clicks the student tool link, they are taken to a WordPress page with a list of links to the student blogs associated with the course. If the staff member clicks on one of the links, they are taken to the home page of the blog and made a blog author (WordPress role).
+### Course Blogs
+
+The first VLE user to click on a course blog tool link will be taken to the WordPress multisite install and a blog will be created for the course. The user will also be made a member of the blog. Any subsequent users that click on the link are added to the blog as a member. Teachers on the course will get the WordPress Administrator role and students will be added as WordPress Authors.
+
+
+### Student Blogs
+
+If a VLE user with the student role clicks on a student blog tool link they are taken to the WordPress multisite install and a blog is created for them. The student is added to the blog with the Wordpress Administrator role.  Teachers on the course who follow the student tool link will be taken to a WordPress page with a list of links to all the student blogs associated with the course. If the Teacher clicks on one of the links, they are given the WordPress Author role and taken to the home page of the blog.
+
 
 ## Associated Plugins  
   
@@ -38,13 +47,15 @@ The following versions of WordPress are supported.
  
 Note: It is very possible that this plugin will work with earlier versions of WordPress, but it has only been tested on the above.
 
-## Installation 
+## Installation and Configuration
 
-Copy the ed-lti folder to the plugins folder.
+### WordPress  
 
-Activate the plugin on the plugins page in WordPress admin (Network Admin -> Plugins). 
+1. Copy the ed-lti folder to the plugins folder.
 
-Once this is done, you should see two new menu items in the network admin settings screen (Network Admin -> Settings) : LTI Consumer Keys and LTI Settings.
+2. Activate the plugin on the plugins page in WordPress admin (Network Admin -> Plugins). 
+
+Once this is done, you should see two new menu items in the Network Admin settings screen (Network Admin -> Settings) : LTI Consumer Keys and LTI Settings.
 
 Add a consumer key for your VLE(s) (Network Admin -> Settings -> LTI Consumer Keys). This includes entering a name, key and password. You should also check the enabled checkbox to activate your key. Make a note of the key and password, as they will be needed when you create an LTI tool in your VLE.
 
@@ -56,9 +67,9 @@ Note: for instructions on how to install a plugin manually, please visit [WordPr
 
 After you have installed and configured the plugin in WordPress, you will need to create LTI tools in your VLE. You should create separate tools for student and course blogs. You can find more info about creating LTI tools on Moodle and Learn on their sites:
 
-[Creating an LTI tool on Moodle](https://docs.moodle.org/35/en/External_tool)
+* [Creating an LTI tool on Moodle](https://docs.moodle.org/35/en/External_tool)
 
-[Creating an LTI tool on Learn](https://help.blackboard.com/Learn/Administrator/SaaS/Integrations/Learning_Tools_Interoperability#add-a-new-lti-tool-provider_OTP-3)
+* [Creating an LTI tool on Learn](https://help.blackboard.com/Learn/Administrator/SaaS/Integrations/Learning_Tools_Interoperability#add-a-new-lti-tool-provider_OTP-3)
  
 You should name your tool appropriately; e.g, WordPress Course, WordPress Student.
 
