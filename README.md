@@ -28,13 +28,16 @@ If the Multisite Privacy plugin or the More Privacy Option plugins are installed
 
 The following versions of PHP are supported:
 
+- PHP 5.6
 - PHP 7.0
 - PHP 7.1
 - PHP 7.2
 
+WordPress multisite Sub-directories install (Sub-domain version of multisite will not work).
+
 The following versions of WordPress are supported.
 
- - WordPress 4.9.8
+- WordPress 4.9.8
  
 Note: It is very possible that this plugin will work with earlier versions of WordPress, but it has only been tested on the above.
 
