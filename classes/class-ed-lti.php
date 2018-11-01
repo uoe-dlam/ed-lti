@@ -85,7 +85,7 @@ class Ed_LTI {
 			}
 
             // phpcs:disable
-			$blog_type = $_REQUEST['custom_blog_type'] ?? '';
+			$blog_type = isset( $_REQUEST['custom_blog_type'] ) ? $_REQUEST['custom_blog_type'] : '';
             // phpcs:enable
 
 			if ( $this->is_student_blog_and_non_student( $blog_type, $tool ) ) {
@@ -225,7 +225,7 @@ class Ed_LTI {
 	 */
 	private function lti_get_site_data() {
         // phpcs:disable
-		$site_category = $_REQUEST['custom_site_category'] ?? 1;
+		$site_category = isset( $_REQUEST['custom_site_category'] )  ? $_REQUEST['custom_site_category'] :  1;
 
         $username = $this->lti_get_username_from_request();
 
