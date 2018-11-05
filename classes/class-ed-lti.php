@@ -4,6 +4,9 @@
  *
  * @author    DLAM Applications Development Team <ltw-apps-dev@ed.ac.uk>
  * @copyright University of Edinburgh
+ * @license   https://www.gnu.org/licenses/gpl.html
+ *
+ * @link https://github.com/uoe-dlam/ed-lti
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
