@@ -1,5 +1,7 @@
 <?php
 
+namespace EDLTI;
+
 /**
  * WP Blog Creator.
  *

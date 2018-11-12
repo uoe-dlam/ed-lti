@@ -1,5 +1,7 @@
 <?php
 
+namespace EDLTI;
+
 /**
  * Course Blog Handler.
  *

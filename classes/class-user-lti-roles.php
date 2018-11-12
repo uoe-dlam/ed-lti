@@ -1,5 +1,7 @@
 <?php
 
+namespace EDLTI;
+
 /**
  * Handles LTI user roles, providing useful wrapper functions to determine if a user is of a particular type
  *

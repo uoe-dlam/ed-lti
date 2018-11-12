@@ -1,5 +1,7 @@
 <?php
 
+namespace EDLTI;
+
 use IMSGlobal\LTI\ToolProvider;
 
 /**

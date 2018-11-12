@@ -1,5 +1,7 @@
 <?php
 
+namespace EDLTI;
+
 /**
  * Blog handler factory
  *

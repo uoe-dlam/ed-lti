@@ -1,5 +1,7 @@
 <?php
 
+namespace EDLTI;
+
 /**
  * Handles LTI tables in WordPress
  *

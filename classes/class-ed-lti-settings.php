@@ -1,5 +1,7 @@
 <?php
 
+namespace EDLTI;
+
 /**
  * Control the LTI settings for WordPress.
  *

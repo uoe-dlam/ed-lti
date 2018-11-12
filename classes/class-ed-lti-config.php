@@ -1,4 +1,7 @@
 <?php
+
+namespace EDLTI;
+
 /**
  * Handles LTI Config Settings.
  *

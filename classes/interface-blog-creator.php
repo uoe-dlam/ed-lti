@@ -1,5 +1,7 @@
 <?php
 
+namespace EDLTI;
+
 /**
  * Blog creator interface
  *

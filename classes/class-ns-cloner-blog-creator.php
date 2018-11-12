@@ -1,5 +1,7 @@
 <?php
 
+namespace EDLTI;
+
 /**
  * NS Cloner Blog Creator.
  *
@@ -26,7 +28,7 @@ class NS_Cloner_Blog_Creator implements Blog_Creator {
 		$_POST['disable_addons'] = true;
 		$_POST['clone_nonce']    = wp_create_nonce( 'ns_cloner' );
 
-		$ns_site_cloner = new ns_cloner();
+		$ns_site_cloner = new \ns_cloner();
 		$ns_site_cloner->process();
 
 		$site_id   = $ns_site_cloner->target_id;

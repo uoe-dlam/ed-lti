@@ -1,4 +1,7 @@
 <?php
+
+namespace EDLTI;
+
 /**
  * Class for coordinating main LTI functions.
  *
@@ -62,7 +65,7 @@ class Ed_LTI {
 		// phpcs:disable
 		return DataConnector::getDataConnector(
 			$this->wpdb->base_prefix,
-			new PDO( 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD )
+			new \PDO( 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD )
 		);
 		// phpcs:enable
 	}
