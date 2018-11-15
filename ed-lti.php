@@ -25,9 +25,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-namespace EDLTI;
+namespace EdLTI;
 
-require_once 'classes/class-ed-lti.php';
+// Include the autoloader so we can dynamically include the rest of the classes.
+require_once trailingslashit( dirname( __FILE__ ) ) . 'inc/autoloader.php';
 
 new Ed_LTI();
 

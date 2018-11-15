@@ -1,13 +1,13 @@
 <?php
 
-namespace EDLTI;
+namespace EdLTI;
 
 /**
  * Handles LTI user roles, providing useful wrapper functions to determine if a user is of a particular type
  *
  * @author Richard Lawson <richard.lawson@ed.ac.uk>
  */
-class User_LTI_Roles {
+class User_Lti_Roles {
 
 	protected $roles = array();
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace EDLTI;
+namespace EdLTI;
 
 use IMSGlobal\LTI\ToolProvider;
 
@@ -24,11 +24,11 @@ class Ed_Tool_Provider extends ToolProvider\ToolProvider {
 	 * Ensure errors in the LTI package are rendered correctly in WordPress
 	 *
 	 * @return void
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function onError() {
 		wp_die( esc_html( $this->reason ) );
 
-		throw new Exception( $this->message );
+		throw new \Exception( $this->message );
 	}
 }

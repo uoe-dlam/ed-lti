@@ -1,13 +1,13 @@
 <?php
 
-namespace EDLTI;
+namespace EdLTI;
 
 /**
  * Handles LTI tables in WordPress
  *
  * @author Richard Lawson <richard.lawson@ed.ac.uk>
  */
-class Ed_LTI_Data {
+class Data {
 
 	private $wpdb;
 
@@ -22,7 +22,7 @@ class Ed_LTI_Data {
 	 *
 	 * @return void
 	 */
-	public function lti_maybe_create_db() {
+	public function maybe_create_db() {
 		$this->wpdb->ltitable = $this->wpdb->base_prefix . 'lti2_consumer';
 
 		if ( is_user_logged_in() && is_super_admin() ) {
@@ -218,7 +218,7 @@ class Ed_LTI_Data {
 	 *
 	 * @return void
 	 */
-	public function lti_maybe_create_site_blogs_meta_table() {
+	public function maybe_create_site_blogs_meta_table() {
 		$this->wpdb->blogsmetatable = $this->wpdb->base_prefix . 'blogs_meta';
 
 		if ( is_user_logged_in() && is_super_admin() ) {

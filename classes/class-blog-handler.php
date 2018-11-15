@@ -1,6 +1,6 @@
 <?php
 
-namespace EDLTI;
+namespace EdLTI;
 
 /**
  * Abstract class used to handle different types of WordPress blogs.
@@ -37,11 +37,11 @@ abstract class Blog_Handler {
 	/**
 	 * Get the WordPress role for a given LTI user role.
 	 *
-	 * @param User_LTI_Roles $roles
+	 * @param User_Lti_Roles $roles
 	 *
 	 * @return string
 	 */
-	abstract public function get_wordpress_role( User_LTI_Roles $roles );
+	abstract public function get_wordpress_role( User_Lti_Roles $roles );
 
 	/**
 	 * Check if the blog we are trying to create already exists
@@ -287,11 +287,11 @@ abstract class Blog_Handler {
 	 *
 	 * @param WP_User        $user
 	 * @param int            $blog_id
-	 * @param User_LTI_Roles $user_roles
+	 * @param User_Lti_Roles $user_roles
 	 *
 	 * @return void
 	 */
-	public function add_user_to_blog( $user, $blog_id, User_LTI_Roles $user_roles ) {
+	public function add_user_to_blog( $user, $blog_id, User_Lti_Roles $user_roles ) {
 		if ( ! is_user_member_of_blog( $user->ID, $blog_id ) ) {
 			$role = $this->get_wordpress_role( $user_roles );
 			add_user_to_blog( $blog_id, $user->ID, $role );
