@@ -1,6 +1,8 @@
 <?php
 
-namespace EdLTI;
+namespace EdLTI\classes;
+
+use stdClass;
 
 /**
  * Control the LTI settings for WordPress.
@@ -207,7 +209,7 @@ class Settings {
 		} else {
 			echo '<h3>New LTI</h3>';
 
-			$row                  = new \stdClass();
+			$row                  = new stdClass();
 			$row->name            = '';
 			$row->consumer_key256 = '';
 			$row->lti_version     = '';

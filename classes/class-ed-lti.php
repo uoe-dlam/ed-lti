@@ -1,6 +1,9 @@
 <?php
 
-namespace EdLTI;
+namespace EdLTI\classes;
+
+use Exception;
+use InvalidArgumentException;
 
 /**
  * Class for coordinating main LTI functions.
@@ -101,7 +104,7 @@ class Ed_LTI {
 			$make_private = get_site_option( 'lti_make_sites_private' ) ? true : false;
 			$blog_id      = $blog_handler->first_or_create_blog( $make_private );
 
-			$user_roles = new User_Lti_Roles( $tool->user->roles );
+			$user_roles = new User_LTI_Roles( $tool->user->roles );
 			$blog_handler->add_user_to_blog( $user, $blog_id, $user_roles );
 			$blog_handler->add_user_to_top_level_blog( $user );
 
@@ -315,7 +318,7 @@ class Ed_LTI {
 	private function show_staff_student_blogs_for_course( $course_id, $resource_link_id, Ed_Tool_Provider $tool ) {
 		$this->add_staff_info_to_session(
 			$this->get_user_data( $tool ),
-			new User_Lti_Roles( $tool->user->roles ),
+			new User_LTI_Roles( $tool->user->roles ),
 			$course_id,
 			$resource_link_id
 		);
@@ -327,7 +330,7 @@ class Ed_LTI {
 	 * Add staff details to a current LTI session
 	 *
 	 * @param array          $user_data
-	 * @param User_Lti_Roles $user_roles
+	 * @param User_LTI_Roles $user_roles
 	 * @param string         $course_id
 	 * @param string         $resource_link_id
 	 *
@@ -335,7 +338,7 @@ class Ed_LTI {
 	 */
 	private function add_staff_info_to_session(
 		array $user_data,
-		User_Lti_Roles $user_roles,
+		User_LTI_Roles $user_roles,
 		$course_id,
 		$resource_link_id
 	) {
@@ -464,12 +467,12 @@ class Ed_LTI {
 	 * @param string $alphabet
 	 *
 	 * @return string
-	 * @throws \Exception
-	 * @throws \InvalidArgumentException
+	 * @throws Exception
+	 * @throws InvalidArgumentException
 	 */
 	private function random_string( $length, $alphabet ) {
 		if ( $length < 1 ) {
-			throw new \InvalidArgumentException( 'Length must be a positive integer' );
+			throw new InvalidArgumentException( 'Length must be a positive integer' );
 		}
 
 		$str = '';
@@ -477,7 +480,7 @@ class Ed_LTI {
 		$alphamax = strlen( $alphabet ) - 1;
 
 		if ( $alphamax < 1 ) {
-			throw new \InvalidArgumentException( 'Invalid alphabet' );
+			throw new InvalidArgumentException( 'Invalid alphabet' );
 		}
 
 		for ( $i = 0; $i < $length; ++$i ) {

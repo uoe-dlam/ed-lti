@@ -1,8 +1,9 @@
 <?php
 
-namespace EdLTI;
+namespace EdLTI\classes;
 
 use IMSGlobal\LTI\ToolProvider;
+use Exception;
 
 /**
  * Ed Tool Wrapper is a wrapper for the LTI tool provider package created by Stephen P. Vickers
@@ -24,11 +25,11 @@ class Ed_Tool_Provider extends ToolProvider\ToolProvider {
 	 * Ensure errors in the LTI package are rendered correctly in WordPress
 	 *
 	 * @return void
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function onError() {
 		wp_die( esc_html( $this->reason ) );
 
-		throw new \Exception( $this->message );
+		throw new Exception( $this->message );
 	}
 }

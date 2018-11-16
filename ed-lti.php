@@ -28,6 +28,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 namespace EdLTI;
 
 // Include the autoloader so we can dynamically include the rest of the classes.
+use EdLTI\classes\Ed_LTI;
+
 require_once trailingslashit( dirname( __FILE__ ) ) . 'inc/autoloader.php';
 
 new Ed_LTI();

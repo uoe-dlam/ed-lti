@@ -1,6 +1,6 @@
 <?php
 
-namespace EdLTI;
+namespace EdLTI\classes;
 
 /**
  * Course Blog Handler.
@@ -147,11 +147,11 @@ class Course_Blog_Handler extends Blog_Handler {
 	/**
 	 * Get the WordPress role for a given LTI user role.
 	 *
-	 * @param User_Lti_Roles $user_roles
+	 * @param User_LTI_Roles $user_roles
 	 *
 	 * @return string
 	 */
-	public function get_wordpress_role( User_Lti_Roles $user_roles ) {
+	public function get_wordpress_role( User_LTI_Roles $user_roles ) {
 		// student or teaching assistants will be set to the default author role
 		$wordpress_user_role = 'author';
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace EdLTI;
+namespace EdLTI\classes;
 
 /**
  * Handles student blog types
@@ -231,11 +231,11 @@ class Student_Blog_Handler extends Blog_Handler {
 	/**
 	 * Get the WordPress role for a given LTI user role
 	 *
-	 * @param User_Lti_Roles $user_roles
+	 * @param User_LTI_Roles $user_roles
 	 *
 	 * @return string
 	 */
-	public function get_wordpress_role( User_Lti_Roles $user_roles ) {
+	public function get_wordpress_role( User_LTI_Roles $user_roles ) {
 		if ( $user_roles->is_learner() || $user_roles->is_admin() ) {
 			return 'administrator';
 		}

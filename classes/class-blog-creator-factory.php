@@ -1,6 +1,6 @@
 <?php
 
-namespace EdLTI;
+namespace EdLTI\classes;
 
 /**
  * Blog creator factory.
