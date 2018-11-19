@@ -6,16 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-### Changed
-- NA
-
 ### Added
-- NA
+- Added namespaces to all classes (PR #19)
 
-## 1.0.0 - 2018-10-30
+### Changed
+- Removed lti prefixes from function names as no longer required (PR #19)
+
+## [1.0.0] - 2018-10-30
 
 - First major release
-
-## 1.0.1 - 2018-11-16
-
-- Added namespaces to classes and added autoloading
