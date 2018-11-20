@@ -292,8 +292,58 @@ abstract class Blog_Handler {
 	public function add_user_to_blog( $user, $blog_id, User_LTI_Roles $user_roles ) {
 		if ( ! is_user_member_of_blog( $user->ID, $blog_id ) ) {
 			$role = $this->get_wordpress_role( $user_roles );
+
+			// Set blog admin_email to user email if they are the first administrator
+			if ( $role === 'administrator' && ! $this->has_blog_admin( $blog_id ) ) {
+				update_blog_option( $blog_id, 'admin_email', $user->user_email );
+				$this->send_admin_notification_email( $user, $blog_id );
+			}
+
 			add_user_to_blog( $blog_id, $user->ID, $role );
 		}
+	}
+
+	/**
+	 * Does blog have one or more admin users.
+	 *
+	 * @param int $blog_id
+	 *
+	 * @return boolean
+	 */
+	public function has_blog_admin( $blog_id ) {
+		return ! empty(
+			get_users(
+				[
+					'blog_id' => $blog_id,
+					'role'    => 'administrator',
+				]
+			)
+		);
+	}
+
+
+	/**
+	 * Send admin user notification email.
+	 *
+	 * @param WP_User $user
+	 * @param int     $blog_id
+	 *
+	 * @return void
+	 */
+	private function send_admin_notification_email( $user, $blog_id ) {
+		$blog_details = get_blog_details( $blog_id );
+		$protocol     = stripos( $_SERVER['SERVER_PROTOCOL'], 'https' ) === true ? 'https://' : 'http://';
+
+		$to      = $user->user_email;
+		$subject = 'You have been made the admin for the blog: ' . $blog_details->blogname;
+		$message = "Hi {$user->first_name},<br><br>
+                            You have been made the main admin for the '{$blog_details->blogname}' blog.<br><br>
+                            This means that you will get notification emails when the blog is updated.<br><br>
+                            If you would like to change the notifications email address for this blog, please update the email address field in the <a href='$protocol{$blog_details->domain}{$blog_details->path}wp-admin/options-general.php'>settings page</a><br><br>
+                            The Academic Blogging Service Team";
+		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
+
+		wp_mail( $to, $subject, $message, $headers );
 	}
 
 	/**
