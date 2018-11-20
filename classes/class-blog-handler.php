@@ -293,8 +293,8 @@ abstract class Blog_Handler {
 		if ( ! is_user_member_of_blog( $user->ID, $blog_id ) ) {
 			$role = $this->get_wordpress_role( $user_roles );
 
-			// Set blog admin_email to user email if they are the first administrator
-			if ( $role === 'administrator' && ! $this->has_blog_admin( $blog_id ) ) {
+			// Set blog admin_email to user email if they are the first administrator.
+			if ( 'administrator' === $role && ! $this->has_blog_admin( $blog_id ) ) {
 				update_blog_option( $blog_id, 'admin_email', $user->user_email );
 				$this->send_admin_notification_email( $user, $blog_id );
 			}
