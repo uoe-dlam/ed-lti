@@ -193,9 +193,8 @@ class Config {
 		} else {
 			update_site_option( 'lti_make_sites_private', 0 );
 		}
-
-		$is_helpline_url = sanitize_text_field( $_POST['is_helpline_url'] );
-		update_site_option( 'is_helpline_url', $is_helpline_url );
+		
+		update_site_option( 'is_helpline_url', sanitize_text_field( $_POST['is_helpline_url'] ) );
 
 		$this->updated = true;
 	}
