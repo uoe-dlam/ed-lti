@@ -1,12 +1,16 @@
 <?php
 
+namespace EdLTI\classes;
+
+use stdClass;
+
 /**
  * Control the LTI settings for WordPress.
  *
  * @author    DLAM Applications Development Team <ltw-apps-dev@ed.ac.uk>
  * @copyright University of Edinburgh
  */
-class Ed_LTI_Settings {
+class Settings {
 
 	private $wpdb;
 
@@ -15,7 +19,7 @@ class Ed_LTI_Settings {
 
 		$this->wpdb = $wpdb;
 
-		add_action( 'network_admin_menu', [ $this, 'lti_network_pages' ] );
+		add_action( 'network_admin_menu', [ $this, 'network_pages' ] );
 	}
 
 	/**
@@ -23,7 +27,7 @@ class Ed_LTI_Settings {
 	 *
 	 * @return void
 	 */
-	public function lti_consumer_keys_admin() {
+	public function consumer_keys_admin() {
 		$is_editing = false;
 
 		echo '<h2>LTI: Consumers Keys</h2>';
@@ -41,7 +45,7 @@ class Ed_LTI_Settings {
                     // phpcs:enable
 
 					if ( $row ) {
-						$this->lti_edit( $row );
+						$this->edit( $row );
 						$is_editing = true;
 					} else {
 						echo '<h3>Provider not found</h3>';
@@ -49,7 +53,7 @@ class Ed_LTI_Settings {
 
 					break;
 				case 'save':
-					$errors = $this->lti_do_validation();
+					$errors = $this->do_validation();
 
 					if ( ! empty( $errors ) ) {
 						echo '<ul style="color:red">';
@@ -142,7 +146,7 @@ class Ed_LTI_Settings {
                     // phpcs:enable
 				);
 
-				$this->lti_listing( $rows, 'Searching for ' . esc_html( $_POST['search_txt'] ) );
+				$this->listing( $rows, 'Searching for ' . esc_html( $_POST['search_txt'] ) );
 			}
 
 			echo '<form method="POST">';
@@ -155,13 +159,13 @@ class Ed_LTI_Settings {
 			echo '<p><input type="submit" class="button-secondary" value="Search"></p>';
 			echo '</form><br>';
 
-			$this->lti_edit();
+			$this->edit();
 
             // phpcs:disable
 			$rows = $this->wpdb->get_results( "SELECT * FROM {$this->wpdb->base_prefix}lti2_consumer LIMIT 0,20" );
             // phpcs:enable
 
-			$this->lti_listing( $rows );
+			$this->listing( $rows );
 		}
 	}
 
@@ -170,7 +174,7 @@ class Ed_LTI_Settings {
 	 *
 	 * @return array
 	 */
-	private function lti_do_validation() {
+	private function do_validation() {
 		$errors = [];
 
         // phpcs:disable
@@ -197,7 +201,7 @@ class Ed_LTI_Settings {
 	 *
 	 * @return void
 	 */
-	private function lti_edit( $row = false ) {
+	private function edit( $row = false ) {
 		$is_new = false;
 
 		if ( is_object( $row ) ) {
@@ -249,7 +253,7 @@ class Ed_LTI_Settings {
 	 *
 	 * @return void
 	 */
-	private function lti_listing( $rows, $heading = '' ) {
+	private function listing( $rows, $heading = '' ) {
 		if ( $rows ) {
 			if ( '' !== $heading ) {
 				echo '<h3>' . esc_html( $heading ) . '</h3>';
@@ -290,14 +294,14 @@ class Ed_LTI_Settings {
 	 *
 	 * @return void
 	 */
-	public function lti_network_pages() {
+	public function network_pages() {
 		add_submenu_page(
 			'settings.php',
 			'LTI Consumers Keys',
 			'LTI Consumers Keys',
 			'manage_options',
-			'lti_consumer_keys_admin',
-			[ $this, 'lti_consumer_keys_admin' ]
+			'consumer_keys_admin',
+			[ $this, 'consumer_keys_admin' ]
 		);
 	}
 }

@@ -1,5 +1,7 @@
 <?php
 
+namespace EdLTI\classes;
+
 /**
  * WP Blog Creator.
  *
@@ -8,7 +10,7 @@
  * @author    DLAM Applications Development Team <ltw-apps-dev@ed.ac.uk>
  * @copyright University of Edinburgh
  */
-class WP_Blog_Creator implements Blog_Creator {
+class WP_Blog_Creator implements Blog_Creator_Interface {
 
 	/**
 	 * Create blog using WP core methods.

@@ -1,6 +1,9 @@
 <?php
 
+namespace EdLTI\classes;
+
 use IMSGlobal\LTI\ToolProvider;
+use Exception;
 
 /**
  * Ed Tool Wrapper is a wrapper for the LTI tool provider package created by Stephen P. Vickers

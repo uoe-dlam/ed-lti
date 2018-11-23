@@ -1,11 +1,14 @@
 <?php
+
+namespace EdLTI\classes;
+
 /**
  * Handles LTI Config Settings.
  *
  * @author    Learning Applications Development Team <ltw-apps-dev@ed.ac.uk>
  * @copyright University of Edinburgh
  */
-class Ed_LTI_Config {
+class Config {
 
 	public $updated;
 	public $errors = [];
@@ -42,7 +45,7 @@ class Ed_LTI_Config {
 	/**
 	 * Creates LTI Config settings page and menu item.
 	 *
-	 * @return Ed_LTI_Config
+	 * @return Config
 	 */
 	public function create_setup_page() {
 		add_submenu_page(
@@ -190,6 +193,8 @@ class Ed_LTI_Config {
 		} else {
 			update_site_option( 'lti_make_sites_private', 0 );
 		}
+		
+		update_site_option( 'is_helpline_url', sanitize_text_field( $_POST['is_helpline_url'] ) );
 
 		$this->updated = true;
 	}

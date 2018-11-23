@@ -1,5 +1,7 @@
 <?php
 
+namespace EdLTI\classes;
+
 /**
  * Abstract class used to handle different types of WordPress blogs.
  *
