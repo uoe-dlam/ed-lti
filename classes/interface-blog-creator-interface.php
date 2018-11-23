@@ -1,4 +1,6 @@
 <?php
+namespace EdLTI\classes;
+
 /**
  * Blog creator interface.
  *
@@ -8,7 +10,7 @@
  *
  * @link https://github.com/uoe-dlam/ed-lti
  */
-interface Blog_Creator {
+interface Blog_Creator_Interface {
 
 	/**
 	 * Create the blog.

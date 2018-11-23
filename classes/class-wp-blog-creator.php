@@ -1,4 +1,6 @@
 <?php
+namespace EdLTI\classes;
+
 /**
  * WP Blog Creator.
  *
@@ -10,7 +12,7 @@
  *
  * @link https://github.com/uoe-dlam/ed-lti
  */
-class WP_Blog_Creator implements Blog_Creator {
+class WP_Blog_Creator implements Blog_Creator_Interface {
 
 	/**
 	 * Create blog using WP core methods.

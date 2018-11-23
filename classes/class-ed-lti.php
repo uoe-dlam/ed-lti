@@ -1,4 +1,11 @@
 <?php
+
+namespace EdLTI\classes;
+
+use Exception;
+use InvalidArgumentException;
+use PDO;
+
 /**
  * Class for coordinating main LTI functions.
  *
@@ -11,19 +18,6 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
-require_once 'class-ed-tool-provider.php';
-require_once 'class-user-lti-roles.php';
-require_once 'class-blog-handler-factory.php';
-require_once 'class-blog-handler.php';
-require_once 'class-course-blog-handler.php';
-require_once 'class-student-blog-handler.php';
-require_once 'class-blog-creator-factory.php';
-require_once 'interface-blog-creator.php';
-require_once 'class-ns-cloner-blog-creator.php';
-require_once 'class-wp-blog-creator.php';
-require_once 'class-ed-lti-data.php';
-require_once 'class-ed-lti-settings.php';
-require_once 'class-ed-lti-config.php';
 
 use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 
@@ -36,11 +30,11 @@ class Ed_LTI {
 
 		$this->wpdb = $wpdb;
 
-		add_action( 'parse_request', [ $this, 'lti_do_launch' ] );
-		add_action( 'parse_request', [ $this, 'lti_add_staff_to_student_blog' ] );
+		add_action( 'parse_request', [ $this, 'do_launch' ] );
+		add_action( 'parse_request', [ $this, 'add_staff_to_student_blog' ] );
 
-		new Ed_LTI_Settings();
-		new Ed_LTI_Config();
+		new Settings();
+		new Config();
 	}
 
 	/**
@@ -49,9 +43,9 @@ class Ed_LTI {
 	 * @return void
 	 */
 	public static function activate() {
-		$lti_data = new Ed_LTI_Data();
-		$lti_data->lti_maybe_create_db();
-		$lti_data->lti_maybe_create_site_blogs_meta_table();
+		$data = new Data();
+		$data->maybe_create_db();
+		$data->maybe_create_site_blogs_meta_table();
 	}
 
 	// TODO Look at handling blog category.
@@ -61,7 +55,7 @@ class Ed_LTI {
 	 *
 	 * @return DataConnector
 	 */
-	private function lti_get_db_connector() {
+	private function get_db_connector() {
 		// phpcs:disable
 		return DataConnector::getDataConnector(
 			$this->wpdb->base_prefix,
@@ -75,11 +69,11 @@ class Ed_LTI {
 	 *
 	 * @return void
 	 */
-	public function lti_do_launch() {
-		if ( $this->lti_is_basic_lti_request() && is_main_site() ) {
-			$this->lti_destroy_session();
+	public function do_launch() {
+		if ( $this->is_basic_lti_request() && is_main_site() ) {
+			$this->destroy_session();
 
-			$tool = new Ed_Tool_Provider( $this->lti_get_db_connector() );
+			$tool = new Ed_Tool_Provider( $this->get_db_connector() );
 
 			$tool->handleRequest();
 
@@ -100,16 +94,16 @@ class Ed_LTI {
 				$resource_link_id = $tool->resourceLink->getId();
 				// phpcs:enable
 
-				$this->lti_show_staff_student_blogs_for_course( $course_id, $resource_link_id, $tool );
+				$this->show_staff_student_blogs_for_course( $course_id, $resource_link_id, $tool );
 
 				return;
 			}
 
-			$user = $this->first_or_create_user( $this->lti_get_user_data( $tool ) );
+			$user = $this->first_or_create_user( $this->get_user_data( $tool ) );
 			$this->set_user_name_temporarily_to_vle_name( $user, $tool );
 
 			$blog_handler = Blog_Handler_Factory::instance( $blog_type );
-			$blog_handler->init( $this->lti_get_site_data(), $user );
+			$blog_handler->init( $this->get_site_data(), $user );
 
 			$make_private = get_site_option( 'lti_make_sites_private' ) ? true : false;
 			$blog_id      = $blog_handler->first_or_create_blog( $make_private );
@@ -118,7 +112,7 @@ class Ed_LTI {
 			$blog_handler->add_user_to_blog( $user, $blog_id, $user_roles );
 			$blog_handler->add_user_to_top_level_blog( $user );
 
-			$this->lti_signin_user( $user, $blog_id );
+			$this->signin_user( $user, $blog_id );
 		}
 	}
 
@@ -127,7 +121,7 @@ class Ed_LTI {
 	 *
 	 * @return bool
 	 */
-	private function lti_is_basic_lti_request() {
+	private function is_basic_lti_request() {
         // phpcs:disable
 		$good_message_type = isset( $_REQUEST['lti_message_type'] )
 							? 'basic-lti-launch-request' === $_REQUEST['lti_message_type']
@@ -146,7 +140,7 @@ class Ed_LTI {
 	 *
 	 * @return void
 	 */
-	private function lti_destroy_session() {
+	private function destroy_session() {
 		wp_logout();
 		wp_set_current_user( 0 );
 
@@ -178,10 +172,9 @@ class Ed_LTI {
 	 * @param Ed_Tool_Provider $tool
 	 *
 	 * @return array
-	 * @throws Exception
 	 */
-	private function lti_get_user_data( Ed_Tool_Provider $tool ) {
-		$username = $this->lti_get_username_from_request();
+	private function get_user_data( Ed_Tool_Provider $tool ) {
+		$username = $this->get_username_from_request();
 
 		$user_data = [
 			'username'  => $username,
@@ -199,7 +192,7 @@ class Ed_LTI {
 	 *
 	 * @return string
 	 */
-	private function lti_get_username_from_request() {
+	private function get_username_from_request() {
 		// LTI specs tell us that username should be set in the 'lis_person_sourcedid' param, but moodle doesn't do
 		// this. In some instances, Moodle uses 'ext_user_username' instead
         // phpcs:disable
@@ -226,11 +219,11 @@ class Ed_LTI {
 	 *
 	 * @return array
 	 */
-	private function lti_get_site_data() {
+	private function get_site_data() {
         // phpcs:disable
 		$site_category = isset( $_REQUEST['custom_site_category'] )  ? $_REQUEST['custom_site_category'] :  1;
 
-        $username = $this->lti_get_username_from_request();
+        $username = $this->get_username_from_request();
 
 		return [
 			'course_id'        => $_REQUEST['context_label'],
@@ -301,7 +294,7 @@ class Ed_LTI {
 	 *
 	 * @return void
 	 */
-	private function lti_signin_user( $user, $blog_id ) {
+	private function signin_user( $user, $blog_id ) {
 		switch_to_blog( $blog_id );
 
 		clean_user_cache( $user->ID );
@@ -326,15 +319,15 @@ class Ed_LTI {
 	 *
 	 * @return void
 	 */
-	private function lti_show_staff_student_blogs_for_course( $course_id, $resource_link_id, Ed_Tool_Provider $tool ) {
-		$this->lti_add_staff_info_to_session(
-			$this->lti_get_user_data( $tool ),
+	private function show_staff_student_blogs_for_course( $course_id, $resource_link_id, Ed_Tool_Provider $tool ) {
+		$this->add_staff_info_to_session(
+			$this->get_user_data( $tool ),
 			new User_LTI_Roles( $tool->user->roles ),
 			$course_id,
 			$resource_link_id
 		);
 
-		$this->lti_render_student_blogs_list_view( $course_id, $resource_link_id );
+		$this->render_student_blogs_list_view( $course_id, $resource_link_id );
 	}
 
 	/**
@@ -347,7 +340,7 @@ class Ed_LTI {
 	 *
 	 * @return void
 	 */
-	private function lti_add_staff_info_to_session(
+	private function add_staff_info_to_session(
 		array $user_data,
 		User_LTI_Roles $user_roles,
 		$course_id,
@@ -368,7 +361,7 @@ class Ed_LTI {
 	 *
 	 * @return void
 	 */
-	private function lti_render_student_blogs_list_view( $course_id, $resource_link_id ) {
+	private function render_student_blogs_list_view( $course_id, $resource_link_id ) {
 		$blog_type = 'student';
 
 		$query = "SELECT * FROM {$this->wpdb->base_prefix}blogs_meta "
@@ -421,7 +414,7 @@ class Ed_LTI {
 	 *
 	 * @return void
 	 */
-	public function lti_add_staff_to_student_blog() {
+	public function add_staff_to_student_blog() {
         // phpcs:disable
 		if ( isset( $_REQUEST['lti_staff_view_blog'] ) && 'true' === $_REQUEST['lti_staff_view_blog'] ) {
         // phpcs:enable
@@ -443,7 +436,7 @@ class Ed_LTI {
 			// If someone has been messing about with the blog id and the blog has nothing to do with the current
 			// course redirect them to the home page
 			if ( ! Blog_Handler::is_course_blog( $course_id, $blog_id ) ) {
-				$this->lti_redirect_user_to_blog_without_login( $blog_id );
+				$this->redirect_user_to_blog_without_login( $blog_id );
 			}
 
 			$user = $this->first_or_create_user( $_SESSION['lti_staff_user_data'] );
@@ -451,7 +444,7 @@ class Ed_LTI {
 			$blog_handler = Blog_Handler_Factory::instance( 'student' );
 			$blog_handler->add_user_to_blog( $user, $blog_id, $user_roles );
 
-			$this->lti_signin_user( $user, $blog_id );
+			$this->signin_user( $user, $blog_id );
 		}
 	}
 
@@ -462,7 +455,7 @@ class Ed_LTI {
 	 *
 	 * @return void
 	 */
-	private function lti_redirect_user_to_blog_without_login( $blog_id ) {
+	private function redirect_user_to_blog_without_login( $blog_id ) {
 		switch_to_blog( $blog_id );
 		wp_safe_redirect( home_url() );
 

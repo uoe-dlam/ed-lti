@@ -1,4 +1,6 @@
 <?php
+namespace EdLTI\classes;
+
 /**
  * Course Blog Handler.
  *
