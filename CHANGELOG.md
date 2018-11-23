@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.0.1] - 2018-11-23
+
 ### Added
 - Added namespaces to all classes (PR #19)
 
@@ -15,3 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [1.0.0] - 2018-10-30
 
 - First major release
+
+
+[Unreleased]: https://github.com/uoe-dlam/ed-lti/compare/1.0.1...HEAD
+[1.0.1]: https://github.com/uoe-dlam/ed-lti/compare/1.0.0...1.0.1
