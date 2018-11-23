@@ -19,5 +19,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - First major release
 
 
-[Unreleased]: https://github.com/uoe-dlam/ed-lti/compare/1.0.1...HEAD
-[1.0.1]: https://github.com/uoe-dlam/ed-lti/compare/1.0.0...1.0.1
+[Unreleased]: https://github.com/uoe-dlam/ed-lti/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/uoe-dlam/ed-lti/compare/v1.0.0...v1.0.1
