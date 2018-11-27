@@ -338,7 +338,7 @@ abstract class Blog_Handler {
 		$subject = 'You have been made the admin for the blog: ' . $blog_details->blogname;
 		$message = "Hi {$user->first_name},<br><br>
                             You have been made the main admin for the '{$blog_details->blogname}' blog.<br><br>
-                            This means that you will get notification emails when the blog is updated.<br><br>
+                            This means that you will get notification emails when the blog is updated. You will also get notification emails if comments are held for moderation, etc. For a full list of the notifications that you will get, please visit <a href='https://en.support.wordpress.com/email-notifications/'>wordpress.com</a>.<br><br>
                             If you would like to change the notifications email address for this blog, please update the email address field in the <a href='$protocol{$blog_details->domain}{$blog_details->path}wp-admin/options-general.php'>settings page</a><br><br>
                             The Academic Blogging Service Team";
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
