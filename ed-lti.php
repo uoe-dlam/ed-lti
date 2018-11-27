@@ -2,12 +2,12 @@
 
 /*
 Plugin Name: UoE LTI
-Description: Allows LMSs to connect to our website and create blogs.
+Description: Allows LMSs to create blogs in a WordPress multisite installation via an LTI connection
 Author: DLAM Applications Development Team
 Version: 1.0
 Credits: This plugin was inspired by the IMS Basic Learning Tools Interoperability plugin ( developed by Chuck Severance & Antoni Bertran ). Some of the code used in this plugin is borrowed from that plugin ( see https://github.com/IMSGlobal/LTI-Tool-Provider-Library-PHP )
-Copyright: 2018 University of Edinburgh
-License: GNU ( see LICENSE )
+Copyright: University of Edinburgh
+License: GPL-3.0+
 */
 
 /*
@@ -25,7 +25,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-require_once 'classes/class-ed-lti.php';
+namespace EdLTI;
+
+// Include the autoloader so we can dynamically include the rest of the classes.
+require_once trailingslashit( dirname( __FILE__ ) ) . 'inc/autoloader.php';
+
+use EdLTI\classes\Ed_LTI;
 
 new Ed_LTI();
 

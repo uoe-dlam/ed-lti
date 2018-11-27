@@ -1,14 +1,19 @@
 <?php
+namespace EdLTI\classes;
+use ns_cloner;
 
 /**
  * NS Cloner Blog Creator.
  *
  * Uses NS Cloner to create blog.
  *
- * @author   DLAM Applications Development Team <ltw-apps-dev@ed.ac.uk>
- * @copyrigh University of Edinburgh
+ * @author    DLAM Applications Development Team <ltw-apps-dev@ed.ac.uk>
+ * @copyright University of Edinburgh
+ * @license   https://www.gnu.org/licenses/gpl.html
+ *
+ * @link https://github.com/uoe-dlam/ed-lti
  */
-class NS_Cloner_Blog_Creator implements Blog_Creator {
+class NS_Cloner_Blog_Creator implements Blog_Creator_Interface {
 
 	/**
 	 * Create blog using NS Cloner.

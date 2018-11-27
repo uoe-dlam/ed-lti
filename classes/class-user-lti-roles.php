@@ -1,9 +1,14 @@
 <?php
+namespace EdLTI\classes;
 
 /**
- * Handles LTI user roles, providing useful wrapper functions to determine if a user is of a particular type
+ * Handles LTI user roles, providing useful wrapper functions to determine if a user is of a particular type.
  *
- * @author Richard Lawson <richard.lawson@ed.ac.uk>
+ * @author    DLAM Applications Development Team <ltw-apps-dev@ed.ac.uk>
+ * @copyright University of Edinburgh
+ * @license   https://www.gnu.org/licenses/gpl.html
+ *
+ * @link https://github.com/uoe-dlam/ed-lti
  */
 class User_LTI_Roles {
 
