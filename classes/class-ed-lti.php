@@ -221,7 +221,7 @@ class Ed_LTI {
 	 */
 	private function get_site_data() {
         // phpcs:disable
-		$site_category = isset( $_REQUEST['custom_site_category'] )  ? $_REQUEST['custom_site_category'] :  1;
+		$site_category = isset( $_REQUEST['custom_site_category'] )  ? $_REQUEST['custom_site_category'] :  2;
 
         $username = $this->get_username_from_request();
 
