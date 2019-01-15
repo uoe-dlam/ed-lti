@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- If the VLE does not pass site category information to the blogging service, the blog will default to a course blog type
+
 ## [1.1.0] - 2018-12-05
 
 ### Added

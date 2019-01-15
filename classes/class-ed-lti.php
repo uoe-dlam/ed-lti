@@ -23,6 +23,8 @@ use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 
 class Ed_LTI {
 
+	const COURSE_SITE_CATEGORY_ID = 2;
+
 	private $wpdb;
 
 	public function __construct() {
@@ -221,7 +223,7 @@ class Ed_LTI {
 	 */
 	private function get_site_data() {
         // phpcs:disable
-		$site_category = isset( $_REQUEST['custom_site_category'] )  ? $_REQUEST['custom_site_category'] :  1;
+		$site_category = isset( $_REQUEST['custom_site_category'] )  ? $_REQUEST['custom_site_category'] :  self::COURSE_SITE_CATEGORY_ID;
 
         $username = $this->get_username_from_request();
 
