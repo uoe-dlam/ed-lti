@@ -24,6 +24,7 @@ use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 class Ed_LTI {
 
 	const COURSE_SITE_CATEGORY_ID = 2;
+
 	private $wpdb;
 
 	public function __construct() {
