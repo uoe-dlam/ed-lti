@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.1.1] - 2019-28-02
+
+### Changed
+- Altered register_activation_hook to point to namespaced Ed_LTI class. Previously, the activation hook was only using class name (without namespace), which resulted in errors.
+
 ## [1.1.0] - 2018-12-05
 
 ### Added
