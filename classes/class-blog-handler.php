@@ -60,15 +60,6 @@ abstract class Blog_Handler {
 	abstract public function get_blog_max_version();
 
 	/**
-	 * Get the total number of blogs of this type
-	 *
-	 * TODO: Check why we are doing this
-	 *
-	 * @return int
-	 */
-	abstract protected function get_blog_count();
-
-	/**
 	 * Get the blog ID
 	 *
 	 * @return string
