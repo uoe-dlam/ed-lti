@@ -46,13 +46,6 @@ abstract class Blog_Handler {
 	abstract public function get_wordpress_role( User_LTI_Roles $roles );
 
 	/**
-	 * Check if the blog we are trying to create already exists
-	 *
-	 * @return bool
-	 */
-	abstract protected function blog_exists();
-
-	/**
 	 * Get the maximum version of a blog type
 	 *
 	 * @return int
@@ -60,11 +53,11 @@ abstract class Blog_Handler {
 	abstract public function get_blog_max_version();
 
 	/**
-	 * Get the blog ID
+	 * Get blog ID if blog exists.
 	 *
 	 * @return string
 	 */
-	abstract protected function get_blog_id();
+	abstract protected function get_blog_id_if_exists();
 
 	/**
 	 * Set class properties using array.
@@ -99,8 +92,10 @@ abstract class Blog_Handler {
 			wp_die( 'Blog_Handler: You must set all data before calling first_or_create_blog' );
 		}
 
-		if ( $this->blog_exists() ) {
-			return $this->get_blog_id();
+		$blog_id = $this->get_blog_id_if_exists();
+
+		if ( null !== $blog_id ) {
+			return $blog_id;
 		}
 
 		return $this->create_blog( $make_private );

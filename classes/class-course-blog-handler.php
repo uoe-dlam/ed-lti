@@ -39,33 +39,6 @@ class Course_Blog_Handler extends Blog_Handler {
 	}
 
 	/**
-	 * Check if the blog we are trying to create already exists
-	 *
-	 * @return bool
-	 */
-	protected function blog_exists() {
-		$query = "SELECT * FROM {$this->wpdb->base_prefix}blogs_meta "
-			. "INNER JOIN {$this->wpdb->base_prefix}blogs "
-			. "ON {$this->wpdb->base_prefix}blogs.blog_id = {$this->wpdb->base_prefix}blogs_meta.blog_id "
-			. 'WHERE course_id = %s '
-			. 'AND resource_link_id = %s '
-			. 'AND blog_type = %s';
-
-        // phpcs:disable
-		$blogs = $this->wpdb->get_results(
-			$this->wpdb->prepare(
-				$query,
-				$this->course_id,
-				$this->resource_link_id,
-				$this->get_blog_type()
-			)
-		);
-        // phpcs:enable
-
-		return ! empty( $blogs );
-	}
-
-	/**
 	 * Get the maximum version of a blog type
 	 *
 	 * @return int
@@ -89,11 +62,11 @@ class Course_Blog_Handler extends Blog_Handler {
 	}
 
 	/**
-	 * Get the blog ID
+	 * Return the blog ID if a blog exists.
 	 *
 	 * @return string
 	 */
-	protected function get_blog_id() {
+	protected function get_blog_id_if_exists() {
 		$query = "SELECT {$this->wpdb->base_prefix}blogs_meta.blog_id AS blog_id "
 			. "FROM {$this->wpdb->base_prefix}blogs_meta "
 			. "INNER JOIN {$this->wpdb->base_prefix}blogs "
