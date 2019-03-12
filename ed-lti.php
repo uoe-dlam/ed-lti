@@ -34,4 +34,4 @@ use EdLTI\classes\Ed_LTI;
 
 new Ed_LTI();
 
-register_activation_hook( __FILE__, [ 'Ed_LTI', 'activate' ] );
+register_activation_hook( __FILE__, [ 'EdLTI\classes\Ed_LTI', 'activate' ] );
