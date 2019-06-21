@@ -62,8 +62,10 @@ class Student_Blog_Handler extends Blog_Handler {
 			wp_die( 'Blog_Handler: You must set all data before calling first_or_create_blog' );
 		}
 
-		if ( $this->blog_exists() ) {
-			return $this->get_blog_id();
+		$blog_id = $this->get_blog_id_if_exists();
+
+		if ( null !== $blog_id ) {
+			return $blog_id;
 		}
 
 		// If the blog path already exists, this user must already have created a student blog already. However, their id must have changed. The most likely reason is that they were deleted from the system and then added again.
