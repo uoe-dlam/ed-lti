@@ -384,6 +384,9 @@ class Ed_LTI {
 		);
         // phpcs:enable
 
+        // Cache the response for 30 minutes
+        header('Cache-Control: private, max-age: 1800');
+
 		get_template_part( 'header' );
 
 		echo '<div style="width:80%; margin: 0 auto">';
