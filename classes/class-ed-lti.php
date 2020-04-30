@@ -32,8 +32,8 @@ class Ed_LTI {
 
 		$this->wpdb = $wpdb;
 
-		add_action( 'parse_request', [ $this, 'do_launch' ] );
-		add_action( 'parse_request', [ $this, 'add_staff_to_student_blog' ] );
+		add_action( 'parse_request', array( $this, 'do_launch' ) );
+		add_action( 'parse_request', array( $this, 'add_staff_to_student_blog' ) );
 
 		new Settings();
 		new Config();
@@ -150,7 +150,7 @@ class Ed_LTI {
 			session_start();
 		}
 
-		$_SESSION = [];
+		$_SESSION = array();
 
 		session_destroy();
 		session_start();
@@ -178,13 +178,13 @@ class Ed_LTI {
 	private function get_user_data( Ed_Tool_Provider $tool ) {
 		$username = $this->get_username_from_request();
 
-		$user_data = [
+		$user_data = array(
 			'username'  => $username,
 			'email'     => $tool->user->email,
 			'firstname' => $tool->user->firstname,
 			'lastname'  => $tool->user->lastname,
 			'password'  => $this->random_string( 20, '0123456789ABCDEFGHIJKLMNOPQRSTUVWZYZabcdefghijklmnopqrstuvwxyz' ),
-		];
+		);
 
 		return $user_data;
 	}
@@ -373,7 +373,7 @@ class Ed_LTI {
 			. 'AND resource_link_id = %s '
 			. 'AND blog_type = %s';
 
-        // phpcs:disable
+                // phpcs:disable
 		$blogs = $this->wpdb->get_results(
 			$this->wpdb->prepare(
 				$query,
@@ -382,7 +382,10 @@ class Ed_LTI {
 				$blog_type
 			)
 		);
-        // phpcs:enable
+                // phpcs:enable
+
+		// Cache the response for 30 minutes
+		header( 'Cache-Control: private, max-age: 1800' );
 
 		get_template_part( 'header' );
 
