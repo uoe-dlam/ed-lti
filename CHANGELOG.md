@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.2.1] - 2020-04-30
 ### Fixed
 - Instructors can now use a browser's back button to return to the LTI student list. Previously they would have been presented with a Document Expired message (PR #22)
 
@@ -34,7 +36,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [1.0.0] - 2018-10-30
 - First major release
 
-[Unreleased]: https://github.com/uoe-dlam/ed-lti/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/uoe-dlam/ed-lti/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/uoe-dlam/ed-lti/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/uoe-dlam/ed-lti/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/uoe-dlam/ed-lti/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/uoe-dlam/ed-lti/compare/v1.0.0...v1.0.1
