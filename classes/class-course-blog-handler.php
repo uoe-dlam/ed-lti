@@ -110,4 +110,24 @@ class Course_Blog_Handler extends Blog_Handler {
 
 		return $wordpress_user_role;
 	}
+
+	/**
+	 * Gets the blog options to set when the blog is created or loaded
+	 *
+	 * @param array   $request_data
+	 *
+	 * @return array
+	 */
+	public function get_options_from_request( array $request_data ): array {
+		return array();
+	}
+
+	/**
+	 * Implement an abstract, but not required for course blogs
+	 *
+	 * @return int|null The blog id, if found, or null
+	 */
+	public function get_blog_from_path_fix(): ?int {
+		return null;
+	}
 }
