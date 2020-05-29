@@ -125,9 +125,8 @@ class Course_Blog_Handler extends Blog_Handler {
 	/**
 	 * Implement an abstract, but not required for course blogs
 	 *
-	 * @return int|null The blog id, if found, or null
+	 *@return void
 	 */
-	public function get_blog_from_path_fix(): ?int {
-		return null;
-	}
+	protected function fix_blog_id_from_path(): void {}
+
 }

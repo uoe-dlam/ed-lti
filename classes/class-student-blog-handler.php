@@ -50,20 +50,17 @@ class Student_Blog_Handler extends Blog_Handler {
 	 * due to a parameter changing since creation.
 	 *
 	 * If so, this function looks to find the blog from the path,
-	 * fixup the blog data and return the ID.
+	 * and fixup the blog data
 	 *
-	 * @return int|null The blog id, if found, or null
+	 * @return void
 	 */
-	public function get_blog_from_path_fix(): ?int {
+	public function fix_blog_id_from_path(): void {
 
 		$blog_id = $this->get_blog_id_for_path();
 
 		if ( null !== $blog_id ) {
 			$this->update_blog_meta_with_user_id( $blog_id );
-			$blog_id = $this->get_blog_id_if_exists();
 		}
-
-		return $blog_id;
 	}
 
 	/**

@@ -70,12 +70,12 @@ abstract class Blog_Handler {
 	abstract public function get_options_from_request( array $request_data ): array;
 
 	/**
-	 * Allow blog to be retrieved from path,
+	 * Allow blog id to be set from path,
 	 * as there is an issue should settings change.
 	 *
-	 * @return int|null The blog id, if found, or null
+	 * @return void
 	 */
-	abstract public function get_blog_from_path_fix(): ?int;
+	abstract protected function fix_blog_id_from_path(): void;
 
 	/**
 	 * Set class properties using array.
@@ -108,7 +108,8 @@ abstract class Blog_Handler {
 		$blog_id = $this->get_blog_id_if_exists();
 
 		if ( null === $blog_id ) {
-			$blog_id = $this->get_blog_from_path_fix();
+			$this->fix_blog_id_from_path();
+			$blog_id = $this->get_blog_id_if_exists();
 		}
 
 		if ( null === $blog_id ) {
