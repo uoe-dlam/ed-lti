@@ -271,7 +271,7 @@ abstract class Blog_Handler {
 	 */
 	public function get_friendly_path( $path ) {
 		$path = str_replace( ' ', '-', $path ); // Replaces all spaces with hyphens.
-		$path = preg_replace( '/[^A-Za-z0-9\-\_]/', '', $path ); // Removes special chars.
+		$path = preg_replace( '/[^A-Za-z0-9\-_]/', '', $path ); // Removes special chars.
 		$path = strtolower( $path ); // Convert to lowercase.
 
 		if ( $this->is_subdirectory_install() ) {
