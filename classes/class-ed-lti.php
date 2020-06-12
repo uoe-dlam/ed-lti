@@ -23,7 +23,7 @@ use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 
 class Ed_LTI {
 
-	const COURSE_SITE_CATEGORY_ID = 2;
+	private const COURSE_SITE_CATEGORY_ID = 2;
 
 	private $wpdb;
 
@@ -84,7 +84,7 @@ class Ed_LTI {
 			}
 
             // phpcs:disable
-			$blog_type = isset( $_REQUEST['custom_blog_type'] ) ? $_REQUEST['custom_blog_type'] : '';
+			$blog_type = $_REQUEST['custom_blog_type'] ?? '';
             // phpcs:enable
 
 			if ( $this->is_student_blog_and_non_student( $blog_type, $tool ) ) {
@@ -220,7 +220,7 @@ class Ed_LTI {
 	 */
 	private function get_site_data() {
         // phpcs:disable
-		$site_category = isset( $_REQUEST['custom_site_category'] )  ? $_REQUEST['custom_site_category'] :  self::COURSE_SITE_CATEGORY_ID;
+		$site_category = $_REQUEST['custom_site_category'] ?? self::COURSE_SITE_CATEGORY_ID;
 
         $username = $this->get_username_from_request();
 
