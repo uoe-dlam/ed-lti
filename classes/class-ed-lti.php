@@ -177,17 +177,13 @@ class Ed_LTI {
 	 * @return array
 	 */
 	private function get_user_data( Ed_Tool_Provider $tool ) {
-		$username = $this->get_username_from_request();
-
-		$user_data = array(
-			'username'  => $username,
+		return array(
+			'username'  => $this->get_username_from_request(),
 			'email'     => $tool->user->email,
 			'firstname' => $tool->user->firstname,
 			'lastname'  => $tool->user->lastname,
 			'password'  => $this->random_string( 20, '0123456789ABCDEFGHIJKLMNOPQRSTUVWZYZabcdefghijklmnopqrstuvwxyz' ),
 		);
-
-		return $user_data;
 	}
 
 	/**
