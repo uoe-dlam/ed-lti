@@ -124,11 +124,13 @@ abstract class Blog_Handler {
 	/**
 	 * Manage additional blog options when a blog is created or viewed
 	 *
-	 * @return string
+	 * @param array $options_to_set
+	 *
+	 * @return void
 	 */
-	public function set_additional_blog_options( array $options_to_set ) {
+	public function set_additional_blog_options( array $options_to_set ): void {
 		foreach ( $options_to_set as $blog_option_key => $blog_option_value ) {
-			return update_blog_option( $this->blog_id, $blog_option_key, $blog_option_value );
+			update_blog_option( $this->blog_id, $blog_option_key, $blog_option_value );
 		}
 	}
 
