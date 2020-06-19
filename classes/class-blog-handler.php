@@ -128,7 +128,7 @@ abstract class Blog_Handler {
 	 *
 	 * @return void
 	 */
-	public function set_additional_blog_options( array $options_to_set ): void {
+	public function set_additional_blog_options( array $options_to_set ) {
 		foreach ( $options_to_set as $blog_option_key => $blog_option_value ) {
 			update_blog_option( $this->blog_id, $blog_option_key, $blog_option_value );
 		}
