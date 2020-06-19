@@ -23,7 +23,7 @@ use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 
 class Ed_LTI {
 
-	const COURSE_SITE_CATEGORY_ID = 2;
+	private const COURSE_SITE_CATEGORY_ID = 2;
 
 	private $wpdb;
 
@@ -84,7 +84,7 @@ class Ed_LTI {
 			}
 
             // phpcs:disable
-			$blog_type = isset( $_REQUEST['custom_blog_type'] ) ? $_REQUEST['custom_blog_type'] : '';
+			$blog_type = $_REQUEST['custom_blog_type'] ?? '';
             // phpcs:enable
 
 			if ( $this->is_student_blog_and_non_student( $blog_type, $tool ) ) {
@@ -113,6 +113,7 @@ class Ed_LTI {
 			$user_roles = new User_LTI_Roles( $tool->user->roles );
 			$blog_handler->add_user_to_blog( $user, $blog_id, $user_roles );
 			$blog_handler->add_user_to_top_level_blog( $user );
+			$blog_handler->set_additional_blog_options( $blog_handler->get_options_from_request( $_REQUEST ) );
 
 			$this->signin_user( $user, $blog_id );
 		}
@@ -176,17 +177,13 @@ class Ed_LTI {
 	 * @return array
 	 */
 	private function get_user_data( Ed_Tool_Provider $tool ) {
-		$username = $this->get_username_from_request();
-
-		$user_data = array(
-			'username'  => $username,
+		return array(
+			'username'  => $this->get_username_from_request(),
 			'email'     => $tool->user->email,
 			'firstname' => $tool->user->firstname,
 			'lastname'  => $tool->user->lastname,
 			'password'  => $this->random_string( 20, '0123456789ABCDEFGHIJKLMNOPQRSTUVWZYZabcdefghijklmnopqrstuvwxyz' ),
 		);
-
-		return $user_data;
 	}
 
 	/**
@@ -223,7 +220,7 @@ class Ed_LTI {
 	 */
 	private function get_site_data() {
         // phpcs:disable
-		$site_category = isset( $_REQUEST['custom_site_category'] )  ? $_REQUEST['custom_site_category'] :  self::COURSE_SITE_CATEGORY_ID;
+		$site_category = $_REQUEST['custom_site_category'] ?? self::COURSE_SITE_CATEGORY_ID;
 
         $username = $this->get_username_from_request();
 

@@ -12,6 +12,7 @@ namespace EdLTI\classes;
  */
 abstract class Blog_Handler {
 
+	protected $blog_id;
 	protected $course_id;
 	protected $course_title;
 	protected $domain;
@@ -60,6 +61,23 @@ abstract class Blog_Handler {
 	abstract protected function get_blog_id_if_exists();
 
 	/**
+	 * Gets the blog options to set when the blog is created or loaded
+	 *
+	 * @param array   $request_data
+	 *
+	 * @return array
+	 */
+	abstract public function get_options_from_request( array $request_data ): array;
+
+	/**
+	 * Allow blog id to be set from path,
+	 * as there is an issue should settings change.
+	 *
+	 * @return void
+	 */
+	abstract protected function fix_blog_id_from_path(): void;
+
+	/**
 	 * Set class properties using array.
 	 *
 	 * @param array   $data
@@ -84,6 +102,39 @@ abstract class Blog_Handler {
 	 * @return int
 	 */
 	public function first_or_create_blog( $make_private = false ) {
+
+		$this->validate_blog_data();
+
+		$blog_id = $this->get_blog_id_if_exists();
+
+		if ( null === $blog_id ) {
+			$this->fix_blog_id_from_path();
+			$blog_id = $this->get_blog_id_if_exists();
+		}
+
+		if ( null === $blog_id ) {
+			$blog_id = $this->create_blog( $make_private );
+		}
+
+		$this->blog_id = $blog_id;
+
+		return $blog_id;
+	}
+
+	/**
+	 * Manage additional blog options when a blog is created or viewed
+	 *
+	 * @param array $options_to_set
+	 *
+	 * @return void
+	 */
+	public function set_additional_blog_options( array $options_to_set ) {
+		foreach ( $options_to_set as $blog_option_key => $blog_option_value ) {
+			update_blog_option( $this->blog_id, $blog_option_key, $blog_option_value );
+		}
+	}
+
+	protected function validate_blog_data() {
 		if (
 			null === $this->course_id || null === $this->course_title || null === $this->domain ||
 			null === $this->resource_link_id || null === $this->username || null === $this->source_id ||
@@ -91,14 +142,6 @@ abstract class Blog_Handler {
 		) {
 			wp_die( 'Blog_Handler: You must set all data before calling first_or_create_blog' );
 		}
-
-		$blog_id = $this->get_blog_id_if_exists();
-
-		if ( null !== $blog_id ) {
-			return $blog_id;
-		}
-
-		return $this->create_blog( $make_private );
 	}
 
 	/**
@@ -230,7 +273,7 @@ abstract class Blog_Handler {
 	 */
 	public function get_friendly_path( $path ) {
 		$path = str_replace( ' ', '-', $path ); // Replaces all spaces with hyphens.
-		$path = preg_replace( '/[^A-Za-z0-9\-\_]/', '', $path ); // Removes special chars.
+		$path = preg_replace( '/[^A-Za-z0-9\-_]/', '', $path ); // Removes special chars.
 		$path = strtolower( $path ); // Convert to lowercase.
 
 		if ( $this->is_subdirectory_install() ) {

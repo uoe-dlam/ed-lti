@@ -1,5 +1,6 @@
 {
 	"require" : {
-		"imsglobal/lti": "*"
-	}
+		"imsglobal/lti": "*",
+      "ext-pdo": "*"
+    }
 }

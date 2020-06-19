@@ -46,37 +46,21 @@ class Student_Blog_Handler extends Blog_Handler {
 	}
 
 	/**
-	 * Create or return the existing blog.
-	 * Note that we are overidding the parent method for this class.
+	 * For student courses, the id might not be found using the standard search,
+	 * due to a parameter changing since creation.
 	 *
-	 * @param bool $make_private
+	 * If so, this function looks to find the blog from the path,
+	 * and fixup the blog data
 	 *
-	 * @return int
+	 * @return void
 	 */
-	public function first_or_create_blog( $make_private = false ) {
-		if (
-			null === $this->course_id || null === $this->course_title || null === $this->domain ||
-			null === $this->resource_link_id || null === $this->username || null === $this->source_id ||
-			null === $this->site_category
-		) {
-			wp_die( 'Blog_Handler: You must set all data before calling first_or_create_blog' );
-		}
+	public function fix_blog_id_from_path(): void {
 
-		$blog_id = $this->get_blog_id_if_exists();
-
-		if ( null !== $blog_id ) {
-			return $blog_id;
-		}
-
-		// If the blog path already exists, this user must already have created a student blog already. However, their id must have changed. The most likely reason is that they were deleted from the system and then added again.
 		$blog_id = $this->get_blog_id_for_path();
 
-		if ( ! empty( $blog_id ) ) {
+		if ( null !== $blog_id ) {
 			$this->update_blog_meta_with_user_id( $blog_id );
-			return $this->get_blog_id();
 		}
-
-		return $this->create_blog( $make_private );
 	}
 
 	/**
@@ -140,9 +124,9 @@ class Student_Blog_Handler extends Blog_Handler {
 	}
 
 	/**
-	 * Get blog id for a given path. If no match 0 is returned.
+	 * Get blog id for a given path. If no match null is returned.
 	 *
-	 * @return int
+	 * @return int|null
 	 */
 	protected function get_blog_id_for_path() {
 		$path    = $this->get_path();
@@ -156,7 +140,9 @@ class Student_Blog_Handler extends Blog_Handler {
 
 		$path = '/' . $path . '/';
 
-		return get_blog_id_from_url( $this->domain, $path );
+		$blog_id = get_blog_id_from_url( $this->domain, $path );
+
+		return 0 === $blog_id ? null : $blog_id;
 	}
 
 	/**
@@ -187,5 +173,23 @@ class Student_Blog_Handler extends Blog_Handler {
 		}
 
 		return 'author';
+	}
+
+	/**
+	 * Gets the blog options to set when the blog is created or loaded
+	 *
+	 * @param array   $request_data
+	 *
+	 * @return array
+	 */
+	public function get_options_from_request( array $request_data ): array {
+		$options = array();
+
+		$notification_email = $request_data['custom_notification_email'] ?? false;
+		if ( $notification_email ) {
+			$options['notification_email'] = $notification_email;
+		}
+
+		return $options;
 	}
 }
