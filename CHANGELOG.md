@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - The plugin will now use a custom notification email supplied by the upstream VLE to store as a WordPress option for student blogs (PR #33)
+- The plugin will update the notification email to null if no, or an empty value, is sent.
 
 ## [1.2.1] - 2020-04-30
 ### Fixed

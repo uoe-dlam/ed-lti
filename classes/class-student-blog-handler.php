@@ -185,10 +185,8 @@ class Student_Blog_Handler extends Blog_Handler {
 	public function get_options_from_request( array $request_data ): array {
 		$options = array();
 
-		$notification_email = $request_data['custom_notification_email'] ?? false;
-		if ( $notification_email ) {
-			$options['notification_email'] = $notification_email;
-		}
+		$notification_email            = $request_data['custom_notification_email'] ?? false;
+		$options['notification_email'] = $notification_email;
 
 		return $options;
 	}
