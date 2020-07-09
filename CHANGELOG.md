@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.3.0]
 ### Added
 - The plugin will now use a custom notification email supplied by the upstream VLE to store as a WordPress option for student blogs (PR #33)
 - The plugin will update the notification email to null if no, or an empty value, is sent. (PR #34)
@@ -39,7 +41,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [1.0.0] - 2018-10-30
 - First major release
 
-[Unreleased]: https://github.com/uoe-dlam/ed-lti/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/uoe-dlam/ed-lti/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/uoe-dlam/ed-lti/compare/v1.2.1...v1.3.0
 [1.2.1]: https://github.com/uoe-dlam/ed-lti/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/uoe-dlam/ed-lti/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/uoe-dlam/ed-lti/compare/v1.0.1...v1.1.0
