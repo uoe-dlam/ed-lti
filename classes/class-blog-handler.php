@@ -22,6 +22,7 @@ abstract class Blog_Handler {
 	protected $site_category;
 	protected $source_id;
 	protected $wpdb;
+	const MAX_PATH_CHARS = 95;
 
 	/**
 	 * Returns the subdirectory name for the blog: path/slug.
@@ -279,6 +280,9 @@ abstract class Blog_Handler {
 		if ( $this->is_subdirectory_install() ) {
 			$path = $this->append_subdirectory_install_base_path( $path );
 		}
+
+		// Make sure path isn't too big for DB Column.
+        $path = substr($path, 0, self::MAX_PATH_CHARS);
 
 		return $path;
 	}
