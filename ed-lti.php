@@ -4,7 +4,7 @@
 Plugin Name: UoE LTI
 Description: Allows LMSs to create blogs in a WordPress multisite installation via an LTI connection
 Author: DLAM Applications Development Team
-Version: 1.3.0
+Version: 1.3.1
 Credits: This plugin was inspired by the IMS Basic Learning Tools Interoperability plugin ( developed by Chuck Severance & Antoni Bertran ). Some of the code used in this plugin is borrowed from that plugin ( see https://github.com/IMSGlobal/LTI-Tool-Provider-Library-PHP )
 Copyright: University of Edinburgh
 License: GPL-3.0+
