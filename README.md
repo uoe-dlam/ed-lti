@@ -116,7 +116,7 @@ This code is principally developed and maintained by the University of Edinburgh
 
 This plugin was inspired by the IMS Basic Learning Tools Interoperability plugin (developed by Chuck Severance & Antoni Bertran). Some of the code used in this plugin is borrowed from that plugin. For further details, please visit [IMS Global](https://www.imsglobal.org/compliance/lti-plugin-wordpress-v33x)
 
-This plugin also makes use of the PHP LTI Tool Provider Library developed by IMS Global. For further details, please visit  [GitHub](https://github.com/IMSGlobal/LTI-Tool-Provider-Library-PHP)
+This plugin also makes use of the PHP LTI package developed by Stephen P. Vickers. For further details, please visit the project's [GitHub repository](https://github.com/celtic-project/LTI-PHP/)
 
 
 
