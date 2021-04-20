@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.3.1]
 ### Fixed
-- Put fix in place to make sure path cannot be too big for db column 
+- Put fix in place to make sure path cannot be too big for db column (PR #35) 
 
 ## [1.3.0]
 ### Added
