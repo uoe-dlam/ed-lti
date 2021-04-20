@@ -12,9 +12,9 @@ use Exception;
  * @link https://github.com/uoe-dlam/ed-lti
  */
 
-use IMSGlobal\LTI\ToolProvider;
+use ceLTIc\LTI\Tool;
 
-class Ed_Tool_Provider extends ToolProvider\ToolProvider {
+class Ed_Tool_Provider extends Tool {
 
 	/**
 	 * On launch set the lti_okay session to true

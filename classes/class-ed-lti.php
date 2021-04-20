@@ -2,6 +2,8 @@
 
 namespace EdLTI\classes;
 
+use ceLTIc\LTI\DataConnector\DataConnector;
+use ceLTIc\LTI\DataConnector\DataConnector_pdo;
 use Exception;
 use InvalidArgumentException;
 use PDO;
@@ -19,7 +21,6 @@ use PDO;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-use IMSGlobal\LTI\ToolProvider\DataConnector\DataConnector;
 
 class Ed_LTI {
 
@@ -50,8 +51,6 @@ class Ed_LTI {
 		$data->maybe_create_site_blogs_meta_table();
 	}
 
-	// TODO Look at handling blog category.
-
 	/**
 	 * Get a DB connector for the LTI connection package
 	 *
@@ -59,9 +58,10 @@ class Ed_LTI {
 	 */
 	private function get_db_connector() {
 		// phpcs:disable
-		return DataConnector::getDataConnector(
+		return DataConnector_pdo::getDataConnector(
+			new PDO( 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD ),
 			$this->wpdb->base_prefix,
-			new PDO( 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD )
+            'pdo'
 		);
 		// phpcs:enable
 	}

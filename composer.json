@@ -1,6 +1,9 @@
 {
-	"require" : {
-		"imsglobal/lti": "*",
+    "require" : {
+	  "celtic/lti": "^v4.4.0",
       "ext-pdo": "*"
+    },
+    "platform" : {
+      "php": "7.1"
     }
 }
