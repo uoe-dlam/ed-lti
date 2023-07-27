@@ -1,6 +1,9 @@
 {
-	"require" : {
-		"imsglobal/lti": "*",
-      "ext-pdo": "*"
+    "require" : {
+	"imsglobal/lti": "*",
+      	"ext-pdo": "*"
+    },
+    "platform" : {
+        "php": "7.1"
     }
 }

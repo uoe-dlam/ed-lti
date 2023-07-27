@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- The latest version of NS Cloner no longer works with lti, so switch to using WP built methods for creating blogs
+
+## [1.3.1]
+### Fixed
+- Put fix in place to make sure path cannot be too big for db column 
 
 ## [1.3.0]
 ### Added
@@ -41,7 +46,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [1.0.0] - 2018-10-30
 - First major release
 
-[Unreleased]: https://github.com/uoe-dlam/ed-lti/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/uoe-dlam/ed-lti/compare/v1.3.1...HEAD
+[1.3.1]: https://github.com/uoe-dlam/ed-lti/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/uoe-dlam/ed-lti/compare/v1.2.1...v1.3.0
 [1.2.1]: https://github.com/uoe-dlam/ed-lti/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/uoe-dlam/ed-lti/compare/v1.1.0...v1.2.0

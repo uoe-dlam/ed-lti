@@ -32,6 +32,9 @@ class WP_Blog_Creator implements Blog_Creator_Interface {
 
 		if ( $site_info ) {
 			$this->set_blog_template( $site_id );
+			$this->set_plugins( $site_id );
+			$this->remove_default_posts( $site_id );
+			$this->set_posts( $site_id );
 			// we don't want the default user to be the site owner, so remove them from the blog we just created
 			remove_user_from_blog( $default_user_id, $site_id );
 
@@ -56,5 +59,76 @@ class WP_Blog_Creator implements Blog_Creator_Interface {
 		$stylesheet = get_blog_option( get_site_option( 'default_site_template_id' ), 'stylesheet' );
 
 		update_blog_option( $site_id, 'stylesheet', $stylesheet );
+	}
+
+	protected function set_plugins( $site_id ) {
+		switch_to_blog( get_site_option( 'default_site_template_id' ) );
+
+		$plugins = get_plugins();
+		$active_plugins = get_option( 'active_plugins' );
+
+		restore_current_blog();
+
+		switch_to_blog( $site_id );
+
+		foreach ($plugins as $plugin_file => $plugin_info) {
+			// Activate the plugin
+			if ( in_array( $plugin_file, $active_plugins ) ) {
+				activate_plugin( $plugin_file );
+			}
+		}
+
+		restore_current_blog();
+	}
+
+	protected function remove_default_posts( $site_id ) {
+		switch_to_blog( $site_id );
+
+		$source_args = array(
+			'post_type'      => 'post',        // Fetch posts
+			'posts_per_page' => -1,            // Retrieve all posts
+		);
+
+		$query = new \WP_Query( $source_args );
+
+		while ( $query->have_posts() ) {
+			$query->the_post();
+			wp_delete_post( get_the_ID(), true, );
+		}
+
+		restore_current_blog();
+	}
+
+	protected function set_posts( $site_id ) {
+		// Source site query
+		switch_to_blog( get_site_option( 'default_site_template_id' ) );
+
+		$source_args = array(
+			'post_type'      => 'post',        // Fetch posts
+			'posts_per_page' => -1,            // Retrieve all posts
+		);
+
+		$source_query = new \WP_Query( $source_args );
+
+		restore_current_blog();
+
+		// Target site
+		switch_to_blog( $site_id );
+
+		while ( $source_query->have_posts() ) {
+			$source_query->the_post();
+
+			// Create the post on the target site
+			$post_data = array(
+				'post_title'   => get_the_title(),
+				'post_content' => get_the_content(),
+				'post_status'  => get_post_status()
+			);
+
+			wp_insert_post( $post_data );
+		}
+
+		// Restore the original blog context
+		restore_current_blog();
 	}
 }

@@ -1,11 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "hash": "96cf0f0428ab417924dabcf284ea6d24",
-    "content-hash": "e2039907eb7d59f12e25d38e6d344083",
+    "content-hash": "ba6483331672e29b3cb0f2ff36cbb7a7",
     "packages": [
         {
             "name": "imsglobal/lti",
@@ -45,7 +44,8 @@
             "keywords": [
                 "LTI"
             ],
-            "time": "2016-09-18 04:22:22"
+            "abandoned": true,
+            "time": "2016-09-18T04:22:22+00:00"
         }
     ],
     "packages-dev": [],
@@ -54,6 +54,8 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-pdo": "*"
+    },
     "platform-dev": []
 }
