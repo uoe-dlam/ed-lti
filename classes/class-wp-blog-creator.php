@@ -110,11 +110,6 @@ class WP_Blog_Creator implements Blog_Creator_Interface {
 
 		$source_query = new \WP_Query( $source_args );
 
-		restore_current_blog();
-
-		// Target site
-		switch_to_blog( $site_id );
-
 		while ( $source_query->have_posts() ) {
 			$source_query->the_post();
 
@@ -125,10 +120,54 @@ class WP_Blog_Creator implements Blog_Creator_Interface {
 				'post_status'  => get_post_status()
 			);
 
-			wp_insert_post( $post_data );
+			$post_thumbnail_id = null;
+
+			if ( has_post_thumbnail() ) {
+				$post_thumbnail_id = get_post_thumbnail_id( get_the_ID() );
+				$image_url = wp_get_attachment_image_src( $post_thumbnail_id, 'full' )[0];
+				$filename = basename( $image_url );
+			}
+
+			// Target site
+			switch_to_blog( $site_id );
+
+			$inserted_post_id = wp_insert_post( $post_data );
+
+			if ( $post_thumbnail_id ) {
+				$this->set_featured_image( $inserted_post_id, $image_url, $filename );
+			}
+
+			switch_to_blog( get_site_option( 'default_site_template_id' ) );
 		}
 
 		// Restore the original blog context
 		restore_current_blog();
+	}
+
+	protected function set_featured_image( int $inserted_post_id, string $image_url, string $filename ) {
+		$upload_dir = wp_upload_dir();
+		$file       = $upload_dir['path'] . '/' . $filename;
+		$result = file_put_contents( $file, file_get_contents( $image_url ) );
+
+		if ($result !== false) {
+			// Upload the image to the Media Library
+			$attachment = array(
+				'post_mime_type' => 'image/jpeg', // Adjust the MIME type as needed
+				'post_title' => $filename,
+				'post_content' => '',
+				'post_status' => 'inherit'
+			);
+
+			$attach_id = wp_insert_attachment( $attachment, $file );
+
+			if ( ! is_wp_error( $attach_id ) ) {
+				require_once( ABSPATH . 'wp-admin/includes/image.php' );
+				$attach_data = wp_generate_attachment_metadata( $attach_id, $file );
+				wp_update_attachment_metadata( $attach_id, $attach_data );
+
+				// Set the image as the featured image for a post
+				set_post_thumbnail( $inserted_post_id, $attach_id );
+			}
+		}
 	}
 }
