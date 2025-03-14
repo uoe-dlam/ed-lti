@@ -39,6 +39,8 @@ If the Multisite Privacy plugin or the More Privacy Option plugins are installed
 
 ### WordPress  
 
+This plugin relies on Composer libraries. Please ensure you run `composer install` in the root directory to download all dependencies prior to installing this plugin. For more information on Composer you can [visit the Composer website](https://getcomposer.org).
+
 1. Copy the ed-lti folder to the plugins folder.
 **Note:** for instructions on how to install a plugin manually, please visit [WordPress for dummies](https://www.dummies.com/web-design-development/wordpress/templates-themes-plugins/how-to-install-wordpress-plugins-manually/)
 2. From **Network Admin > Plugins** select the plugin and click **Network Activate**.

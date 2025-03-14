@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Put fix in place to make sure path cannot be too big for db column 
 
+## [1.3.1]
+### Fixed
+- Put fix in place to make sure path cannot be too big for db column 
+
 ## [1.3.0]
 ### Added
 - The plugin will now use a custom notification email supplied by the upstream VLE to store as a WordPress option for student blogs (PR #33)
