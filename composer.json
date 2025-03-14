@@ -1,6 +1,6 @@
 {
 	"require" : {
-		"imsglobal/lti": "*",
-      "ext-pdo": "*"
+		"ext-pdo": "*",
+		"oat-sa/imsglobal-lti": "^4.0"
     }
 }
