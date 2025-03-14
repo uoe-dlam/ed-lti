@@ -5,7 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- The latest version of NS Cloner no longer works with lti, so switch to using WP built methods for creating blogs
+- The latest version of NS Cloner no longer works with lti, so switch to using WP built methods for creating blogs (PR #38)
+- Update IMS Global LTI plugin to support php v8 (PR #40) 
 
 ## [1.3.1]
 ### Fixed
