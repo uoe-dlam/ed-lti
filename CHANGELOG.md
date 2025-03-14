@@ -8,15 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The latest version of NS Cloner no longer works with lti, so switch to using WP built methods for creating blogs (PR #38)
 - Update IMS Global LTI plugin to support php v8 (PR #40) 
 
-## [1.3.1]
+## [1.3.1] - 2020-09-29
 ### Fixed
 - Put fix in place to make sure path cannot be too big for db column 
 
-## [1.3.1]
-### Fixed
-- Put fix in place to make sure path cannot be too big for db column 
-
-## [1.3.0]
+## [1.3.0] - 2020-07-09
 ### Added
 - The plugin will now use a custom notification email supplied by the upstream VLE to store as a WordPress option for student blogs (PR #33)
 - The plugin will update the notification email to null if no, or an empty value, is sent. (PR #34)
