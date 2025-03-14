@@ -23,18 +23,31 @@ class NS_Cloner_Blog_Creator implements Blog_Creator_Interface {
 	 * @return int
 	 */
 	public function create( array $data ) {
-		$_POST['action']         = 'process';
-		$_POST['clone_mode']     = 'core';
-		$_POST['source_id']      = $data['source_id'];
-		$_POST['target_name']    = $data['path'];
-		$_POST['target_title']   = $data['title'];
-		$_POST['disable_addons'] = true;
-		$_POST['clone_nonce']    = wp_create_nonce( 'ns_cloner' );
+		add_filter( 'ns_cloner_do_step_create_site', '__return_true' );
 
-		$ns_site_cloner = new ns_cloner();
-		$ns_site_cloner->process();
+		$request = array(
+			'clone_mode'   => 'core',
+			'source_id'    => $data['source_id'], // any blog/site id on network
+			'target_name'  => $data['path'],
+			'target_title' => $data['title'],
+			'debug'        => 1,
+			'copy_theme'   => true
+		);
 
-		$site_id   = $ns_site_cloner->target_id;
+		add_filter( 'ns_cloner_do_step_create_site', '__return_true' );
+
+		// This is required to bootstrap the required plugin classes.
+		\ns_cloner()->init();
+
+		// This will create a background process via WP Cron to run the cloning operation.
+		\ns_cloner()->schedule->add(
+			$request,
+			time(), // timestamp of date/time to start cloning - use time() to run immediately
+			'ed-lti' // name of your project, required but used only for debugging
+		);
+
+		$site_id = get_blog_id_from_url($data['domain'], '/' . $data['path'] . '/');
+
 		$site_info = get_blog_details( $site_id );
 
 		if ( $site_info ) {

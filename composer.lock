@@ -1,0 +1,64 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "e3a005934343a57d1d9afe3617a5558f",
+    "packages": [
+        {
+            "name": "oat-sa/imsglobal-lti",
+            "version": "4.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/oat-sa/imsglobal-lti.git",
+                "reference": "bf4f393b9c76c8e8c14c417a6d795141e3c2d5d9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/oat-sa/imsglobal-lti/zipball/bf4f393b9c76c8e8c14c417a6d795141e3c2d5d9",
+                "reference": "bf4f393b9c76c8e8c14c417a6d795141e3c2d5d9",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 || ~8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "IMSGlobal\\LTI\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Open Assessment Technologies S.A.",
+                    "homepage": "https://www.taotesting.com"
+                }
+            ],
+            "description": "LTI Tool Provider Library",
+            "homepage": "https://www.imsglobal.org/lti",
+            "keywords": [
+                "LTI"
+            ],
+            "support": {
+                "source": "https://github.com/oat-sa/imsglobal-lti/tree/4.0.1"
+            },
+            "time": "2022-07-19T14:04:41+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "ext-pdo": "*"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.6.0"
+}
