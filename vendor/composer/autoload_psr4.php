@@ -6,5 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'IMSGlobal\\LTI\\' => array($vendorDir . '/imsglobal/lti/src'),
+    'IMSGlobal\\LTI\\' => array($vendorDir . '/oat-sa/imsglobal-lti/src'),
 );

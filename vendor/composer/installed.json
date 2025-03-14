@@ -1,24 +1,24 @@
 {
     "packages": [
         {
-            "name": "imsglobal/lti",
-            "version": "3.0.2",
-            "version_normalized": "3.0.2.0",
+            "name": "oat-sa/imsglobal-lti",
+            "version": "4.0.1",
+            "version_normalized": "4.0.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/IMSGlobal/LTI-Tool-Provider-Library-PHP.git",
-                "reference": "06b12f70c2803ee08da116bcda2951eefd411ac9"
+                "url": "https://github.com/oat-sa/imsglobal-lti.git",
+                "reference": "bf4f393b9c76c8e8c14c417a6d795141e3c2d5d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/IMSGlobal/LTI-Tool-Provider-Library-PHP/zipball/06b12f70c2803ee08da116bcda2951eefd411ac9",
-                "reference": "06b12f70c2803ee08da116bcda2951eefd411ac9",
+                "url": "https://api.github.com/repos/oat-sa/imsglobal-lti/zipball/bf4f393b9c76c8e8c14c417a6d795141e3c2d5d9",
+                "reference": "bf4f393b9c76c8e8c14c417a6d795141e3c2d5d9",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6.0"
+                "php": "^7.4 || ~8"
             },
-            "time": "2016-09-18T04:22:22+00:00",
+            "time": "2022-07-19T14:04:41+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -32,8 +32,8 @@
             ],
             "authors": [
                 {
-                    "name": "Stephen Vickers",
-                    "email": "svickers@imsglobal.org"
+                    "name": "Open Assessment Technologies S.A.",
+                    "homepage": "https://www.taotesting.com"
                 }
             ],
             "description": "LTI Tool Provider Library",
@@ -41,8 +41,10 @@
             "keywords": [
                 "LTI"
             ],
-            "abandoned": true,
-            "install-path": "../imsglobal/lti"
+            "support": {
+                "source": "https://github.com/oat-sa/imsglobal-lti/tree/4.0.1"
+            },
+            "install-path": "../oat-sa/imsglobal-lti"
         }
     ],
     "dev": true,

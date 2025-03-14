@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit2c9cc57029ef7311aa15bebeb5dbc211
+class ComposerStaticInite3a005934343a57d1d9afe3617a5558f
 {
     public static $prefixLengthsPsr4 = array (
         'I' => 
@@ -16,7 +16,7 @@ class ComposerStaticInit2c9cc57029ef7311aa15bebeb5dbc211
     public static $prefixDirsPsr4 = array (
         'IMSGlobal\\LTI\\' => 
         array (
-            0 => __DIR__ . '/..' . '/imsglobal/lti/src',
+            0 => __DIR__ . '/..' . '/oat-sa/imsglobal-lti/src',
         ),
     );
 
@@ -27,9 +27,9 @@ class ComposerStaticInit2c9cc57029ef7311aa15bebeb5dbc211
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit2c9cc57029ef7311aa15bebeb5dbc211::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit2c9cc57029ef7311aa15bebeb5dbc211::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit2c9cc57029ef7311aa15bebeb5dbc211::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInite3a005934343a57d1d9afe3617a5558f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInite3a005934343a57d1d9afe3617a5558f::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInite3a005934343a57d1d9afe3617a5558f::$classMap;
 
         }, null, ClassLoader::class);
     }
